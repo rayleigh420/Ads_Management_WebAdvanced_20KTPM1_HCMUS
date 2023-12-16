@@ -1,16 +1,14 @@
-import './App.css'
-import { Footer, Header } from './components/global'
-import { RouterProvider } from './routes'
+import { RouterProvider } from 'react-router-dom';
+import './App.css';
+import AntdConfigProvider from './config/antd';
+import { router } from './routes';
 
 function App() {
   return (
-
-    <div className='h-[100vh]'>
-      <Header />
-      <RouterProvider />
-      <Footer />
-    </div>
-  )
+    <AntdConfigProvider>
+      <RouterProvider router={router} />;
+    </AntdConfigProvider>
+  );
 }
 
-export default App
+export default App;
