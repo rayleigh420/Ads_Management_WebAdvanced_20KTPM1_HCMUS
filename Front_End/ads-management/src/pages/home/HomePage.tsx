@@ -1,5 +1,5 @@
 import React from "react"
-import { Counter } from "../components/ui"
+import { Counter } from "../../components/ui"
 
 const Home = () => {
     return (

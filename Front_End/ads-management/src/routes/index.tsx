@@ -2,8 +2,7 @@ import {
     Route,
     Routes
 } from "react-router-dom";
-import Home from "../pages";
-import NotFound from "../pages/NotFound";
+import { Home, NotFound } from "../pages";
 
 export const RouterProvider = () => {
     return (
