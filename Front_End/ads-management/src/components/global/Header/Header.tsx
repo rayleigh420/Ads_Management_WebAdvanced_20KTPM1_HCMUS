@@ -13,7 +13,7 @@ const Header = () => {
         />
       </Link>
       <div className='flex items-center gap-4'>
-        <Button size='large' href='/'>
+        <Button size='large' href='/login'>
           Login
         </Button>
       </div>
