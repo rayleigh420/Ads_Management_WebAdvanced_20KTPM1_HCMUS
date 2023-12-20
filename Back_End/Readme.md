@@ -7,6 +7,10 @@
   - EditorConfig for VS Code
 
 ## Command
+```bash
+docker-compose up -d
+```
+
 start dev
 ```bash
 npm run dev
