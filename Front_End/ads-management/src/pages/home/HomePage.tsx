@@ -1,9 +1,14 @@
-import Map, { FullscreenControl, GeolocateControl, Marker, NavigationControl, Popup } from 'react-map-gl'
+import Map, { FullscreenControl, GeolocateControl, Layer, MapEvent, MapRef, Marker, NavigationControl, Popup, ScaleControl } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AimOutlined } from '@ant-design/icons';
-import LocationInfo from '@/core/models/map.model';
+import { LocationInfo } from '@/core/models/map.model';
+import { DEFAULT_LON_LAT_LOCTION, MAP_STYLES } from '@/core/constants/map.constants';
+import { Button } from 'antd';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import mapboxgl from 'mapbox-gl';
+import LocationPopup from './components/Popup';
 
 const HomePage = () => {
   //current public and secret key here
@@ -12,15 +17,10 @@ const HomePage = () => {
   const secretKey =
     'sk.eyJ1Ijoic3RlcmxpbmdoIiwiYSI6ImNscWNsdWhkYjAyeGUyaXJxaWJoNXcxMW0ifQ.Xr8UkJ8p6uf7FPfMPoVfvw';
 
-  const [viewState, setViewState] = useState({
-    longitude: 106.65920130189151,
-    latitude: 10.804600283178255,
-    zoom: 14
-  });
-
-  const onMove = useCallback((evt: any) => {
-    setViewState(evt.viewState);
-  }, []);
+  const mapStyleIndex = useRef<number>(0)
+  const [mapStyle, setMapStyle] = useState(MAP_STYLES[mapStyleIndex.current])
+  const mapRef = useRef<MapRef>()
+  const geoControlRef = useRef<mapboxgl.GeolocateControl>();
 
   const locations: LocationInfo[] = [
     {
@@ -45,29 +45,17 @@ const HomePage = () => {
     }
   ]
 
-  const [selectedMarker, setSelectedMarker] = useState<LocationInfo>({ longitude: -1, latitude: -1 })
-  const [showPopup, setShowPopup] = useState<boolean>(true);
-
-
-  const markerRef = useRef<mapboxgl.Marker>();
+  const [selectedMarker, setSelectedMarker] = useState<LocationInfo>({ longitude: DEFAULT_LON_LAT_LOCTION, latitude: -DEFAULT_LON_LAT_LOCTION })
+  const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const handleClickMarker = useCallback((location: LocationInfo) => {
-    console.log(location);
-
     setSelectedMarker(location)
-    markerRef.current?.setLngLat({
-      lng: location.longitude,
-      lat: location.latitude
-    })
-    markerRef.current?.togglePopup();
   }, []);
-
 
   const markers = useMemo(() => locations.map((location, index) => (
     <Marker key={location.longitude}
       longitude={location.longitude}
       latitude={location.latitude}
-      ref={markerRef}
       onClick={() => handleClickMarker(location)}
     >
       <AimOutlined style={{ fontSize: '32px', color: 'red' }} />
@@ -75,26 +63,128 @@ const HomePage = () => {
   ), [locations]);
 
 
+  useEffect(() => {
+    if (selectedMarker.latitude != DEFAULT_LON_LAT_LOCTION && selectedMarker.longitude != DEFAULT_LON_LAT_LOCTION)
+      setShowPopup(true)
+  }, [selectedMarker])
+
+  const handleClosePopup = () => {
+    setShowPopup(false)
+  }
+
+  const handleChangeMapStyle = () => {
+    if (mapStyleIndex.current === MAP_STYLES.length - 1) {
+      mapStyleIndex.current = 0
+    } else
+      mapStyleIndex.current = mapStyleIndex.current + 1
+
+    setMapStyle(MAP_STYLES[mapStyleIndex.current])
+  }
+
+  const handleLoadMap = (event: MapEvent) => {
+    geoControlRef.current?.trigger()
+    mapboxgl.accessToken = publicKey
+    // Add the control to the map.
+    mapRef.current?.addControl(
+      new MapboxGeocoder({
+        accessToken: publicKey,
+        localGeocoder: coordinatesGeocoder,
+        zoom: 14,
+        placeholder: 'Search the location',
+        mapboxgl: mapboxgl,
+        reverseGeocode: true,
+        countries: "VN",
+        language: "vi",
+        marker: true,
+      })
+    );
+  }
+
+  const coordinatesGeocoder = (query: string) => {
+    // Match anything which looks like
+    // decimal degrees coordinate pair.
+    const matches = query.match(
+      /^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i
+    );
+    if (!matches) {
+      return null;
+    }
+
+    const coordinateFeature = (lng: number, lat: number) => {
+      return {
+        center: [lng, lat],
+        geometry: {
+          type: 'Point',
+          coordinates: [lng, lat]
+        },
+        place_name: 'Lat: ' + lat + ' Lng: ' + lng,
+        place_type: ['coordinate'],
+        properties: {},
+        type: 'Feature'
+      };
+    }
+
+    const coord1 = Number(matches[1]);
+    const coord2 = Number(matches[2]);
+    const geocodes: any = [];
+
+    if (coord1 < -90 || coord1 > 90) {
+      // must be lng, lat
+      geocodes.push(coordinateFeature(coord1, coord2));
+    }
+
+    if (coord2 < -90 || coord2 > 90) {
+      // must be lat, lng
+      geocodes.push(coordinateFeature(coord2, coord1));
+    }
+
+    if (geocodes.length === 0) {
+      // else could be either lng, lat or lat, lng
+      geocodes.push(coordinateFeature(coord1, coord2));
+      geocodes.push(coordinateFeature(coord2, coord1));
+    }
+
+    return geocodes;
+  };
+
   return (
-    <div className='w-full flex  items-center justify-center flex-col'>
+    <div className='w-[100vh] h-[80vh] flex  items-center justify-center flex-col'>
       <Map
         mapboxAccessToken={publicKey}
-        initialViewState={viewState}
-        style={{ width: 600, height: 400 }}
-        onMove={onMove}
-        mapStyle="mapbox://styles/mapbox/streets-v9"
+        style={{ width: '100%', height: '100%' }}
+        mapStyle={mapStyle}
+        trackResize
+        ref={mapRef}
+        onLoad={handleLoadMap}
       >
         {markers}
         <FullscreenControl />
-        <GeolocateControl trackUserLocation />
+        <GeolocateControl
+          trackUserLocation
+          showUserLocation={true}
+          showUserHeading={true}
+          showAccuracyCircle={true}
+          ref={geoControlRef}
+        />
         <NavigationControl />
+        <ScaleControl style={{ color: 'white', backgroundColor: 'gray' }} />
+
         {showPopup && (
-          <Popup longitude={106.66094109691875} latitude={10.802745704872967}
+          <Popup longitude={selectedMarker.longitude} latitude={selectedMarker.latitude}
             anchor="bottom"
-            onClose={() => setShowPopup(false)}>
-            You are here
+            onClose={handleClosePopup}
+            closeOnClick={false}
+            focusAfterOpen
+          >
+            <LocationPopup
+              title='Cổ đông chính trị'
+              description='Đất công/ Công viên/ Hành lang an toàn giao thông.'
+              location='Đồng Khởi, Nguyễn Du'
+              status='Đã quy hoạch'
+            />
           </Popup>)}
       </Map>
+      <Button size='large' onClick={handleChangeMapStyle} className='bg-blue-400 text-white mt-4'>Change Map Style</Button>
     </div>
   );
 };
