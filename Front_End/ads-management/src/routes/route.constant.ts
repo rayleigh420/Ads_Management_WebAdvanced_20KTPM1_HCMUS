@@ -1,6 +1,11 @@
 export const MY_ROUTE = {
   HOME: '/',
-  LOGIN: '/login'
+  LOGIN: '/login',
+  REPORT: '/report',
+  REQUIRE_LISENCE: '/require',
+  REQUIRE_EDIT: '/require/:id',
+  COMPANY_DETAIL: '/company/:id',
+  AD_DETAIL: '/ad/:id',
 };
 
 export const DEFAULT_ROUTE = MY_ROUTE.HOME;

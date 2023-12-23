@@ -4,11 +4,22 @@
   height: 100%;
 }
 
+//login
+.ant-layout-content {
+  width: 100%;
+}
+
+//map canvas
+.mapboxgl-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 //search the location
 .mapboxgl-ctrl-geocoder.mapboxgl-ctrl {
   position: absolute;
   top: 0;
-  right: 280px;
+  right: 100%;
   width: 600px;
   max-width: 600px;
 }
@@ -279,4 +290,12 @@
   50% {
     transform: scale(0.98);
   }
+}
+
+.ant-form-item-row {
+  display: flex;
+  flex-direction: column;
+}
+.ant-select-in-form-item {
+  width: 250px !important;
 }

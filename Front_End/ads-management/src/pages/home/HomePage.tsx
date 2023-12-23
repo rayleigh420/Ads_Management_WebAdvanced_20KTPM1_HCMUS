@@ -148,7 +148,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className='w-[100vh] h-[80vh] flex  items-center justify-center flex-col'>
+    <div className='w-full h-[80vh] flex  items-center justify-center flex-col'>
       <Map
         mapboxAccessToken={publicKey}
         style={{ width: '100%', height: '100%' }}
