@@ -32,9 +32,10 @@ export const CustomTextInput = <T extends object>({
     <Form.Item<T>
       name={name as any}
       rules={rules}
+      labelCol={{ span: 24 }}
       label={label && <label className='whitespace-normal w-full'>{label}</label>}
       wrapperCol={{ span: spanCol }}
-      className={`${classNameForm} mb-10`}
+      className={`${classNameForm} `}
     >
       <Input
         placeholder={placeholder}

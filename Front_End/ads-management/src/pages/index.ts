@@ -1,3 +1,6 @@
+export { default as AdsLocationPage } from './ads-location/AdsLocationPage';
+export { default as AdsRequiredEditPage } from './ads-require-edit/AdsRequiredEditPage';
+export { default as DistrictManagementPage } from './district-management/DistrictManagementPage';
 export { default as HomePage } from './home/HomePage';
 export { default as NotFoundPage } from './not-found/NotFoundPage';
 export { default as LoginPage } from './login/LoginPage';
