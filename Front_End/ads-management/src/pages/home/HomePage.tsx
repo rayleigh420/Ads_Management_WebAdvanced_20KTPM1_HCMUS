@@ -1,4 +1,14 @@
-import Map, { FullscreenControl, GeolocateControl, Layer, MapEvent, MapRef, Marker, NavigationControl, Popup, ScaleControl } from 'react-map-gl'
+import Map, {
+  FullscreenControl,
+  GeolocateControl,
+  Layer,
+  MapEvent,
+  MapRef,
+  Marker,
+  NavigationControl,
+  Popup,
+  ScaleControl,
+} from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AimOutlined, ExclamationOutlined, MoreOutlined } from '@ant-design/icons';
@@ -18,15 +28,15 @@ const HomePage = () => {
   const secretKey =
     'sk.eyJ1Ijoic3RlcmxpbmdoIiwiYSI6ImNscWNsdWhkYjAyeGUyaXJxaWJoNXcxMW0ifQ.Xr8UkJ8p6uf7FPfMPoVfvw';
 
-  const mapStyleIndex = useRef<number>(0)
-  const [mapStyle, setMapStyle] = useState(MAP_STYLES[mapStyleIndex.current])
-  const mapRef = useRef<MapRef>()
+  const mapStyleIndex = useRef<number>(0);
+  const [mapStyle, setMapStyle] = useState(MAP_STYLES[mapStyleIndex.current]);
+  const mapRef = useRef<MapRef>();
   const geoControlRef = useRef<mapboxgl.GeolocateControl>();
 
   const locations: LocationInfo[] = [
     {
       longitude: 106.65920130189151,
-      latitude: 10.80456866726492
+      latitude: 10.80456866726492,
     },
     {
       longitude: 106.65931931910323,
@@ -34,57 +44,66 @@ const HomePage = () => {
     },
     {
       longitude: 106.65957529854192,
-      latitude: 10.804592977044063
+      latitude: 10.804592977044063,
     },
     {
       longitude: 106.66076782699842,
-      latitude: 10.803450999515064
+      latitude: 10.803450999515064,
     },
     {
       longitude: 106.66094109691875,
-      latitude: 10.802745704872967
-    }
-  ]
+      latitude: 10.802745704872967,
+    },
+  ];
 
-  const [selectedMarker, setSelectedMarker] = useState<LocationInfo>({ longitude: DEFAULT_LON_LAT_LOCTION, latitude: -DEFAULT_LON_LAT_LOCTION })
+  const [selectedMarker, setSelectedMarker] = useState<LocationInfo>({
+    longitude: DEFAULT_LON_LAT_LOCTION,
+    latitude: -DEFAULT_LON_LAT_LOCTION,
+  });
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const handleClickMarker = useCallback((location: LocationInfo) => {
-    setSelectedMarker(location)
+    setSelectedMarker(location);
   }, []);
 
-  const markers = useMemo(() => locations.map((location, index) => (
-    <Marker key={location.longitude}
-      longitude={location.longitude}
-      latitude={location.latitude}
-      onClick={() => handleClickMarker(location)}
-    >
-      <AimOutlined style={{ fontSize: '32px', color: 'red' }} />
-    </Marker>)
-  ), [locations]);
-
+  const markers = useMemo(
+    () =>
+      locations.map((location, index) => (
+        <Marker
+          key={location.longitude}
+          longitude={location.longitude}
+          latitude={location.latitude}
+          onClick={() => handleClickMarker(location)}
+        >
+          <AimOutlined style={{ fontSize: '32px', color: 'red' }} />
+        </Marker>
+      )),
+    [locations],
+  );
 
   useEffect(() => {
-    if (selectedMarker.latitude != DEFAULT_LON_LAT_LOCTION && selectedMarker.longitude != DEFAULT_LON_LAT_LOCTION)
-      setShowPopup(true)
-  }, [selectedMarker])
+    if (
+      selectedMarker.latitude != DEFAULT_LON_LAT_LOCTION &&
+      selectedMarker.longitude != DEFAULT_LON_LAT_LOCTION
+    )
+      setShowPopup(true);
+  }, [selectedMarker]);
 
   const handleClosePopup = () => {
-    setShowPopup(false)
-  }
+    setShowPopup(false);
+  };
 
   const handleChangeMapStyle = () => {
     if (mapStyleIndex.current === MAP_STYLES.length - 1) {
-      mapStyleIndex.current = 0
-    } else
-      mapStyleIndex.current = mapStyleIndex.current + 1
+      mapStyleIndex.current = 0;
+    } else mapStyleIndex.current = mapStyleIndex.current + 1;
 
-    setMapStyle(MAP_STYLES[mapStyleIndex.current])
-  }
+    setMapStyle(MAP_STYLES[mapStyleIndex.current]);
+  };
 
   const handleLoadMap = (event: MapEvent) => {
-    geoControlRef.current?.trigger()
-    mapboxgl.accessToken = publicKey
+    geoControlRef.current?.trigger();
+    mapboxgl.accessToken = publicKey;
     // Add the control to the map.
     mapRef.current?.addControl(
       new MapboxGeocoder({
@@ -94,19 +113,17 @@ const HomePage = () => {
         placeholder: 'Search the location',
         mapboxgl: mapboxgl,
         reverseGeocode: true,
-        countries: "VN",
-        language: "vi",
+        countries: 'VN',
+        language: 'vi',
         marker: true,
-      })
+      }),
     );
-  }
+  };
 
   const coordinatesGeocoder = (query: string) => {
     // Match anything which looks like
     // decimal degrees coordinate pair.
-    const matches = query.match(
-      /^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i
-    );
+    const matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
     if (!matches) {
       return null;
     }
@@ -116,14 +133,14 @@ const HomePage = () => {
         center: [lng, lat],
         geometry: {
           type: 'Point',
-          coordinates: [lng, lat]
+          coordinates: [lng, lat],
         },
         place_name: 'Lat: ' + lat + ' Lng: ' + lng,
         place_type: ['coordinate'],
         properties: {},
-        type: 'Feature'
+        type: 'Feature',
       };
-    }
+    };
 
     const coord1 = Number(matches[1]);
     const coord2 = Number(matches[2]);
@@ -172,8 +189,10 @@ const HomePage = () => {
           <ScaleControl style={{ color: 'white', backgroundColor: 'gray' }} />
 
           {showPopup && (
-            <Popup longitude={selectedMarker.longitude} latitude={selectedMarker.latitude}
-              anchor="bottom"
+            <Popup
+              longitude={selectedMarker.longitude}
+              latitude={selectedMarker.latitude}
+              anchor='bottom'
               onClose={handleClosePopup}
               closeOnClick={false}
               focusAfterOpen
@@ -184,9 +203,12 @@ const HomePage = () => {
                 location='Đồng Khởi, Nguyễn Du'
                 status='Đã quy hoạch'
               />
-            </Popup>)}
+            </Popup>
+          )}
         </Map>
-        <Button size='large' onClick={handleChangeMapStyle} className='bg-blue-400 text-white mt-4'>Change Map Style</Button>
+        <Button size='large' onClick={handleChangeMapStyle} className='bg-blue-400 text-white mt-4'>
+          Change Map Style
+        </Button>
       </div>
       <div className='ml-6 w-[25%]'>
         <Advertise />

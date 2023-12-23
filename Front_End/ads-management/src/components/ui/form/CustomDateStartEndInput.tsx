@@ -24,6 +24,7 @@ export const CustomDateStartEndInput = <T extends object>({
       name={name as any}
       rules={rules}
       label={label}
+      labelCol={{ span: 24 }}
       wrapperCol={{ span: spanCol }}
       className={classNameForm}
     >

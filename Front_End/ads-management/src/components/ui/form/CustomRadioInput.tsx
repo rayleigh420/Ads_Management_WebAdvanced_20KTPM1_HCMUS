@@ -29,6 +29,7 @@ export const CustomRadioInput = <T extends object>({
       rules={rules}
       className={`custom-radio ${classNameForm}`}
       label={label}
+      labelCol={{ span: 24 }}
       onMetaChange={(e) => {
         console.log(e);
       }}

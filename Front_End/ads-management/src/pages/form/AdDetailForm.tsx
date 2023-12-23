@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { CustomDateInput } from '@/components/ui/form/CustomDateInput';
 import dayjs, { Dayjs } from 'dayjs';
 import { EyeOutlined } from '@ant-design/icons';
-import './AdDetailForm.scss';
 
 export default function AdDetailForm() {
   const fileList = [
@@ -24,6 +23,7 @@ export default function AdDetailForm() {
       url: 'https://cdn.reatimes.vn/mediav2/upload/userfiles2021/images/phongnt/m%C3%A8o%20anh%201.jpg',
     },
   ];
+
   const handleDownload = (url: string, fileName: string) => {
     const link = document.createElement('a');
     link.href = url;
@@ -49,7 +49,7 @@ export default function AdDetailForm() {
             defaultValue={dayjs('2015-01-01', 'YYYY-MM-DD')}
             disabled={true}
           />
-          <Form.Item label='Hình ảnh bảng quảng cáo ' name='image' className='mt-10'>
+          <Form.Item label='Hình ảnh bảng quảng cáo ' name='image' labelCol={{ span: 24 }}>
             <List
               dataSource={fileList}
               renderItem={(item) => (

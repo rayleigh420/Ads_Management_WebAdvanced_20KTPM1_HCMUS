@@ -22,7 +22,7 @@ export default function CompanyDetailForm() {
             disabled={true}
             defaultValue='Công ty TNHH Viettel'
           />
-          <div className='flex justify-between'>
+          <div className='flex justify-between gap-5'>
             <CustomTextInput<any>
               name='email'
               label='Email'
