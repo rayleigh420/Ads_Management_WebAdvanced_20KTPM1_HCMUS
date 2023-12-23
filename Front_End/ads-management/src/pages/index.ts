@@ -1,2 +1,11 @@
+export { default as AdsLocationPage } from './ads-location/AdsLocationPage';
+export { default as AdsRequiredEditPage } from './ads-require-edit/AdsRequiredEditPage';
+export { default as DistrictManagementPage } from './district-management/DistrictManagementPage';
 export { default as HomePage } from './home/HomePage';
 export { default as NotFoundPage } from './not-found/NotFoundPage';
+export { default as LoginPage } from './login/LoginPage';
+export { default as ReportForm } from './form/ReportForm';
+export { default as RequireLisenceForm } from './form/RequireLisenceForm';
+export { default as RequireEditForm } from './form/RequireEditForm';
+export { default as CompanyDetailForm } from './form/CompanyDetailForm';
+export { default as AdDetailForm } from './form/AdDetailForm';
