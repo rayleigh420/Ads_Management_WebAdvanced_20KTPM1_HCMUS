@@ -17,7 +17,7 @@ class Database {
         database: process.env.DB_DATABASE,
         entities: ['src/orm/entities/*{.ts,.js}'],
         migrations: ['src/migrations/*.ts', 'dist/migrations/*{.ts,.js}'],
-        synchronize: false,
+        synchronize: false
       })
       console.log('entity', process.env.DB_HOST)
     }

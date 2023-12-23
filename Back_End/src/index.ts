@@ -3,9 +3,9 @@ const app = express()
 const router = express.Router()
 import { defaultErrorHandler } from './middlewares/error.middlewares'
 import { myDataSource } from './orm/connectDb'
-import dotenv from 'dotenv';
-dotenv.config();
-const PORT = process.env.PORT || 3001;
+import dotenv from 'dotenv'
+dotenv.config()
+const PORT = process.env.PORT || 3001
 
 myDataSource
   .initialize()
