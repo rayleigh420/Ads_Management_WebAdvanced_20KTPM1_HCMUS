@@ -12,7 +12,7 @@ import Map, {
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AimOutlined, ExclamationOutlined, MoreOutlined } from '@ant-design/icons';
-import { LocationInfo } from '@/core/models/map.model';
+import { Coordinates } from '@/core/models/map.model';
 import { DEFAULT_LON_LAT_LOCTION, MAP_STYLES } from '@/core/constants/map.constants';
 import { Button } from 'antd';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
@@ -33,7 +33,7 @@ const HomePage = () => {
   const mapRef = useRef<MapRef>();
   const geoControlRef = useRef<mapboxgl.GeolocateControl>();
 
-  const locations: LocationInfo[] = [
+  const locations: Coordinates[] = [
     {
       longitude: 106.65920130189151,
       latitude: 10.80456866726492,
@@ -56,30 +56,15 @@ const HomePage = () => {
     },
   ];
 
-  const [selectedMarker, setSelectedMarker] = useState<LocationInfo>({
+  const [selectedMarker, setSelectedMarker] = useState<Coordinates>({
     longitude: DEFAULT_LON_LAT_LOCTION,
     latitude: -DEFAULT_LON_LAT_LOCTION,
   });
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
-  const handleClickMarker = useCallback((location: LocationInfo) => {
+  const handleClickMarker = useCallback((location: Coordinates) => {
     setSelectedMarker(location);
   }, []);
-
-  const markers = useMemo(
-    () =>
-      locations.map((location, index) => (
-        <Marker
-          key={location.longitude}
-          longitude={location.longitude}
-          latitude={location.latitude}
-          onClick={() => handleClickMarker(location)}
-        >
-          <AimOutlined style={{ fontSize: '32px', color: 'red' }} />
-        </Marker>
-      )),
-    [locations],
-  );
 
   useEffect(() => {
     if (
@@ -165,6 +150,21 @@ const HomePage = () => {
     return geocodes;
   };
 
+  const markers = useMemo(
+    () =>
+      locations.map((location, index) => (
+        <Marker
+          key={location.longitude}
+          longitude={location.longitude}
+          latitude={location.latitude}
+          onClick={() => handleClickMarker(location)}
+        >
+          <AimOutlined style={{ fontSize: '32px', color: 'red' }} />
+        </Marker>
+      )),
+    [locations],
+  );
+
   return (
     <div className='w-full flex'>
       <div className='h-[80vh] w-[75%] flex items-center justify-center flex-col'>
@@ -211,7 +211,19 @@ const HomePage = () => {
         </Button>
       </div>
       <div className='ml-6 w-[25%]'>
-        <Advertise />
+        <Advertise
+          advertisingLocation={{
+            type: 'Đất công/ Công viên/ Hành lang an toàn giao thông',
+            address: 'Đồng Khởi - Nguyễn Du',
+            size: '2.5m x 10m',
+            quantity: '1 trụ/ 1 bảng',
+            formOfAdvertising: 'cổ đông chính trị',
+            name: 'Trụ, cụm pano',
+            image: '',
+            expirationDate: '12/12/2024'
+          }}
+          coordinates={selectedMarker}
+        />
       </div>
     </div>
   );

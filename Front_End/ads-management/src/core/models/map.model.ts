@@ -1,9 +1,9 @@
-export interface LocationInfo {
+export interface Coordinates {
     longitude: number,
     latitude: number
 }
 
-export interface LocationInfoPopup {
+export interface CoordinatesPopup {
     title: string,
     description: string,
     location: string,

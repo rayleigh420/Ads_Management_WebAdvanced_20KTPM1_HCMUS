@@ -1,6 +1,6 @@
-import { LocationInfoPopup } from "@/core/models/map.model";
+import { CoordinatesPopup } from "@/core/models/map.model";
 
-function LocationPopup(props: LocationInfoPopup) {
+function LocationPopup(props: CoordinatesPopup) {
     return (
         <div className="w-full">
             <p className="text-lg font-semibold mb-2">{props.title}</p>
