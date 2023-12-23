@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm'
-
+import { config } from 'dotenv'
+config()
 class Database {
   private static instance: DataSource
 
@@ -8,17 +9,17 @@ class Database {
   static getInstance(): DataSource {
     if (!Database.instance) {
       Database.instance = new DataSource({
-        type: 'mysql',
-        host: 'localhost',
-        port: 3306,
-        username: 'root',
-        password: 'pass',
-        database: 'ads_management',
+        type: process.env.DB_TYPE as any,
+        host: process.env.DB_HOST,
+        port: parseInt(process.env.DB_PORT, 10),
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
         entities: ['src/orm/entities/*{.ts,.js}'],
         migrations: ['src/migrations/*.ts', 'dist/migrations/*{.ts,.js}'],
-        synchronize: true
+        synchronize: false,
       })
-      console.log('entity', Database.getInstance().options.entities)
+      console.log('entity', process.env.DB_HOST)
     }
 
     return Database.instance

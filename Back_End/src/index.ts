@@ -3,6 +3,9 @@ const app = express()
 const router = express.Router()
 import { defaultErrorHandler } from './middlewares/error.middlewares'
 import { myDataSource } from './orm/connectDb'
+import dotenv from 'dotenv';
+dotenv.config();
+const PORT = process.env.PORT || 3001;
 
 myDataSource
   .initialize()
@@ -15,6 +18,6 @@ myDataSource
 
 app.use(express.json())
 app.use(defaultErrorHandler)
-app.listen(3001, () => {
-  console.log('server is running')
+app.listen(PORT, () => {
+  console.log('server is running on port', PORT)
 })
