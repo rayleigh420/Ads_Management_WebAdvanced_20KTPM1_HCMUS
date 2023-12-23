@@ -87,7 +87,8 @@
 .ant-layout-sider.ant-layout-sider-collapsed {
   max-width: 138px !important;
   width: 138px !important;
-  .ant-menu-item {
+  .ant-menu-item,
+  .ant-menu-submenu-title {
     display: flex;
     align-items: center;
     flex-direction: column;
