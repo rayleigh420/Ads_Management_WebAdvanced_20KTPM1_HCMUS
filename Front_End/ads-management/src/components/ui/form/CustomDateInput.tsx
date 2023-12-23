@@ -40,6 +40,7 @@ export const CustomDateInput = <T extends object>({
     <Form.Item<T>
       name={name as any}
       rules={rules}
+      labelCol={{ span: 24 }}
       label={label}
       wrapperCol={{ span: spanCol }}
       className={classNameForm}

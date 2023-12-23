@@ -4,8 +4,14 @@ export const MY_ROUTE = {
   REQUIRE_LISENCE: '/require',
   REQUIRE_EDIT: '/require/:id',
   COMPANY_DETAIL: '/company/:id',
-  AD_DETAIL: '/ad/:id',
-  LOGIN: '/login'
+  LOGIN: '/login',
+  DISTRICT: '/district',
+  ADS: {
+    self: '/ads',
+    detail: (id: string) => `/ads/${id}`,
+    REQUIRE_EDIT: '/ads/required-edit',
+    LOCATION: '/ads/location',
+  },
 };
 
 export const DEFAULT_ROUTE = MY_ROUTE.HOME;

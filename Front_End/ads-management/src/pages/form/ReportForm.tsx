@@ -31,31 +31,29 @@ export default function ReportForm() {
       <div className='w-[800px] m-auto'>
         <h1 className='text-3xl font-bold text-center mb-11'>Báo cáo địa điểm hoặc quảng cáo</h1>
         <Form
-          name='report-form'
+          name='report'
           initialValues={{}}
-          onFinish={handleSubmit}
+          onFinish={(values) => console.log(values)}
           autoComplete='off'
           colon={false}
           labelAlign='left'
-          className=''
+          className='mt-11'
         >
           <CustomTextInput<any>
             name='username'
             label='Họ tên người gửi báo cáo'
             rules={[{ required: true, message: 'Please input your name!' }]}
           />
-          <div className='flex justify-between'>
+          <div className='flex justify-between gap-5'>
             <CustomTextInput<any>
               name='email'
               label='Email'
               rules={[{ required: true, message: 'Please input your email!' }]}
-              classNameInput='w-[250px]'
             />
             <CustomTextInput<any>
               name='phone'
               label='Số điện thoại liên lạc'
               rules={[{ required: true, message: 'Please input your phone!' }]}
-              classNameInput='w-[250px]'
             />
 
             <CustomSelectInput<any>
@@ -70,7 +68,12 @@ export default function ReportForm() {
             />
           </div>
 
-          <Form.Item label='Nội dung báo cáo' name='report-content' className='h-[416px] mt-10'>
+          <Form.Item
+            label='Nội dung báo cáo'
+            name='report-content'
+            className='h-[416px] '
+            labelCol={{ span: 24 }}
+          >
             <Editor
               apiKey='t8nah5tn0cpxgd8k8raf0zzt0c4pxf3rl54o1ys4xfto7k0a'
               initialValue='<p>This is the initial content of the editor</p>'
@@ -92,7 +95,12 @@ export default function ReportForm() {
               }}
             />
           </Form.Item>
-          <Form.Item label='Hình ảnh báo cáo' name='report-image'>
+          <Form.Item
+            label='Hình ảnh báo cáo'
+            name='report-image'
+            className='mt-12'
+            labelCol={{ span: 24 }}
+          >
             <Upload
               action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
               listType='picture'
@@ -105,14 +113,10 @@ export default function ReportForm() {
             <br />
           </Form.Item>
           <div className='flex justify-between'>
-            <Button
-              type='primary'
-              htmlType='submit'
-              className={`h-[54px] p-[15px] mt-60 bg-cyan-600`}
-            >
+            <Button type='primary' htmlType='submit' className={`h-[54px] p-[15px] bg-cyan-600`}>
               Submit
             </Button>
-            <div className='mt-60'>
+            <div className=''>
               <HCaptcha sitekey='d28eb78d-8dfb-4499-a7bb-46f87d8c5553' />
             </div>
           </div>

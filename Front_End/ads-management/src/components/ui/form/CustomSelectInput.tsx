@@ -26,13 +26,18 @@ const CustomSelectInput = <T extends object>({
   showSearch,
 }: CustomSelectInputProps<T>) => {
   return (
-    <Form.Item name={name as any} rules={rules} label={label} className={classNameForm}>
+    <Form.Item
+      name={name as any}
+      rules={rules}
+      label={label}
+      className={classNameForm}
+      labelCol={{ span: 24 }}
+    >
       <Select
-        className={`h-[39px] ${classNameSelect} mb-10`}
+        className={`h-[39px] ${classNameSelect}`}
         disabled={disabled}
         options={options}
         showSearch={showSearch}
-        defaultValue={options && options[0] && options[0].value}
       />
     </Form.Item>
   );
