@@ -20,7 +20,7 @@ const routes: {
   label: string;
   children?: { key: string; label: string }[];
 }[] = [
-  { key: 'report', label: 'report' },
+  { key: 'report', label: 'Báo cáo' },
   { key: 'district', label: 'Quản lý quận' },
   { key: 'ward', label: 'Quản lý phường' },
   {
