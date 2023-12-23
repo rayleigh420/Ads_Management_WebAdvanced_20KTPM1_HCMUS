@@ -1,7 +1,7 @@
 import Map, { FullscreenControl, GeolocateControl, Layer, MapEvent, MapRef, Marker, NavigationControl, Popup, ScaleControl } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AimOutlined } from '@ant-design/icons';
+import { AimOutlined, ExclamationOutlined, MoreOutlined } from '@ant-design/icons';
 import { LocationInfo } from '@/core/models/map.model';
 import { DEFAULT_LON_LAT_LOCTION, MAP_STYLES } from '@/core/constants/map.constants';
 import { Button } from 'antd';
@@ -9,6 +9,7 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import mapboxgl from 'mapbox-gl';
 import LocationPopup from './components/Popup';
+import Advertise from './components/Advertise';
 
 const HomePage = () => {
   //current public and secret key here
@@ -148,43 +149,48 @@ const HomePage = () => {
   };
 
   return (
-    <div className='w-full h-[80vh] flex  items-center justify-center flex-col'>
-      <Map
-        mapboxAccessToken={publicKey}
-        style={{ width: '100%', height: '100%' }}
-        mapStyle={mapStyle}
-        trackResize
-        ref={mapRef}
-        onLoad={handleLoadMap}
-      >
-        {markers}
-        <FullscreenControl />
-        <GeolocateControl
-          trackUserLocation
-          showUserLocation={true}
-          showUserHeading={true}
-          showAccuracyCircle={true}
-          ref={geoControlRef}
-        />
-        <NavigationControl />
-        <ScaleControl style={{ color: 'white', backgroundColor: 'gray' }} />
+    <div className='w-full flex'>
+      <div className='h-[80vh] w-[75%] flex items-center justify-center flex-col'>
+        <Map
+          mapboxAccessToken={publicKey}
+          style={{ width: '100%', height: '100%' }}
+          mapStyle={mapStyle}
+          trackResize
+          ref={mapRef}
+          onLoad={handleLoadMap}
+        >
+          {markers}
+          <FullscreenControl />
+          <GeolocateControl
+            trackUserLocation
+            showUserLocation={true}
+            showUserHeading={true}
+            showAccuracyCircle={true}
+            ref={geoControlRef}
+          />
+          <NavigationControl />
+          <ScaleControl style={{ color: 'white', backgroundColor: 'gray' }} />
 
-        {showPopup && (
-          <Popup longitude={selectedMarker.longitude} latitude={selectedMarker.latitude}
-            anchor="bottom"
-            onClose={handleClosePopup}
-            closeOnClick={false}
-            focusAfterOpen
-          >
-            <LocationPopup
-              title='Cổ đông chính trị'
-              description='Đất công/ Công viên/ Hành lang an toàn giao thông.'
-              location='Đồng Khởi, Nguyễn Du'
-              status='Đã quy hoạch'
-            />
-          </Popup>)}
-      </Map>
-      <Button size='large' onClick={handleChangeMapStyle} className='bg-blue-400 text-white mt-4'>Change Map Style</Button>
+          {showPopup && (
+            <Popup longitude={selectedMarker.longitude} latitude={selectedMarker.latitude}
+              anchor="bottom"
+              onClose={handleClosePopup}
+              closeOnClick={false}
+              focusAfterOpen
+            >
+              <LocationPopup
+                title='Cổ đông chính trị'
+                description='Đất công/ Công viên/ Hành lang an toàn giao thông.'
+                location='Đồng Khởi, Nguyễn Du'
+                status='Đã quy hoạch'
+              />
+            </Popup>)}
+        </Map>
+        <Button size='large' onClick={handleChangeMapStyle} className='bg-blue-400 text-white mt-4'>Change Map Style</Button>
+      </div>
+      <div className='ml-6 w-[25%]'>
+        <Advertise />
+      </div>
     </div>
   );
 };
