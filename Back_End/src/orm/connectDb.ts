@@ -1,8 +1,8 @@
-import { DataSource } from 'typeorm'
-import { config } from 'dotenv'
-config()
+import { DataSource } from 'typeorm';
+import { config } from 'dotenv';
+config();
 class Database {
-  private static instance: DataSource
+  private static instance: DataSource;
 
   private constructor() {}
 
@@ -18,12 +18,12 @@ class Database {
         entities: ['src/orm/entities/*{.ts,.js}'],
         migrations: ['src/migrations/*.ts', 'dist/migrations/*{.ts,.js}'],
         synchronize: false
-      })
-      console.log('entity', process.env.DB_HOST)
+      });
+      console.log('entity', process.env.DB_HOST);
     }
 
-    return Database.instance
+    return Database.instance;
   }
 }
 
-export const myDataSource = Database.getInstance()
+export const myDataSource = Database.getInstance();
