@@ -17,9 +17,13 @@ import { DEFAULT_LON_LAT_LOCTION, MAP_STYLES } from '@/core/constants/map.consta
 import { Button } from 'antd';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { MapLayerMouseEvent } from 'mapbox-gl';
+import axios from 'axios';
 import LocationPopup from './components/Popup';
+import Location from './components/Location';
 import Advertise from './components/Advertise';
+import Pin from './components/Pin';
+import { set } from 'react-hook-form';
 
 const HomePage = () => {
   //current public and secret key here
@@ -54,15 +58,26 @@ const HomePage = () => {
       longitude: 106.66094109691875,
       latitude: 10.802745704872967,
     },
+    {
+      longitude: 107.07597921052809,
+      latitude: 10.341370911378078,
+    },
   ];
-
   const [selectedMarker, setSelectedMarker] = useState<Coordinates>({
     longitude: DEFAULT_LON_LAT_LOCTION,
     latitude: -DEFAULT_LON_LAT_LOCTION,
   });
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
+  const [showPin, setShowPin] = useState(false);
+  const [clickedCoordinates, setClickedCoordinates] = useState({ longitude: 0, latitude: 0 });
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [addressExisted, setAddressExisted] = useState(true);
+
   const handleClickMarker = useCallback((location: Coordinates) => {
+    console.log('location');
+    setShowPin(false);
     setSelectedMarker(location);
   }, []);
 
@@ -70,8 +85,11 @@ const HomePage = () => {
     if (
       selectedMarker.latitude != DEFAULT_LON_LAT_LOCTION &&
       selectedMarker.longitude != DEFAULT_LON_LAT_LOCTION
-    )
+    ) {
+      setShowPin(false);
       setShowPopup(true);
+    }
+    console.log('selectedMarker', selectedMarker);
   }, [selectedMarker]);
 
   const handleClosePopup = () => {
@@ -165,6 +183,49 @@ const HomePage = () => {
     [locations],
   );
 
+  const pins = useMemo(
+    () => (
+      <Marker
+        key={clickedCoordinates.longitude}
+        longitude={clickedCoordinates.longitude}
+        latitude={clickedCoordinates.latitude}
+      >
+        <Pin />
+      </Marker>
+    ),
+    [clickedCoordinates],
+  );
+  console.log('popup', showPopup);
+  console.log('pin', showPin);
+  // get lng, lat, place_name when click random location on map
+  const handleMapClick = (event: MapLayerMouseEvent) => {
+    const { lngLat } = event;
+    const longitude = lngLat.lng;
+    const latitude = lngLat.lat;
+
+    if (showPopup === false) {
+      setShowPin(true);
+      setClickedCoordinates({ longitude, latitude });
+      axios
+        .get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json`, {
+          params: {
+            access_token: publicKey,
+          },
+        })
+        .then((res) => {
+          setName(res.data.features[0].text);
+          if (res.data.features[0].properties.address === undefined) {
+            setAddressExisted(false);
+          } else {
+            setAddressExisted(true);
+            setAddress(
+              res.data.features[0].properties.address + ', ' + res.data.features[3].place_name,
+            );
+          }
+        });
+    }
+  };
+
   return (
     <div className='w-full flex'>
       <div className='h-[80vh] w-[75%] flex items-center justify-center flex-col'>
@@ -175,8 +236,10 @@ const HomePage = () => {
           trackResize
           ref={mapRef}
           onLoad={handleLoadMap}
+          onClick={(event) => handleMapClick(event)}
         >
           {markers}
+          {showPin && pins}
           <FullscreenControl />
           <GeolocateControl
             trackUserLocation
@@ -211,19 +274,23 @@ const HomePage = () => {
         </Button>
       </div>
       <div className='ml-6 w-[25%]'>
-        <Advertise
-          advertisingLocation={{
-            type: 'Đất công/ Công viên/ Hành lang an toàn giao thông',
-            address: 'Đồng Khởi - Nguyễn Du',
-            size: '2.5m x 10m',
-            quantity: '1 trụ/ 1 bảng',
-            formOfAdvertising: 'cổ đông chính trị',
-            name: 'Trụ, cụm pano',
-            image: '',
-            expirationDate: '12/12/2024'
-          }}
-          coordinates={selectedMarker}
-        />
+        {showPopup && (
+          <Advertise
+            advertisingLocation={{
+              id: '1',
+              type: 'Đất công/ Công viên/ Hành lang an toàn giao thông',
+              address: 'Đồng Khởi - Nguyễn Du',
+              size: '2.5m x 10m',
+              quantity: '1 trụ/ 1 bảng',
+              formOfAdvertising: 'cổ đông chính trị',
+              name: 'Trụ, cụm pano',
+              image: '',
+              expirationDate: '12/12/2024',
+            }}
+            coordinates={selectedMarker}
+          />
+        )}
+        {showPin && <Location name={name} address={address} addressExisted={addressExisted} />}
       </div>
     </div>
   );
