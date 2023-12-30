@@ -11,9 +11,7 @@ import Map, {
 } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AimOutlined, ExclamationOutlined, MoreOutlined } from '@ant-design/icons';
-import { Coordinates } from '@/core/models/map.model';
-import { DEFAULT_LON_LAT_LOCTION, MAP_STYLES } from '@/core/constants/map.constants';
+import { DEFAULT_LON_LAT_LOCTION, MAP_STYLES, REGEX_COORDINATES_GEOCODER } from '@/core/constants/map.constants';
 import { Button } from 'antd';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
@@ -24,6 +22,9 @@ import Location from './components/Location';
 import Advertise from './components/Advertise';
 import Pin from './components/Pin';
 import { set } from 'react-hook-form';
+import { AdvertisingLocationInfo } from '@/core/models/adversise.model';
+import { AdvertisingLocationType } from '@/core/enums/AdvertisingLocationType.enum';
+import MarkerCustom from './components/MarkerCustom';
 
 const HomePage = () => {
   //current public and secret key here
@@ -37,36 +38,146 @@ const HomePage = () => {
   const mapRef = useRef<MapRef>();
   const geoControlRef = useRef<mapboxgl.GeolocateControl>();
 
-  const locations: Coordinates[] = [
+  //mock data for test map
+  const locations: AdvertisingLocationInfo[] = [
     {
-      longitude: 106.65920130189151,
-      latitude: 10.80456866726492,
+      advertisingLocation: {
+        id: "1",
+        typeString: 'Đất công/ Công viên/ Hành lang an toàn giao thông 1',
+        address: 'Đồng Khởi - Nguyễn Du',
+        type: AdvertisingLocationType.BusStop,
+        size: '2.5m x 10m',
+        quantity: '1 trụ/ 1 bảng',
+        formOfAdvertising: 'cổ động chính trị',
+        name: 'Trụ, cụm pano',
+        image: '',
+        expirationDate: '12/12/2024'
+      },
+      coordinates: {
+        longitude: 106.65920130189151,
+        latitude: 10.80456866726492,
+      }
     },
     {
-      longitude: 106.65931931910323,
-      latitude: 10.804689861576456,
+      advertisingLocation: {
+        id: "2",
+        typeString: 'Đất công/ Công viên/ Hành lang an toàn giao thông 2',
+        address: 'Đồng Khởi - Nguyễn Du',
+        type: AdvertisingLocationType.ShoppingMall,
+        size: '2.5m x 10m',
+        quantity: '1 trụ/ 1 bảng',
+        formOfAdvertising: 'cổ động chính trị',
+        name: 'Trụ, cụm pano',
+        image: '',
+        expirationDate: '12/12/2024'
+      },
+      coordinates:
+      {
+        longitude: 106.65931931910323,
+        latitude: 10.804689861576456,
+      }
     },
     {
-      longitude: 106.65957529854192,
-      latitude: 10.804592977044063,
+      advertisingLocation: {
+        id: "3",
+        typeString: 'Đất công/ Công viên/ Hành lang an toàn giao thông 3',
+        address: 'Đồng Khởi - Nguyễn Du',
+        type: AdvertisingLocationType.PublicLand,
+        size: '2.5m x 10m',
+        quantity: '1 trụ/ 1 bảng',
+        formOfAdvertising: 'cổ động chính trị',
+        name: 'Trụ, cụm pano',
+        image: '',
+        expirationDate: '12/12/2024'
+      },
+      coordinates:
+      {
+        longitude: 106.65957529854192,
+        latitude: 10.804592977044063,
+      }
     },
     {
-      longitude: 106.66076782699842,
-      latitude: 10.803450999515064,
+      advertisingLocation: {
+        id: "3",
+        typeString: 'Đất công/ Công viên/ Hành lang an toàn giao thông 4',
+        address: 'Đồng Khởi - Nguyễn Du',
+        type: AdvertisingLocationType.GasStation,
+        size: '2.5m x 10m',
+        quantity: '1 trụ/ 1 bảng',
+        formOfAdvertising: 'cổ động chính trị',
+        name: 'Trụ, cụm pano',
+        image: '',
+        expirationDate: '12/12/2024'
+      },
+      coordinates:
+      {
+        longitude: 106.66076782699842,
+        latitude: 10.803450999515064,
+      }
     },
     {
-      longitude: 106.66094109691875,
-      latitude: 10.802745704872967,
+      advertisingLocation: {
+        id: "4",
+        typeString: 'Đất công/ Công viên/ Hành lang an toàn giao thông 5',
+        address: 'Đồng Khởi - Nguyễn Du',
+        type: AdvertisingLocationType.House,
+        size: '2.5m x 10m',
+        quantity: '1 trụ/ 1 bảng',
+        formOfAdvertising: 'cổ động chính trị',
+        name: 'Trụ, cụm pano',
+        image: '',
+        expirationDate: '12/12/2024'
+      },
+      coordinates:
+      {
+        longitude: 106.66094109691875,
+        latitude: 10.802745704872967,
+      }
     },
     {
-      longitude: 107.07597921052809,
-      latitude: 10.341370911378078,
-    },
+      advertisingLocation: {
+        id: "5",
+        typeString: 'Đất công/ Công viên/ Hành lang an toàn giao thông 5',
+        address: 'Đồng Khởi - Nguyễn Du',
+        type: AdvertisingLocationType.House,
+        size: '2.5m x 10m',
+        quantity: '1 trụ/ 1 bảng',
+        formOfAdvertising: 'cổ động chính trị',
+        name: 'Trụ, cụm pano',
+        image: '',
+        expirationDate: '12/12/2024'
+      },
+      coordinates:
+      {
+        longitude: 107.07597921052809,
+        latitude: 10.341370911378078,
+      }
+    }
   ];
-  const [selectedMarker, setSelectedMarker] = useState<Coordinates>({
-    longitude: DEFAULT_LON_LAT_LOCTION,
-    latitude: -DEFAULT_LON_LAT_LOCTION,
-  });
+
+  const getLocationDefault = () => {
+    return {
+      advertisingLocation: {
+        id: "",
+        typeString: '',
+        type: -1,
+        address: '',
+        size: '',
+        quantity: '',
+        formOfAdvertising: '',
+        name: '',
+        image: '',
+        expirationDate: ''
+      },
+      coordinates:
+      {
+        longitude: DEFAULT_LON_LAT_LOCTION,
+        latitude: DEFAULT_LON_LAT_LOCTION,
+      }
+    }
+  }
+
+  const [selectedMarker, setSelectedMarker] = useState<AdvertisingLocationInfo>(getLocationDefault());
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const [showPin, setShowPin] = useState(false);
@@ -75,7 +186,7 @@ const HomePage = () => {
   const [address, setAddress] = useState('');
   const [addressExisted, setAddressExisted] = useState(true);
 
-  const handleClickMarker = useCallback((location: Coordinates) => {
+  const handleClickMarker = useCallback((location: AdvertisingLocationInfo) => {
     console.log('location');
     setShowPin(false);
     setSelectedMarker(location);
@@ -83,8 +194,8 @@ const HomePage = () => {
 
   useEffect(() => {
     if (
-      selectedMarker.latitude != DEFAULT_LON_LAT_LOCTION &&
-      selectedMarker.longitude != DEFAULT_LON_LAT_LOCTION
+      selectedMarker.coordinates.latitude != DEFAULT_LON_LAT_LOCTION &&
+      selectedMarker.coordinates.longitude != DEFAULT_LON_LAT_LOCTION
     ) {
       setShowPin(false);
       setShowPopup(true);
@@ -126,7 +237,7 @@ const HomePage = () => {
   const coordinatesGeocoder = (query: string) => {
     // Match anything which looks like
     // decimal degrees coordinate pair.
-    const matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
+    const matches = query.match(REGEX_COORDINATES_GEOCODER);
     if (!matches) {
       return null;
     }
@@ -135,13 +246,13 @@ const HomePage = () => {
       return {
         center: [lng, lat],
         geometry: {
-          type: 'Point',
+          typeString: 'Point',
           coordinates: [lng, lat],
         },
         place_name: 'Lat: ' + lat + ' Lng: ' + lng,
         place_type: ['coordinate'],
         properties: {},
-        type: 'Feature',
+        typeString: 'Feature',
       };
     };
 
@@ -170,15 +281,8 @@ const HomePage = () => {
 
   const markers = useMemo(
     () =>
-      locations.map((location, index) => (
-        <Marker
-          key={location.longitude}
-          longitude={location.longitude}
-          latitude={location.latitude}
-          onClick={() => handleClickMarker(location)}
-        >
-          <AimOutlined style={{ fontSize: '32px', color: 'red' }} />
-        </Marker>
+      locations.map((location) => (
+        <MarkerCustom location={location} handleClickMarker={handleClickMarker} />
       )),
     [locations],
   );
@@ -197,6 +301,7 @@ const HomePage = () => {
   );
   console.log('popup', showPopup);
   console.log('pin', showPin);
+
   // get lng, lat, place_name when click random location on map
   const handleMapClick = (event: MapLayerMouseEvent) => {
     const { lngLat } = event;
@@ -253,15 +358,15 @@ const HomePage = () => {
 
           {showPopup && (
             <Popup
-              longitude={selectedMarker.longitude}
-              latitude={selectedMarker.latitude}
+              longitude={selectedMarker.coordinates.longitude}
+              latitude={selectedMarker.coordinates.latitude}
               anchor='bottom'
               onClose={handleClosePopup}
               closeOnClick={false}
               focusAfterOpen
             >
               <LocationPopup
-                title='Cổ đông chính trị'
+                title='Cổ động chính trị'
                 description='Đất công/ Công viên/ Hành lang an toàn giao thông.'
                 location='Đồng Khởi, Nguyễn Du'
                 status='Đã quy hoạch'
@@ -276,18 +381,8 @@ const HomePage = () => {
       <div className='ml-6 w-[25%]'>
         {showPopup && (
           <Advertise
-            advertisingLocation={{
-              id: '1',
-              type: 'Đất công/ Công viên/ Hành lang an toàn giao thông',
-              address: 'Đồng Khởi - Nguyễn Du',
-              size: '2.5m x 10m',
-              quantity: '1 trụ/ 1 bảng',
-              formOfAdvertising: 'cổ đông chính trị',
-              name: 'Trụ, cụm pano',
-              image: '',
-              expirationDate: '12/12/2024',
-            }}
-            coordinates={selectedMarker}
+            advertisingLocation={selectedMarker.advertisingLocation}
+            coordinates={selectedMarker.coordinates}
           />
         )}
         {showPin && <Location name={name} address={address} addressExisted={addressExisted} />}
