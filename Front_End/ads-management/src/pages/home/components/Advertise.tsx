@@ -10,7 +10,7 @@ function Advertise(props: AdvertisingLocationInfo) {
   const [modal1Open, setModal1Open] = useState(false);
 
   return (
-    <div className='w-full p-6 border bg-[#e6f6fd]'>
+    <div className='w-full p-6 border bg-[#e6f6fd] mb-4'>
       <div className='font-bold text-xl text-center mb-4'>Thông tin bảng quảng cáo</div>
       <div className='text-xl font-bold'>{props.advertisingLocation.name}</div>
       <div className='text-base font-bold text-gray-600 py-2'>
@@ -24,7 +24,7 @@ function Advertise(props: AdvertisingLocationInfo) {
         Hình thức: <b>{props.advertisingLocation.formOfAdvertising}</b>
       </div>
       <div className='text-base font-bold'>
-        Phân loại: <b>{props.advertisingLocation.type}</b>
+        Phân loại: <b>{props.advertisingLocation.typeString}</b>
       </div>
       <div className='flex justify-end gap-4'>
         <Button
