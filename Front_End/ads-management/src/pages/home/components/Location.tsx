@@ -1,4 +1,10 @@
+import { Button, Modal } from 'antd';
+import { ReportForm } from '@/pages';
+import { useState } from 'react';
+
 const Location = (props) => {
+  const [modal1Open, setModal1Open] = useState(false);
+
   return (
     <>
       {props.addressExisted ? (
@@ -41,12 +47,20 @@ const Location = (props) => {
           </div>
           <div className='flex flex-col ml-9 text-secondary-success'>{props.address}</div>
           <div className='flex flex-wrap justify-end'>
-            <button
-              type='button'
-              className='text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg mt-3 px-3 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900 '
-            >
+            <Button danger onClick={() => setModal1Open(true)} className='mt-2'>
               Báo cáo vi phạm
-            </button>
+            </Button>
+            <Modal
+              centered
+              open={modal1Open}
+              onOk={() => setModal1Open(false)}
+              onCancel={() => setModal1Open(false)}
+              footer=''
+              width={1000}
+              style={{ top: 20 }}
+            >
+              <ReportForm />
+            </Modal>
           </div>
         </div>
       ) : (
