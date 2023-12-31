@@ -1,30 +1,30 @@
-import { AdvertisingLocationInfo } from '@/core/models/adversise.model';
+import { AdsOrReportLocationInfo } from '@/core/models/adversise.model';
 import { AdDetailForm, ReportForm } from '@/pages';
 import { ExclamationOutlined, MoreOutlined } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
 import { memo, useState } from 'react';
 
-function AdvertiseInfo(props: AdvertisingLocationInfo) {
-  console.log('12345678');
+function AdvertiseInfo(props: AdsOrReportLocationInfo) {
+  console.log('12345678', props.report);
   const [modal2Open, setModal2Open] = useState(false);
   const [modal1Open, setModal1Open] = useState(false);
 
   return (
     <div className='w-full p-6 border bg-[#e6f6fd] mb-4'>
       <div className='font-bold text-xl text-center mb-4'>Thông tin bảng quảng cáo</div>
-      <div className='text-xl font-bold'>{props.advertisingLocation.name}</div>
+      <div className='text-xl font-bold'>{props.advertisingLocation?.name}</div>
       <div className='text-base font-bold text-gray-600 py-2'>
-        {props.advertisingLocation.address}
+        {props.advertisingLocation?.address}
       </div>
-      <div className='text-base font-bold'>Kích thước: {props.advertisingLocation.size}</div>
+      <div className='text-base font-bold'>Kích thước: {props.advertisingLocation?.size}</div>
       <div className='text-base font-bold'>
-        Số lượng: <b>{props.advertisingLocation.quantity}</b>
-      </div>
-      <div className='text-base font-bold'>
-        Hình thức: <b>{props.advertisingLocation.formOfAdvertising}</b>
+        Số lượng: <b>{props.advertisingLocation?.quantity}</b>
       </div>
       <div className='text-base font-bold'>
-        Phân loại: <b>{props.advertisingLocation.typeString}</b>
+        Hình thức: <b>{props.advertisingLocation?.formOfAdvertising}</b>
+      </div>
+      <div className='text-base font-bold'>
+        Phân loại: <b>{props.advertisingLocation?.typeString}</b>
       </div>
       <div className='flex justify-end gap-4'>
         <Button
@@ -44,7 +44,7 @@ function AdvertiseInfo(props: AdvertisingLocationInfo) {
           width={1000}
           style={{ top: 20 }}
         >
-          <ReportForm />
+          <ReportForm initialValues={props.report} />
         </Modal>
 
         <Button

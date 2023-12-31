@@ -1,7 +1,7 @@
 import { CustomPin } from '@/components/ui';
-import { AdvertisingLocationInfo } from '@/core/models/adversise.model';
-import { Coordinates } from '@/core/models/map.model';
+import { AdsOrReportLocationInfo } from '@/core/models/adversise.model';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import { Switch } from 'antd';
 import { MapLayerMouseEvent } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useRef, useState } from 'react';
@@ -12,17 +12,18 @@ import MapComponent from './components/MapComponent';
 import ShowMarkers from './components/ShowMarkers';
 
 const HomePage = () => {
-  const [selectedMarker, setSelectedMarker] = useState<AdvertisingLocationInfo>();
+  const [selectedMarker, setSelectedMarker] = useState<AdsOrReportLocationInfo>();
+  const [isReport, setIsReport] = useState<boolean>(true);
+  const [isZone, setIsZone] = useState<boolean>(true);
 
   const isSelectedMarker = useRef(false);
-  const [locationPin, setLocationPin] = useState<Coordinates>();
 
-  const addSelectedMarker = useCallback(
-    (location?: AdvertisingLocationInfo) => {
+  const handleSelectedMarker = useCallback(
+    (location?: AdsOrReportLocationInfo) => {
       if (location) {
-        setLocationPin(undefined);
         isSelectedMarker.current = true;
       }
+      console.log('location', location);
       setSelectedMarker(location);
     },
     [selectedMarker],
@@ -32,8 +33,9 @@ const HomePage = () => {
     const { lngLat } = event;
 
     if (!isSelectedMarker.current) {
-      addSelectedMarker(undefined);
-      setLocationPin({ longitude: lngLat.lng, latitude: lngLat.lat });
+      handleSelectedMarker({
+        coordinates: { longitude: lngLat.lng, latitude: lngLat.lat },
+      });
     }
     isSelectedMarker.current = false;
   }, []);
@@ -42,12 +44,18 @@ const HomePage = () => {
     <div className='w-full flex'>
       <MapComponent onMapClick={handleMapClick}>
         <div>
-          <ShowMarkers setSelectedMarker={addSelectedMarker} selectedMarker={selectedMarker} />
-          {locationPin && (
+          <ShowMarkers
+            setSelectedMarker={handleSelectedMarker}
+            selectedMarker={selectedMarker}
+            isReport={isReport}
+            isZone={isZone}
+          />
+
+          {selectedMarker && !selectedMarker?.advertisingLocation && !selectedMarker?.report && (
             <Marker
-              key={locationPin.longitude}
-              longitude={locationPin.longitude}
-              latitude={locationPin.latitude}
+              key={selectedMarker.coordinates.longitude}
+              longitude={selectedMarker.coordinates.longitude}
+              latitude={selectedMarker.coordinates.latitude}
             >
               <CustomPin />
             </Marker>
@@ -55,13 +63,37 @@ const HomePage = () => {
         </div>
       </MapComponent>
       <div className='ml-6 w-[25%]'>
-        {selectedMarker && (
+        <div className='flex justify-between'>
+          <div className='text-xl font-semibold'>Báo cáo</div>
+          <Switch
+            value={isReport}
+            onChange={(e) => {
+              setIsReport(e);
+            }}
+          />
+        </div>
+        <div className='flex justify-between'>
+          <div className='text-xl font-semibold'>Quy hoạch</div>
+          <Switch
+            value={isZone}
+            onChange={(e) => {
+              setIsZone(e);
+            }}
+          />
+        </div>
+        {selectedMarker?.advertisingLocation && (
           <AdvertiseInfo
             advertisingLocation={selectedMarker.advertisingLocation}
             coordinates={selectedMarker.coordinates}
+            report={selectedMarker.report}
           />
         )}
-        {locationPin && <LocationInfo location={locationPin} />}
+        {!selectedMarker?.advertisingLocation && (
+          <LocationInfo
+            location={selectedMarker?.coordinates}
+            reportInfo={selectedMarker?.report}
+          />
+        )}
       </div>
     </div>
   );

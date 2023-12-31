@@ -1,2 +1,2 @@
-export { default as CustomMaker } from './CustomMaker';
+export { default as CustomMarkerAdvertise } from './CustomMarkerAdvertise';
 export { default as CustomPin } from './CustomPin';
