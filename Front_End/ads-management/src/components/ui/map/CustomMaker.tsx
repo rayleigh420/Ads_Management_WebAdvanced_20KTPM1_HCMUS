@@ -1,20 +1,21 @@
-import { AdvertisingLocationInfo } from "@/core/models/adversise.model";
-import { FC } from "react";
-import { Marker } from "react-map-gl";
+import { AdvertisingLocationType } from '@/core/enums/AdvertisingLocationType.enum';
+import { AdvertisingLocationInfo } from '@/core/models/adversise.model';
 import { AimOutlined } from '@ant-design/icons';
-import { AdvertisingLocationType } from "@/core/enums/AdvertisingLocationType.enum";
-interface MarkerCustomProps {
+import { FC, memo } from 'react';
+import { Marker } from 'react-map-gl';
+interface CustomMarkerProps {
   location: AdvertisingLocationInfo;
   handleClickMarker: any;
 }
 
-const MarkerCustom: FC<MarkerCustomProps> = ({ location, handleClickMarker }) => {
+const CustomMarker: FC<CustomMarkerProps> = ({ location, handleClickMarker }) => {
   return (
     <Marker
       key={location.coordinates.longitude}
       longitude={location.coordinates.longitude}
       latitude={location.coordinates.latitude}
       onClick={() => handleClickMarker(location)}
+      draggable
     >
       {/* currently, we temporarily use that method to change the icon color  */}
       {location.advertisingLocation.type === AdvertisingLocationType.BusStop && (
@@ -40,6 +41,6 @@ const MarkerCustom: FC<MarkerCustomProps> = ({ location, handleClickMarker }) =>
       )}
     </Marker>
   );
-}
+};
 
-export default MarkerCustom;
+export default memo(CustomMarker);

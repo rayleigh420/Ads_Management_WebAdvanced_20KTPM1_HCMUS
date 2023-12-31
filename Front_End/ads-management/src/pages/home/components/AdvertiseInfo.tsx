@@ -1,11 +1,11 @@
+import { AdvertisingLocationInfo } from '@/core/models/adversise.model';
+import { AdDetailForm, ReportForm } from '@/pages';
+import { ExclamationOutlined, MoreOutlined } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
-import { AimOutlined, ExclamationOutlined, MoreOutlined } from '@ant-design/icons';
-import { AdvertiseInfo, AdvertisingLocationInfo } from '@/core/models/adversise.model';
-import { useState } from 'react';
-import { AdDetailForm } from '@/pages';
-import { ReportForm } from '@/pages';
+import { memo, useState } from 'react';
 
-function Advertise(props: AdvertisingLocationInfo) {
+function AdvertiseInfo(props: AdvertisingLocationInfo) {
+  console.log('12345678');
   const [modal2Open, setModal2Open] = useState(false);
   const [modal1Open, setModal1Open] = useState(false);
 
@@ -69,4 +69,4 @@ function Advertise(props: AdvertisingLocationInfo) {
   );
 }
 
-export default Advertise;
+export default memo(AdvertiseInfo);

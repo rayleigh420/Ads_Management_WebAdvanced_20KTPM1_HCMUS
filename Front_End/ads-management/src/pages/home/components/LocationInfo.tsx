@@ -1,13 +1,46 @@
-import { Button, Modal } from 'antd';
+import { addressMapDetailApi } from '@/apis/map-box/address-map_detail.api';
+import { Coordinates } from '@/core/models/map.model';
 import { ReportForm } from '@/pages';
-import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { Button, Modal } from 'antd';
+import { memo, useEffect, useState } from 'react';
 
-const Location = (props) => {
+type LocationInfoProps = {
+  location?: Coordinates;
+};
+
+const LocationInfo = ({ location }: LocationInfoProps) => {
   const [modal1Open, setModal1Open] = useState(false);
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [addressExisted, setAddressExisted] = useState(false);
+
+  const { mutate: mutateAddressDetail } = useMutation({
+    mutationFn: (data: Coordinates) => addressMapDetailApi(data),
+    onSuccess: (res) => {
+      setName(res.data.features[0].text);
+      if (res.data.features[0].properties.address === undefined) {
+        setAddressExisted(false);
+      } else {
+        setAddressExisted(true);
+        setAddress(
+          res.data.features[0].properties.address + ', ' + res.data.features[3].place_name,
+        );
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (location) {
+      mutateAddressDetail(location);
+    } else {
+      setAddressExisted(false);
+    }
+  }, [location]);
 
   return (
     <>
-      {props.addressExisted ? (
+      {addressExisted ? (
         <div className='bg-secondary-bgsuccess p-5 rounded-lg'>
           <div className='flex'>
             <svg
@@ -42,10 +75,8 @@ const Location = (props) => {
             </svg>
             <h1 className='text-secondary-success text-base'>Thông tin địa điểm</h1>
           </div>
-          <div className='flex flex-col ml-9 text-secondary-success font-semibold'>
-            {props.name}
-          </div>
-          <div className='flex flex-col ml-9 text-secondary-success'>{props.address}</div>
+          <div className='flex flex-col ml-9 text-secondary-success font-semibold'>{name}</div>
+          <div className='flex flex-col ml-9 text-secondary-success'>{address}</div>
           <div className='flex flex-wrap justify-end'>
             <Button danger onClick={() => setModal1Open(true)} className='mt-2'>
               Báo cáo vi phạm
@@ -105,4 +136,4 @@ const Location = (props) => {
   );
 };
 
-export default Location;
+export default memo(LocationInfo);
