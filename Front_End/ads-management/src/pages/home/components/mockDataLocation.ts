@@ -1,8 +1,8 @@
 import { AdvertisingLocationType } from '@/core/enums/AdvertisingLocationType.enum';
-import { AdvertisingLocationInfo } from '@/core/models/adversise.model';
+import { AdsOrReportLocationInfo } from '@/core/models/adversise.model';
 
 //mock data for test map
-export const mockDataLocations: AdvertisingLocationInfo[] = [
+export const mockDataLocations: AdsOrReportLocationInfo[] = [
   {
     advertisingLocation: {
       id: '1',
@@ -16,27 +16,32 @@ export const mockDataLocations: AdvertisingLocationInfo[] = [
       image: '',
       expirationDate: '12/12/2024',
     },
-    coordinates: {
-      longitude: 106.65920130189151,
-      latitude: 10.80456866726492,
+    report: {
+      username: 'Trụ, cụm pano',
+      email: 'manhtu2272002@gmail.com',
+      phone: '0974220702',
+      select: 'eeee',
+      reportContent: 'k có sao',
+      image: 'wwe',
     },
+    coordinates: {
+      longitude: 106.729835,
+      latitude: 10.739484,
+    },
+    isZone: true,
   },
   {
-    advertisingLocation: {
-      id: '2',
-      typeString: 'Đất công/ Công viên/ Hành lang an toàn giao thông 2',
-      address: 'Đồng Khởi - Nguyễn Du',
-      type: AdvertisingLocationType.ShoppingMall,
-      size: '2.5m x 10m',
-      quantity: '1 trụ/ 1 bảng',
-      formOfAdvertising: 'cổ động chính trị',
-      name: 'Trụ, cụm pano',
-      image: '',
-      expirationDate: '12/12/2024',
+    report: {
+      username: 'Trụ, cụm pano',
+      email: 'manhtu2272002@gmail.com',
+      phone: '0974220702',
+      select: 'eeee',
+      reportContent: 'k có sao',
+      image: 'wwe',
     },
     coordinates: {
-      longitude: 106.65931931910323,
-      latitude: 10.804689861576456,
+      longitude: 106.715876,
+      latitude: 10.731419,
     },
   },
   {

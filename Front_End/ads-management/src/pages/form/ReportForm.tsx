@@ -1,20 +1,40 @@
 import CustomSelectInput from '@/components/ui/form/CustomSelectInput';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
-import { Button, Divider, Form, Input } from 'antd';
-import { Editor } from '@tinymce/tinymce-react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Upload } from 'antd';
-import { useState, useRef, useEffect } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { Editor } from '@tinymce/tinymce-react';
+import { Button, Divider, Form, Upload } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 
-export default function ReportForm() {
+export type ReportInput = {
+  username: string;
+  email: string;
+  phone: string;
+  select: string;
+  reportContent: string;
+  image: string;
+};
+
+type ReportFormProps = {
+  initialValues?: ReportInput;
+};
+
+export default function ReportForm({ initialValues }: ReportFormProps) {
+  const [form] = Form.useForm<ReportInput>();
   const [fileList, setFileList] = useState([]);
   const [token, setToken] = useState(null);
   const captchaRef = useRef(null);
 
+  console.log('initialValues', initialValues);
   useEffect(() => {
     if (token) console.log(`hCaptcha Token: ${token}`);
   }, [token]);
+
+  useEffect(() => {
+    if (initialValues) {
+      form.setFieldsValue(initialValues);
+    }
+  }, [initialValues]);
 
   return (
     <div className='w-full flex justify-center items-center p-6'>
@@ -26,27 +46,28 @@ export default function ReportForm() {
           onFinish={(values) => console.log(values)}
           autoComplete='off'
           colon={false}
+          form={form}
           labelAlign='left'
           className='mt-11'
         >
-          <CustomTextInput<any>
+          <CustomTextInput<ReportInput>
             name='username'
             label='Họ tên người gửi báo cáo'
             rules={[{ required: true, message: 'Please input your name!' }]}
           />
           <div className='flex justify-between gap-5'>
-            <CustomTextInput<any>
+            <CustomTextInput<ReportInput>
               name='email'
               label='Email'
               rules={[{ required: true, message: 'Please input your email!' }]}
             />
-            <CustomTextInput<any>
+            <CustomTextInput<ReportInput>
               name='phone'
               label='Số điện thoại liên lạc'
               rules={[{ required: true, message: 'Please input your phone!' }]}
             />
 
-            <CustomSelectInput<any>
+            <CustomSelectInput<ReportInput>
               name='select'
               label='Chọn hình thức báo cáo'
               options={[
@@ -58,9 +79,9 @@ export default function ReportForm() {
             />
           </div>
 
-          <Form.Item
+          <Form.Item<ReportInput>
             label='Nội dung báo cáo'
-            name='report-content'
+            name='reportContent'
             className='h-[250px] '
             labelCol={{ span: 24 }}
           >
@@ -85,7 +106,7 @@ export default function ReportForm() {
               }}
             />
           </Form.Item>
-          <Form.Item label='Hình ảnh báo cáo' name='report-image' labelCol={{ span: 24 }}>
+          <Form.Item<ReportInput> label='Hình ảnh báo cáo' name='image' labelCol={{ span: 24 }}>
             <Upload
               action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
               listType='picture'
