@@ -1,9 +1,10 @@
-import { createHash } from 'crypto';
+import { createHash } from 'crypto'
+import { envConfig } from '../constants/config'
 
-export const sha256 = (content: string) => {
-  return createHash('sha256').update(content).digest('hex');
-};
+export function sha256(content: string) {
+  return createHash('sha256').update(content).digest('hex')
+}
 
-export const hashPassword = (content: string) => {
-  return sha256(content + process.env.HASH_SECRET);
-};
+export function hashPassword(password: string) {
+  return sha256(password + envConfig.passwordSecret)
+}
