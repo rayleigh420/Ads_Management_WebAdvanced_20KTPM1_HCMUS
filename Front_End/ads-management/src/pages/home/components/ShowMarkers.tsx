@@ -1,6 +1,6 @@
 import { CustomMaker } from '@/components/ui';
 import { AdvertisingLocationInfo } from '@/core/models/adversise.model';
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { Popup } from 'react-map-gl';
 import LocationPopup from './LocationPopup';
 import { mockDataLocations } from './mockDataLocation';
@@ -10,11 +10,8 @@ type ShowMarkersProps = {
   setSelectedMarker: (location?: AdvertisingLocationInfo) => void;
 };
 
-export default function ShowMarkers({ selectedMarker, setSelectedMarker }: ShowMarkersProps) {
-  // const [selectedMarker, setSelectedMarker] = useState<AdvertisingLocationInfo>();
-
+function ShowMarkers({ selectedMarker, setSelectedMarker }: ShowMarkersProps) {
   const handleClickMarker = useCallback((location: AdvertisingLocationInfo) => {
-    console.log('qwwefdgh');
     setSelectedMarker(location);
   }, []);
 
@@ -47,3 +44,4 @@ export default function ShowMarkers({ selectedMarker, setSelectedMarker }: ShowM
     </div>
   );
 }
+export default memo(ShowMarkers);
