@@ -10,8 +10,11 @@ export class AdvertisingBoard {
   @Column('int', { name: 'location_id', unsigned: true })
   locationId: number;
 
-  @Column('varchar', { name: 'size', nullable: true, length: 20 })
-  size: string | null;
+  @Column('float', { name: 'width', nullable: true })
+  width: number | null;
+
+  @Column('float', { name: 'height', nullable: true })
+  height: number | null;
 
   @Column('int', { name: 'board_type' })
   boardType: number;

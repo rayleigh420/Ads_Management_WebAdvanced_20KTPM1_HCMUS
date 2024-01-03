@@ -3,6 +3,7 @@ const app = express();
 const router = express.Router();
 import { defaultErrorHandler } from './middlewares/error.middlewares';
 import { myDataSource } from './orm/connectDb';
+import paginate from 'express-paginate';
 import dotenv from 'dotenv';
 import indexRouter from './routes/index.routes';
 dotenv.config();
@@ -18,6 +19,7 @@ myDataSource
   });
 
 app.use(express.json());
+app.use(paginate.middleware(5, 50));
 app.use(indexRouter)
 app.use(defaultErrorHandler);
 app.listen(PORT, () => {
