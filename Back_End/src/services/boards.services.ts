@@ -15,6 +15,14 @@ class BoardService {
       .take(limit)
       .getManyAndCount();
   }
+
+  public async getBoardById(id: number) {
+    return await this.boardRepository
+      .createQueryBuilder('board')
+      .leftJoinAndSelect('board.location', 'location')
+      .where('board.id = :id', { id })
+      .getOne();
+  }
 }
 
 export default new BoardService();

@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import {  loginValidator, registerValidator } from '../middlewares/users.middlewares';
+import { getBoardByIdController, getBoardsController } from '../controllers/boards.controllers';
 import { wrapRequestHandler } from '../utils/handler.ultil';
-import { loginController, registerController } from '../controllers/users.controllers';
-import { getBoardsController } from '../controllers/boards.controllers';
 
 const boardsRouter = Router();
 
-boardsRouter.get('/boards', getBoardsController);
+boardsRouter.get('/', wrapRequestHandler(getBoardsController));
+boardsRouter.get('/:id', wrapRequestHandler(getBoardByIdController));
 
 export default boardsRouter;

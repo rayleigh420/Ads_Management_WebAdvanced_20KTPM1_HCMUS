@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { LoginReqBody, RegisterReqBody } from '../models/requets/user.requests';
+import { CreateUserBody, LoginReqBody, RegisterReqBody } from '../models/requets/user.requests';
 import { ParamsDictionary } from 'express-serve-static-core';
 // import databaseService from '~/services/database.services';
 import usersService from '../services/users.services';
@@ -11,11 +11,11 @@ import { USER_MESSAGES } from '../constants/message';
 import { User } from '../orm/entities/User';
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
-  const {user}: any = req;
+  const { user }: any = req;
   console.log('🚀 ~ file: users.controllers.ts:13 ~ loginController ~ user:', user);
   const userId = user.id;
   const result = await usersService.login({ userId });
-  console.log("🚀 ~ file: users.controllers.ts:18 ~ loginController ~ result:", result)
+  console.log('🚀 ~ file: users.controllers.ts:18 ~ loginController ~ result:', result);
   res.json(ApiResponse.success(result, USER_MESSAGES.LOGIN_SUCCESS));
 
   // return res.status(200).json({
@@ -44,21 +44,28 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
   // }
 };
 
-export const registerController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const createAccountController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("🚀 ~ file: users.controllers.ts:50 ~ req.body", req.body);
-    const result = await usersService.register(req.body);
-    console.log("🚀 ~ file: users.controllers.ts:50 ~ result:", result)
-    res.json(ApiResponse.success(result, USER_MESSAGES.REGISTER_SUCCESS));
+    const result = await usersService.createAccount(req.body as CreateUserBody);
+    delete result.password;
+    res.json(ApiResponse.success(result, USER_MESSAGES.CREATE_ACCOUNT_SUCCESS));
   } catch (error) {
     next(error);
   }
 };
 
+export const createAccountAdminController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await usersService.createAccountDepartmentOfficer(req.body);
+    res.json(ApiResponse.success(result, USER_MESSAGES.CREATE_ACCOUNT_SUCCESS));
+  } catch (error) {
+    next(error);
+  }
+};
 // export const logoutController = async (req: Request, res: Response) => {
 //   const refreshToken = req.body.refreshToken;
 //   const result = await usersServices.logout(refreshToken);

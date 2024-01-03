@@ -45,9 +45,8 @@ CREATE TABLE `user` (
     `phone_number` VARCHAR(12) NULL,
     `date_of_birth` DATE NOT NULL,
     `auth_provider` INT,
-    `role_id` INT UNSIGNED NOT NULL,
+    `user_type` INT NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`role_id`) REFERENCES `role`(`id`)
 );
 
 CREATE TABLE `advertising_location` (
@@ -76,11 +75,6 @@ CREATE TABLE `report` (
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `role` (
-    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `role_name` VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`id`)
-);
 
 CREATE TABLE `ward_officier` (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,

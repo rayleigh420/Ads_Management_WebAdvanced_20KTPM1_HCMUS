@@ -2,10 +2,8 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGenerat
 import { DepartmentOfficier } from './DepartmentOfficier';
 import { DistrictOfficier } from './DistrictOfficier';
 import { RefreshToken } from './RefreshToken';
-import { Role } from './Role';
 import { WardOfficier } from './WardOfficier';
 
-@Index('role_id', ['roleId'], {})
 @Entity('user', { schema: 'ads_management' })
 export class User {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
@@ -25,9 +23,9 @@ export class User {
 
   @Column('int', { name: 'auth_provider', nullable: true })
   authProvider: number | null;
-
-  @Column('int', { name: 'role_id', unsigned: true, nullable: true })
-  roleId: number | null;
+  
+  @Column('int', { name: 'user_type', nullable: true })
+  userType: number | null;
 
   @OneToMany(() => DepartmentOfficier, (departmentOfficier) => departmentOfficier.user)
   departmentOfficiers: DepartmentOfficier[];
@@ -37,13 +35,6 @@ export class User {
 
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refreshTokens: RefreshToken[];
-
-  @ManyToOne(() => Role, (role) => role.users, {
-    onDelete: 'NO ACTION',
-    onUpdate: 'NO ACTION'
-  })
-  @JoinColumn([{ name: 'role_id', referencedColumnName: 'id' }])
-  role: Role;
 
   @OneToMany(() => WardOfficier, (wardOfficier) => wardOfficier.user)
   wardOfficiers: WardOfficier[];
