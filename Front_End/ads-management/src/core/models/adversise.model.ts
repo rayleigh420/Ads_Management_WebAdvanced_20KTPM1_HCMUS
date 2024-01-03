@@ -1,7 +1,9 @@
-import { Coordinates } from "./map.model";
+import { Coordinates } from './map.model';
 
 export interface AdvertiseInfo {
-    type: string,
+    id: string;
+    typeString: string,
+    type: number,
     address: string,
     size: string,
     quantity: string,
@@ -11,6 +13,6 @@ export interface AdvertiseInfo {
     expirationDate: string,
 }
 export interface AdvertisingLocationInfo {
-    advertisingLocation: AdvertiseInfo,
-    coordinates: Coordinates
+  advertisingLocation: AdvertiseInfo;
+  coordinates: Coordinates;
 }

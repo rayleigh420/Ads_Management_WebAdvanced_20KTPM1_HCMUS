@@ -11,20 +11,10 @@ export default function ReportForm() {
   const [fileList, setFileList] = useState([]);
   const [token, setToken] = useState(null);
   const captchaRef = useRef(null);
-  // const onLoad = () => {
-  //   // this reaches out to the hCaptcha JS API and runs the
-  //   // execute function on it. you can use other functions as
-  //   // documented here:
-  //   // https://docs.hcaptcha.com/configuration#jsapi
-  //   captchaRef.current.execute();
-  // };
+
   useEffect(() => {
     if (token) console.log(`hCaptcha Token: ${token}`);
   }, [token]);
-
-  const handleSubmit = async (data: any) => {
-    console.log('reponse');
-  };
 
   return (
     <div className='w-full flex justify-center items-center p-6'>
@@ -71,7 +61,7 @@ export default function ReportForm() {
           <Form.Item
             label='Nội dung báo cáo'
             name='report-content'
-            className='h-[416px] '
+            className='h-[250px] '
             labelCol={{ span: 24 }}
           >
             <Editor
@@ -80,7 +70,7 @@ export default function ReportForm() {
               init={{
                 skin: 'snow',
                 icons: 'thin',
-                height: 400,
+                height: 200,
                 menubar: false,
                 plugins: [
                   'advlist autolink lists link image',
@@ -95,12 +85,7 @@ export default function ReportForm() {
               }}
             />
           </Form.Item>
-          <Form.Item
-            label='Hình ảnh báo cáo'
-            name='report-image'
-            className='mt-12'
-            labelCol={{ span: 24 }}
-          >
+          <Form.Item label='Hình ảnh báo cáo' name='report-image' labelCol={{ span: 24 }}>
             <Upload
               action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
               listType='picture'

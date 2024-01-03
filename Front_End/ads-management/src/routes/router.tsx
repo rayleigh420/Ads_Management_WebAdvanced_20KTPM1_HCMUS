@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
       { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
       { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
-      { path: `${MY_ROUTE.ADS}/:id`, element: <AdDetailForm /> },
+      { path: `${MY_ROUTE.ADS.detail(':id')}`, element: <AdDetailForm /> },
       { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
       { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
       { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
