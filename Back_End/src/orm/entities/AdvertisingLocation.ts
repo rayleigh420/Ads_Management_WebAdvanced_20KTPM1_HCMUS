@@ -29,6 +29,9 @@ export class AdvertisingLocation {
   @Column('int', { name: 'ward_id', unsigned: true })
   wardId: number;
 
+  @Column('varchar', { name: 'address', length: 250, nullable: true })
+  address: string | null;
+
   @OneToMany(() => AdvertisingBoard, (advertisingBoard) => advertisingBoard.location)
   advertisingBoards: AdvertisingBoard[];
 
