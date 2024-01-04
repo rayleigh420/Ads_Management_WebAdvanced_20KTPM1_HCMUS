@@ -8,7 +8,7 @@ export class Report {
   @Column('int', { name: 'report_type' })
   reportType: number;
 
-  @Column('bigint', { name: 'fullname_of_reporter' })
+  @Column('varchar', { name: 'fullname_of_reporter' })
   fullnameOfReporter: string;
 
   @Column('varchar', { name: 'email_of_reporter', nullable: true, length: 50 })

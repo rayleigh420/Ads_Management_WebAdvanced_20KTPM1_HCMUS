@@ -1,5 +1,5 @@
 // import { Board } from "../entities/board.entity";
-import { ReportReqBody } from '../models/requets/report.request';
+import { ReportReqBody } from '../models/requets/report.requests';
 import { myDataSource } from '../orm/connectDb';
 import { Report } from '../orm/entities/Report';
 
@@ -12,7 +12,7 @@ class BoardService {
     const report = new Report();
     report.reportType = payload.reportType;
     report.fullnameOfReporter = payload.fullname;
-    report.emailOfReporter = payload.email;
+    report.emailOfReporter = payload?.email;
     report.phoneNumberOfReporter = payload.phoneNumber;
     report.content = payload.content;
 
