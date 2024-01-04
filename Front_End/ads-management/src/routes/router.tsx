@@ -1,25 +1,24 @@
+import { LayoutAll } from '@/components/global';
 import {
+  AdDetailForm,
   AdsLocationPage,
   AdsRequiredEditPage,
+  CompanyDetailForm,
   DistrictManagementPage,
   HomePage,
   LoginPage,
   NotFoundPage,
   ReportForm,
-  RequireLisenceForm,
   RequireEditForm,
-  CompanyDetailForm,
-  AdDetailForm,
+  RequireLisenceForm,
 } from '@/pages';
 import { createBrowserRouter } from 'react-router-dom';
 import { MY_ROUTE } from './route.constant';
-import { LayoutAll } from '@/components/global';
 
 const router = createBrowserRouter([
   {
     path: '/login',
-    element: <LayoutAll />,
-    children: [{ path: MY_ROUTE.LOGIN, element: <LoginPage /> }],
+    element: <LoginPage />,
   },
   {
     path: '/',

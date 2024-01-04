@@ -1,4 +1,4 @@
-import { addressMapDetailApi } from '@/apis/map-box/address-map_detail.api';
+import { getAddressMapDetailApi } from '@/apis/map-box/address-map_detail.api';
 import { Coordinates } from '@/core/models/map.model';
 import { ReportForm } from '@/pages';
 import { ReportInput } from '@/pages/form/ReportForm';
@@ -18,7 +18,7 @@ const LocationInfo = ({ location, reportInfo }: LocationInfoProps) => {
   const [addressExisted, setAddressExisted] = useState(false);
 
   const { mutate: mutateAddressDetail } = useMutation({
-    mutationFn: (data: Coordinates) => addressMapDetailApi(data),
+    mutationFn: (data: Coordinates) => getAddressMapDetailApi(data),
     onSuccess: (res) => {
       setName(res.data.features[0].text);
       if (res.data.features[0].properties.address === undefined) {
