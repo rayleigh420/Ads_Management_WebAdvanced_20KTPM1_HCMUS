@@ -20,9 +20,7 @@ export const wrapRequestHandler = <P>(func: RequestHandler<P, any, any, any>) =>
   return async (req: Request<P>, res: Response, next: NextFunction) => {
     try {
       await func(req, res, next)
-      console.log("check 1");
     } catch (error) {
-      console.log("check 2");
       next(error)
     }
   }

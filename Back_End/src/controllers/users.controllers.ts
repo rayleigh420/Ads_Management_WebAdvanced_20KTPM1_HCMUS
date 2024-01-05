@@ -12,10 +12,8 @@ import { User } from '../orm/entities/User';
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const { user }: any = req;
-  console.log('🚀 ~ file: users.controllers.ts:13 ~ loginController ~ user:', user);
   const userId = user.id;
   const result = await usersService.login({ userId });
-  console.log('🚀 ~ file: users.controllers.ts:18 ~ loginController ~ result:', result);
   res.json(ApiResponse.success(result, USER_MESSAGES.LOGIN_SUCCESS));
 
   // return res.status(200).json({

@@ -20,8 +20,11 @@ export class AdvertisingLocation {
   @Column('int', { name: 'advertising_type' })
   advertisingType: number;
 
-  @Column('int', { name: 'image_id', nullable: true })
-  imageId: number | null;
+  @Column('text', { name: 'image1', nullable: true})
+  image1: string | null;
+  
+  @Column('text', { name: 'image2', nullable: true})
+  image2: string | null;
 
   @Column('tinyint', { name: 'is_planned', default: () => "'1'" })
   isPlanned: number;

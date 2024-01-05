@@ -8,6 +8,7 @@ export const defaultErrorHandler = (err: any, req: Request, res: Response, next:
   try {
     if (err instanceof ErrorWithStatus) {
       res.status(HTTP_STATUS.UNPROCESSABLE_ENTITY).json(ApiResponse.error(JSON.stringify(omit(err, ['status']))));
+      return;
     }
 
     const finalError: any = {};

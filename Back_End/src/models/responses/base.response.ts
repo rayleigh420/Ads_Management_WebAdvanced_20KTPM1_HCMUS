@@ -12,12 +12,12 @@ export class ApiResponse<T> {
     this.data = data;
     this.message = message;
 
-    if (!success) {
-      this.error = {
-        // code: errorCode,
-        message: message || 'Internal Server Error'
-      };
-    }
+    // if (!success) {
+    //   this.error = {
+    //     // code: errorCode,
+    //     message: message || 'Internal Server Error'
+    //   };
+    // }
   }
 
   static success<T>(data?: T, message?: string): ApiResponse<T> {

@@ -20,12 +20,11 @@ export class Report {
   @Column('text', { name: 'content' })
   content: string;
 
-  @Column('int', {
-    name: 'image_id',
-    nullable: true,
-    comment: 'toi da 2 hinhn'
-  })
-  imageId: number | null;
+  @Column('text', { name: 'image1', nullable: true})
+  image1: string | null;
+
+  @Column('text', { name: 'image2', nullable: true})
+  image2: string | null;
 
   @Column('datetime', {
     name: 'created_at',

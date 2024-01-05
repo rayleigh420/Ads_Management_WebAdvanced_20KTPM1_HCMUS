@@ -15,17 +15,14 @@ export const validate = (validations: RunnableValidationChains<ValidationChain>)
       return next();
     }
     const errorsObject = errors.mapped();
-    console.log('🚀 ~ file: validator.ts:15 ~ return ~ errorsObject:', errorsObject);
     const entityError = new EntityError({ errors: {} });
     for (const key in errorsObject) {
       const { msg } = errorsObject[key];
       //error is not validation error
       if (msg instanceof ErrorWithStatus && msg.status !== HTTP_STATUS.UNPROCESSABLE_ENTITY) {
-        console.log('🚀 ~ file: validator.ts:18 ~ return ~ msg.statu:', msg.status);
         return next(msg);
       }
       entityError.errors[key] = errorsObject[key];
-      console.log('🚀 ~ file: validator.ts:28 ~ return ~ entityError.errors[key]:', entityError.errors[key]);
     }
     // res.status(422).json({ errors: errors.mapped() });
     next(entityError);

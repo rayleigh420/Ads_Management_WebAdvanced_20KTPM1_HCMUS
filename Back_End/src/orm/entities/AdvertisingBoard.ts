@@ -19,8 +19,11 @@ export class AdvertisingBoard {
   @Column('int', { name: 'board_type' })
   boardType: number;
 
-  @Column('int', { name: 'image_id', nullable: true, unsigned: true })
-  imageId: number | null;
+  @Column('text', { name: 'image1', nullable: true})
+  image1: string | null;
+  
+  @Column('text', { name: 'image2', nullable: true})
+  image2: string | null;
 
   @Column('date', { name: 'expireDate' })
   expireDate: string;

@@ -6,9 +6,10 @@ import { ReportReqBody } from '../models/requets/report.requests';
 
 export const createReport = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await reportsServices.createReport(req.body as ReportReqBody);
+    const result = await reportsServices.createReport(req.body as ReportReqBody, req.file);
     res.json(ApiResponse.success(result, 'success'));
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

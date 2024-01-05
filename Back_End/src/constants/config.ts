@@ -26,5 +26,7 @@ export const envConfig = {
   awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
   awsRegion: process.env.AWS_REGION as string,
   sesFromAddress: process.env.SES_FROM_ADDRESS as string,
-  s3BucketName: process.env.S3_BUCKET_NAME as string
+  s3BucketName: process.env.S3_BUCKET_NAME as string,
+  cloudinaryAPIKey: process.env.CLOUDINARY_API_KEY as string,
+  cloudinarySecret: process.env.CLOUDINARY_SECRET as string,
 }
