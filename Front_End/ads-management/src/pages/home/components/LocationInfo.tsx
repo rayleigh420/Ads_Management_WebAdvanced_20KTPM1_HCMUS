@@ -77,7 +77,7 @@ const LocationInfo = ({ location, reportInfo }: LocationInfoProps) => {
                 </linearGradient>
               </defs>
             </svg>
-            <h1 className='text-secondary-success text-base'>Thông tin địa điểm</h1>
+            <h1 className='text-secondary-success text-base mt-0'>Thông tin địa điểm</h1>
           </div>
           <div className='flex flex-col ml-9 text-secondary-success font-semibold'>{name}</div>
           <div className='flex flex-col ml-9 text-secondary-success'>{address}</div>
@@ -136,7 +136,7 @@ const LocationInfo = ({ location, reportInfo }: LocationInfoProps) => {
                 </linearGradient>
               </defs>
             </svg>
-            <h1 className='text-secondary-unsuccess text-base'>Thông tin bảng quảng cáo</h1>
+            <h1 className='text-secondary-unsuccess text-base mt-0'>Thông tin bảng quảng cáo</h1>
           </div>
           <div className='flex flex-col ml-9 text-secondary-unsuccess font-semibold'>
             Chưa có dữ liệu!

@@ -42,45 +42,49 @@ const HomePage = () => {
 
   return (
     <div className='w-full flex'>
-      <MapComponent onMapClick={handleMapClick}>
-        <div>
-          <ShowMarkers
-            setSelectedMarker={handleSelectedMarker}
-            selectedMarker={selectedMarker}
-            isReport={isReport}
-            isZone={isZone}
-          />
+      <div className='flex flex-col w-[75%]'>
+        <div className='flex justify-evenly'>
+          <div className='flex justify-between'>
+            <div className='text-sm font-semibold mr-2'>Báo cáo quảng cáo/ địa điểm</div>
+            <Switch
+              value={isReport}
+              onChange={(e) => {
+                setIsReport(e);
+              }}
+            />
+          </div>
+          <div className='flex justify-between'>
+            <div className='text-sm font-semibold mr-2 mb-4'>Điểm đặt quảng cáo</div>
+            <Switch
+              value={isZone}
+              onChange={(e) => {
+                setIsZone(e);
+              }}
+            />
+          </div>
+        </div>
+        <MapComponent onMapClick={handleMapClick}>
+          <div>
+            <ShowMarkers
+              setSelectedMarker={handleSelectedMarker}
+              selectedMarker={selectedMarker}
+              isReport={isReport}
+              isZone={isZone}
+            />
 
-          {selectedMarker && !selectedMarker?.advertisingLocation && !selectedMarker?.report && (
-            <Marker
-              key={selectedMarker.coordinates.longitude}
-              longitude={selectedMarker.coordinates.longitude}
-              latitude={selectedMarker.coordinates.latitude}
-            >
-              <CustomPin />
-            </Marker>
-          )}
-        </div>
-      </MapComponent>
-      <div className='ml-6 w-[25%]'>
-        <div className='flex justify-between'>
-          <div className='text-xl font-semibold'>Báo cáo</div>
-          <Switch
-            value={isReport}
-            onChange={(e) => {
-              setIsReport(e);
-            }}
-          />
-        </div>
-        <div className='flex justify-between'>
-          <div className='text-xl font-semibold'>Quy hoạch</div>
-          <Switch
-            value={isZone}
-            onChange={(e) => {
-              setIsZone(e);
-            }}
-          />
-        </div>
+            {selectedMarker && !selectedMarker?.advertisingLocation && !selectedMarker?.report && (
+              <Marker
+                key={selectedMarker.coordinates.longitude}
+                longitude={selectedMarker.coordinates.longitude}
+                latitude={selectedMarker.coordinates.latitude}
+              >
+                <CustomPin />
+              </Marker>
+            )}
+          </div>
+        </MapComponent>
+      </div>
+      <div className='ml-6 w-[25%] mt-9'>
         {selectedMarker?.advertisingLocation && (
           <AdvertiseInfo
             advertisingLocation={selectedMarker.advertisingLocation}

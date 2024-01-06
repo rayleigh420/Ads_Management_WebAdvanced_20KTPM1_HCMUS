@@ -102,7 +102,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMapClick, children }) => 
   };
 
   return (
-    <div className='h-[80vh] w-[75%] flex items-center justify-center flex-col'>
+    <div className='h-[80vh] w-full flex items-center justify-center flex-col'>
       <Map
         mapboxAccessToken={import.meta.env.VITE_MAP_BOX_PUBLIC_TOKEN}
         style={{ width: '100%', height: '100%' }}
