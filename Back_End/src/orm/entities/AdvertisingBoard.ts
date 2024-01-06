@@ -22,6 +22,9 @@ export class AdvertisingBoard {
   @Column("int", { name: "board_type" })
   boardType: number;
 
+  @Column("int", { name: "quantity", default: () => 1 })
+  quantity: number;
+
   @Column("text", { name: "image1", nullable: true })
   image1: string | null;
 
