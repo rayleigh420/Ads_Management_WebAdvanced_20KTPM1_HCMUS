@@ -2,6 +2,7 @@ import { loginApi } from '@/apis/auth/auth.api';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
 import { STORAGE } from '@/core/constants/share.constants';
 import { loginSuccess } from '@/store/auth/auth.slice';
+import { BaseHTTP } from '@/utils/config/http';
 import Icon from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Form } from 'antd';
@@ -27,6 +28,9 @@ export default function LoginPage() {
       });
       Cookie.set(STORAGE.REFRESH_TOKEN, resp.data.data.newRefreshToken, {
         path: '/',
+      });
+      BaseHTTP.getInstance().config({
+        accessToken: resp.data.data.newRefreshToken,
       });
 
       dispatch(loginSuccess({ token: resp.data.data.newAccessToken }));

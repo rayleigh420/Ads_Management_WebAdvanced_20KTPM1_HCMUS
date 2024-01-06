@@ -1,3 +1,5 @@
+import { logoutSuccess } from '@/store/auth/auth.slice';
+import { authStore } from '@/store/auth/auth.store';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import nProgress from 'nprogress';
 
@@ -32,6 +34,9 @@ export class BaseHTTP {
       },
       (error: AxiosError): Promise<AxiosError> => {
         nProgressHandler('stop');
+        if ([401, 403].includes(error.response?.status || 0)) {
+          authStore.dispatch(logoutSuccess());
+        }
         return Promise.reject(error);
       },
     );

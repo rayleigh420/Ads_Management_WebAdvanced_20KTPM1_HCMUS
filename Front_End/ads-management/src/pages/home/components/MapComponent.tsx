@@ -121,6 +121,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMapClick, children }) => 
         />
         <NavigationControl />
         <ScaleControl style={{ color: 'white', backgroundColor: 'gray' }} />
+
         {children}
       </Map>
       <Button size='large' onClick={handleChangeMapStyle} className='bg-blue-400 text-white mt-4'>
