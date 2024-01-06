@@ -1,51 +1,118 @@
-import { CustomMarkerAdvertise } from '@/components/ui';
+import { getLocationApi } from '@/apis/location/location.api';
 import { AdsOrReportLocationInfo } from '@/core/models/adversise.model';
 import { ICONS } from '@/utils/theme';
-import { memo, useCallback, useMemo } from 'react';
-import { Marker, Popup } from 'react-map-gl';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { memo, useMemo } from 'react';
+import { MapRef, Marker, Popup } from 'react-map-gl';
+import useSupercluster from 'use-supercluster';
 import LocationPopup from './LocationPopup';
-import { mockDataLocations } from './mockDataLocation';
 
 type ShowMarkersProps = {
   selectedMarker?: AdsOrReportLocationInfo;
   setSelectedMarker: (location?: AdsOrReportLocationInfo) => void;
   isZone?: boolean;
   isReport?: boolean;
+  mapRef: React.MutableRefObject<MapRef | null>;
+  zoom: number;
+  setZoom: (zoom: number) => void;
+  isRefClick: React.MutableRefObject<boolean>;
 };
 
-function ShowMarkers({ selectedMarker, setSelectedMarker, isReport, isZone }: ShowMarkersProps) {
-  const handleClickMarker = useCallback((location: AdsOrReportLocationInfo) => {
+function ShowMarkers({
+  selectedMarker,
+  setSelectedMarker,
+  isReport,
+  mapRef,
+  zoom,
+  isRefClick,
+}: ShowMarkersProps) {
+  const { data: dataLocation } = useQuery({
+    queryKey: ['location'],
+    queryFn: () => getLocationApi(),
+    select: (resp) => resp.data.data,
+    placeholderData: keepPreviousData,
+  });
+
+  const handleClickMarker = (location: AdsOrReportLocationInfo) => {
     setSelectedMarker(location);
-  }, []);
+  };
+  const points = useMemo(() => {
+    console.log('dataLocation', dataLocation);
+    if (dataLocation) {
+      return dataLocation.map((data, index) => ({
+        type: 'Feature',
+        properties: {
+          cluster: false,
+          crimeId: index,
+          category: index,
+        },
+        id: data.id,
+        geometry: {
+          type: 'Point',
+          coordinates: [data.long, data.lat],
+        },
+      }));
+    }
+    return [];
+  }, [dataLocation]);
 
-  const markers = useMemo(() => {
-    return mockDataLocations.map((location) => {
-      if (!location.isZone) location.isZone = false;
+  const bounds: any = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
 
-      const isAdvertisingLocation = location.advertisingLocation && location.isZone === isZone;
-      const isMarkerForReport = !location.advertisingLocation && isReport;
-
-      return isAdvertisingLocation ? (
-        <CustomMarkerAdvertise location={location} handleClickMarker={handleClickMarker} />
-      ) : (
-        isMarkerForReport && (
-          <Marker
-            key={location.coordinates.longitude}
-            longitude={location.coordinates.longitude}
-            latitude={location.coordinates.latitude}
-            onClick={() => handleClickMarker(location)}
-            draggable
-          >
-            <img src={ICONS.MARKER_REPORT} alt='' width={40} height={40} />
-          </Marker>
-        )
-      );
-    });
-  }, [mockDataLocations, isReport, isZone]);
+  const { clusters, supercluster } = useSupercluster({
+    points: points,
+    bounds,
+    zoom: zoom,
+    options: { radius: 75, maxZoom: 20 },
+  });
 
   return (
     <div>
-      {markers}
+      {clusters.map((cluster) => {
+        const [longitude, latitude] = cluster.geometry.coordinates;
+        const { cluster: isCluster, point_count: pointCount } = cluster.properties;
+
+        if (isCluster) {
+          return (
+            <Marker key={`cluster-${cluster.id}`} latitude={latitude} longitude={longitude}>
+              <div
+                className='cluster-marker'
+                style={{
+                  width: `${15 + (pointCount / points.length) * 20}px`,
+                  height: `${15 + (pointCount / points.length) * 20}px`,
+                }}
+                onClick={() => {
+                  isRefClick.current = true;
+                  const expansionZoom = Math.min(
+                    supercluster.getClusterExpansionZoom(cluster.id),
+                    20,
+                  );
+                  if (mapRef.current)
+                    mapRef.current.easeTo({
+                      center: cluster.geometry.coordinates,
+                      zoom: expansionZoom,
+                      duration: 1000,
+                      easing: (t) => t,
+                    });
+                }}
+              >
+                {pointCount}
+              </div>
+            </Marker>
+          );
+        }
+
+        return (
+          <Marker
+            key={longitude}
+            longitude={longitude}
+            latitude={latitude}
+            onClick={() => handleClickMarker(cluster.info)}
+            draggable
+          >
+            <img src={ICONS.MARKER_ADS_RED} alt='' />
+          </Marker>
+        );
+      })}
       {selectedMarker?.advertisingLocation && (
         <Popup
           longitude={selectedMarker.coordinates.longitude}

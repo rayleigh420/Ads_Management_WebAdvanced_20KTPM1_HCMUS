@@ -30,7 +30,7 @@ export default function LoginPage() {
         path: '/',
       });
       BaseHTTP.getInstance().config({
-        accessToken: resp.data.data.newRefreshToken,
+        accessToken: resp.data.data.newAccessToken,
       });
 
       dispatch(loginSuccess({ token: resp.data.data.newAccessToken }));
