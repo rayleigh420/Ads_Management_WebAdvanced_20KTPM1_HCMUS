@@ -5,7 +5,7 @@ import { Switch } from 'antd';
 import { MapLayerMouseEvent } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useRef, useState } from 'react';
-import { Marker } from 'react-map-gl';
+import { MapRef, Marker } from 'react-map-gl';
 import AdvertiseInfo from './components/AdvertiseInfo';
 import LocationInfo from './components/LocationInfo';
 import MapComponent from './components/MapComponent';
@@ -15,6 +15,8 @@ const HomePage = () => {
   const [selectedMarker, setSelectedMarker] = useState<AdsOrReportLocationInfo>();
   const [isReport, setIsReport] = useState<boolean>(true);
   const [isZone, setIsZone] = useState<boolean>(true);
+  const mapRef = useRef<MapRef>(null);
+  const [zoom, setZoom] = useState<number>(14);
 
   const isSelectedMarker = useRef(false);
 
@@ -42,13 +44,17 @@ const HomePage = () => {
 
   return (
     <div className='w-full flex'>
-      <MapComponent onMapClick={handleMapClick}>
+      <MapComponent onMapClick={handleMapClick} mapRef={mapRef} zoom={zoom} setZoom={setZoom}>
         <div>
           <ShowMarkers
             setSelectedMarker={handleSelectedMarker}
             selectedMarker={selectedMarker}
             isReport={isReport}
             isZone={isZone}
+            mapRef={mapRef}
+            zoom={zoom}
+            setZoom={setZoom}
+            isRefClick={isSelectedMarker}
           />
 
           {selectedMarker && !selectedMarker?.advertisingLocation && !selectedMarker?.report && (
