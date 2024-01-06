@@ -1,5 +1,6 @@
 export interface ReportReqBody {
-  reportType: number;
+  locationId?: number;
+  boardId?: number;
   reportForm: number;
   fullname: string;
   email?: string;

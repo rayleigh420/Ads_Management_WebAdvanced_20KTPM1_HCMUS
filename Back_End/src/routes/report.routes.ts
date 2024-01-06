@@ -16,6 +16,6 @@ const upload = multer({
     files: 1
   }
 });
-reportsRouter.post('/', upload.single('file'), createReportValidate, wrapRequestHandler(createReport));
+reportsRouter.post('/anonymous', upload.single('file'), createReportValidate, wrapRequestHandler(createReport));
 
 export default reportsRouter;

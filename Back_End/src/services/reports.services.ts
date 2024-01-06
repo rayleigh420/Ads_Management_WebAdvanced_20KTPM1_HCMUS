@@ -15,7 +15,8 @@ class BoardService {
     const resultUpload = await uploadToCloudinary(file);
 
     const report = new Report();
-    report.reportType = payload.reportType;
+    report.locationId = payload.locationId;
+    report.boardId = payload.boardId;
     report.reportForm = payload.reportForm;
     report.fullnameOfReporter = payload.fullname;
     report.emailOfReporter = payload?.email;

@@ -16,9 +16,6 @@ export class Report {
   @PrimaryGeneratedColumn({ type: "int", name: "id", unsigned: true })
   id: number;
 
-  @Column("int", { name: "report_type" })
-  reportType: number;
-
   @Column("varchar", { name: "fullname_of_reporter", length: 100 })
   fullnameOfReporter: string;
 
