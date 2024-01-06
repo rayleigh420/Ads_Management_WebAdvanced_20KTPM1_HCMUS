@@ -74,6 +74,7 @@ class UserService {
     await this.refreshTokenRepository.save(refreshToken);
 
     return {
+      userType,
       newAccessToken,
       newRefreshToken
     };
