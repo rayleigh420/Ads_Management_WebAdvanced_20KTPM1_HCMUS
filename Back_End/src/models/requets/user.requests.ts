@@ -1,3 +1,6 @@
+import { JwtPayload } from "jsonwebtoken";
+import { TokenType } from "../../constants/enum";
+
 export interface RegisterReqBody {
   email: string;
   password: string;
@@ -27,4 +30,12 @@ export interface CreateUserBody {
   password: string;
   wardId?: number;
   districtId?: number;
+}
+
+export interface TokenPayload extends JwtPayload {
+  userId: string;
+  userType: UserType;
+  tokenType: TokenType;
+  exp: number;
+  iat: number;
 }

@@ -13,7 +13,8 @@ import { User } from '../orm/entities/User';
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const { user }: any = req;
   const userId = user.id;
-  const result = await usersService.login({ userId });
+  const userType = user.userType;
+  const result = await usersService.login({ userId, userType });
   res.json(ApiResponse.success(result, USER_MESSAGES.LOGIN_SUCCESS));
 
   // return res.status(200).json({

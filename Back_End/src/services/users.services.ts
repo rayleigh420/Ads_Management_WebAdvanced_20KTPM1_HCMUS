@@ -57,9 +57,9 @@ class UserService {
     return savedUser;
   }
 
-  async login({ userId }: { userId: number }) {
+  async login({ userId, userType }: { userId: number, userType: UserType }) {
     const [newAccessToken, newRefreshToken] = await this.signAccessAndRefreshToken({
-      userId
+      userId, userType
     });
     const { iat, exp } = await this.decodeRefreshToken(newRefreshToken as string);
     const refreshToken = new RefreshToken();
@@ -97,14 +97,15 @@ class UserService {
     return await this.userRepository.findOne({ where: [options] });
   };
 
-  signAccessAndRefreshToken = ({ userId }: { userId: number }) => {
-    return Promise.all([this.signAccessToken({ userId }), this.signRefreshToken({ userId })]);
+  signAccessAndRefreshToken = ({ userId, userType }: { userId: number, userType: UserType }) => {
+    return Promise.all([this.signAccessToken({ userId, userType }), this.signRefreshToken({ userId })]);
   };
 
-  private signAccessToken({ userId }: { userId: number }) {
+  private signAccessToken({ userId, userType }: { userId: number, userType: UserType }) {
     return signToken({
       payload: {
         userId,
+        userType,
         token_type: TokenType.AccessToken
       },
       privateKey: envConfig.jwtSecretAccessToken,
@@ -137,6 +138,18 @@ class UserService {
   }
   private decodeRefreshToken(refreshToken: string) {
     return verifyToken(refreshToken, envConfig.jwtSecretRefreshToken);
+  }
+
+  async getWardOfficerByUserId(userId: number) {
+    return await this.wardOfficerRepository.findOneBy({
+      userId
+    });
+  }
+
+  async getDistrictOfficerByUserId(userId: number) {
+    return await this.districtOfficerRepository.findOneBy({
+      userId
+    });
   }
 }
 

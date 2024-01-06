@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { wrapRequestHandler } from '../utils/handler.ultil';
-import { createReport } from '../controllers/reports.controller';
+import { createReport, getReportAnonymousByConditionController } from '../controllers/reports.controller';
 import { createReportValidate } from '../middlewares/report.middlewares';
 import multer from 'multer';
 
 const reportsRouter = Router();
 
-// reportsRouter.get('/', wrapRequestHandler());
 // reportsRouter.get('/:id', wrapRequestHandler());
+reportsRouter.get('/anonymous', wrapRequestHandler(getReportAnonymousByConditionController));
 
 const upload = multer({
   storage: multer.memoryStorage(),

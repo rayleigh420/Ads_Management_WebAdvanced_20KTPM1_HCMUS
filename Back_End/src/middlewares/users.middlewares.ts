@@ -8,6 +8,7 @@ import { verifyToken } from '../utils/jwt.utils';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { FindOptions } from 'typeorm';
 import { FindUserOptions } from '../models/requets/user.requests';
+import { verifyAccessToken } from '../utils/common.util';
 
 // export const validateLogin = (req: Request, res: Response, next: NextFunction) => {
 //   const { username, password } = req.body;
@@ -68,29 +69,21 @@ export const registerValidator = validate(
   })
 );
 
-// export const accessTokenValidator = validate(
-//   checkSchema(
-//     {
-//       Authorization: {
-//         custom: {
-//           options: async (value: string) => {
-//             if (!value) throw new ErrorWithStatus({ message: 'Access token is required', status: 401 });
-//             console.log('🚀 ~ file: users.middlewares.ts:119 ~ options: ~ value:', value);
-//             const accessToken = value.split(' ')[1];
-//             console.log('accesstoken', accessToken);
-//             if (!accessToken) {
-//               throw new ErrorWithStatus({ message: 'Access token is required', status: 401 });
-//             }
-//             return true;
-//             const decodedAuth = await verifyToken(accessToken);
-//             const user = await databaseService.users.findOne({ accessToken: accessToken });
-//           }
-//         }
-//       }
-//     },
-//     ['headers']
-//   )
-// );
+export const accessTokenValidator = validate(
+  checkSchema(
+    {
+      Authorization: {
+        custom: {
+          options: async (value: string, { req }) => {
+            const accessToken = (value || '').split(' ')[1]
+            return await verifyAccessToken(accessToken, req)
+          }
+        }
+      }
+    },
+    ['headers']
+  )
+)
 
 // export const refreshTokenValidator = validate(
 //   checkSchema(

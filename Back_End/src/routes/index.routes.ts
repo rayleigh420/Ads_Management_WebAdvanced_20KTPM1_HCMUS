@@ -9,6 +9,6 @@ const indexRouter = Router();
 indexRouter.use('/users', usersRouter);
 indexRouter.use('/boards', boardsRouter);
 indexRouter.use('/reports', reportsRouter);
-indexRouter.get('/locations', locationsRoute);
+indexRouter.use('/locations', locationsRoute);
 
 export default indexRouter;

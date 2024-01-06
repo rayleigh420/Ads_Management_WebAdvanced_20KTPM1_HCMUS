@@ -24,6 +24,14 @@ class BoardService {
     report.image1 = resultUpload.url;
     return await this.reportRepository.save(report);
   }
+
+  public async getReportAnonymousByLocationId(locationId: number, reportId: number) {
+    return await this.reportRepository.find({ where: { locationId, id: reportId } });
+  }
+
+  public async getReportAnonymousByBoardId(boardId: number, reportId: number) {
+    return await this.reportRepository.find({ where: { boardId, id: reportId } });
+  }
 }
 
 export default new BoardService();
