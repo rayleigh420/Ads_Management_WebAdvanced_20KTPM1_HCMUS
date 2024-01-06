@@ -20,7 +20,7 @@ export default function AntdConfigProvider({ children }: { children: React.React
             borderRadius: 5,
             defaultColor: '#5599D6',
             defaultBorderColor: '#5599D6',
-            defaultBg: '#fff',
+            // defaultBg: '#fff',
           },
           Menu: {
             subMenuItemBg: '#fff',

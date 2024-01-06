@@ -1,22 +1,24 @@
-import { addressMapDetailApi } from '@/apis/map-box/address-map_detail.api';
+import { getAddressMapDetailApi } from '@/apis/map-box/address-map_detail.api';
 import { Coordinates } from '@/core/models/map.model';
 import { ReportForm } from '@/pages';
+import { ReportInput } from '@/pages/form/ReportForm';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Modal } from 'antd';
 import { memo, useEffect, useState } from 'react';
 
 type LocationInfoProps = {
   location?: Coordinates;
+  reportInfo?: ReportInput;
 };
 
-const LocationInfo = ({ location }: LocationInfoProps) => {
+const LocationInfo = ({ location, reportInfo }: LocationInfoProps) => {
   const [modal1Open, setModal1Open] = useState(false);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [addressExisted, setAddressExisted] = useState(false);
 
   const { mutate: mutateAddressDetail } = useMutation({
-    mutationFn: (data: Coordinates) => addressMapDetailApi(data),
+    mutationFn: (data: Coordinates) => getAddressMapDetailApi(data),
     onSuccess: (res) => {
       setName(res.data.features[0].text);
       if (res.data.features[0].properties.address === undefined) {
@@ -37,6 +39,8 @@ const LocationInfo = ({ location }: LocationInfoProps) => {
       setAddressExisted(false);
     }
   }, [location]);
+
+  console.log(reportInfo);
 
   return (
     <>
@@ -78,9 +82,19 @@ const LocationInfo = ({ location }: LocationInfoProps) => {
           <div className='flex flex-col ml-9 text-secondary-success font-semibold'>{name}</div>
           <div className='flex flex-col ml-9 text-secondary-success'>{address}</div>
           <div className='flex flex-wrap justify-end'>
-            <Button danger onClick={() => setModal1Open(true)} className='mt-2'>
-              Báo cáo vi phạm
-            </Button>
+            {reportInfo ? (
+              <Button
+                type='primary'
+                onClick={() => setModal1Open(true)}
+                className='mt-2 bg-blue-300'
+              >
+                Đã báo cáo vi phạm
+              </Button>
+            ) : (
+              <Button danger onClick={() => setModal1Open(true)} className='mt-2'>
+                Báo cáo vi phạm
+              </Button>
+            )}
             <Modal
               centered
               open={modal1Open}
@@ -90,7 +104,7 @@ const LocationInfo = ({ location }: LocationInfoProps) => {
               width={1000}
               style={{ top: 20 }}
             >
-              <ReportForm />
+              <ReportForm initialValues={reportInfo} />
             </Modal>
           </div>
         </div>
