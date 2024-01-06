@@ -6,7 +6,7 @@ import { myDataSource } from './orm/connectDb';
 import paginate from 'express-paginate';
 import dotenv from 'dotenv';
 import indexRouter from './routes/index.routes';
-import cors from 'cors';
+// import cors from 'cors';
 
 dotenv.config();
 const PORT = process.env.PORT || 3001;
@@ -21,14 +21,14 @@ myDataSource
   });
 
 //cors
-const options = {
-  origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-};
+// const options = {
+//   origin: '*',
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204
+// };
 
-app.use(cors(options));
+// app.use(cors(options));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(paginate.middleware(5, 50));

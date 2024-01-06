@@ -3,7 +3,6 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import { ApiResponse } from '../models/responses/base.response';
 import reportsServices from '../services/reports.services';
 import { ReportReqBody } from '../models/requets/report.requests';
-import { report } from 'process';
 
 export const createReport = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -4,7 +4,7 @@ import { myDataSource } from '../orm/connectDb';
 import { Report } from '../orm/entities/Report';
 import uploadToCloudinary from '../utils/cloudinary.util';
 
-class BoardService {
+class ReportService {
   private reportRepository = myDataSource.getRepository(Report);
 
   public async createReport(payload: ReportReqBody, file: Express.Multer.File) {
@@ -35,4 +35,4 @@ class BoardService {
   }
 }
 
-export default new BoardService();
+export default new ReportService();

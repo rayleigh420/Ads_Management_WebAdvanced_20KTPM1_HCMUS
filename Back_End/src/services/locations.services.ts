@@ -11,7 +11,7 @@ class LocationService {
         .createQueryBuilder('location')
         .leftJoinAndSelect('location.ward', 'ward')
         // .leftJoinAndSelect('location.district', 'district')
-        .getManyAndCount();
+        .getMany();
     }
     return await this.locationRepository
       .createQueryBuilder('location')
@@ -19,7 +19,7 @@ class LocationService {
       // .leftJoinAndSelect('location.district', 'district')
       .skip(skip)
       .take(limit)
-      .getManyAndCount();
+      .getMany();
   }
 
   public async getLocationsAnonymous() {
@@ -27,7 +27,7 @@ class LocationService {
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
       // .leftJoinAndSelect('location.district', 'district')
-      .getManyAndCount();
+      .getMany();
   }
 
   public async getLocationsAnonymousById(id: number) {
