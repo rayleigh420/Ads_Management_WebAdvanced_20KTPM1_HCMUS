@@ -16,6 +16,7 @@ class BoardService {
 
     const report = new Report();
     report.reportType = payload.reportType;
+    report.reportForm = payload.reportForm;
     report.fullnameOfReporter = payload.fullname;
     report.emailOfReporter = payload?.email;
     report.phoneNumberOfReporter = payload.phoneNumber;

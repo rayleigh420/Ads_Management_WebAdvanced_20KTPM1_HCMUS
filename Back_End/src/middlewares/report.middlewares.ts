@@ -9,6 +9,11 @@ export const createReportValidate = validate(
         isNumeric: true,
         errorMessage: 'Invalid report type'
       },
+      reportForm: {
+        notEmpty: true,
+        isNumeric: true,
+        errorMessage: 'Invalid report form'
+      },
       fullname: {
         notEmpty: true,
         isString: true,

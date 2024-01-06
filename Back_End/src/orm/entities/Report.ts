@@ -8,6 +8,9 @@ export class Report {
   @Column('int', { name: 'report_type' })
   reportType: number;
 
+  @Column('int', { name: 'report_form' })
+  reportForm: number;
+
   @Column('varchar', { name: 'fullname_of_reporter' })
   fullnameOfReporter: string;
 

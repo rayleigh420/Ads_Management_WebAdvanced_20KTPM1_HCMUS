@@ -19,6 +19,7 @@ myDataSource
   });
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(paginate.middleware(5, 50));
 app.use(indexRouter)
 app.use(defaultErrorHandler);

@@ -45,3 +45,7 @@ export enum PeopleFollow {
   Anyone = '0',
   Following = '1'
 }
+
+export enum ReportType{
+  
+}
