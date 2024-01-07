@@ -22,7 +22,7 @@ export const getReportAnonymousByConditionController = async (
 ) => {
   try {
     const reportType = req.query.reportType;
-    const reportId = req.body.reportId;
+    const reportId = req.query.reportId as string;
     if (reportType === 'location') {
       const locationId = req.body.locationId;
       const result = await reportsServices.getReportAnonymousByLocationId(
@@ -31,7 +31,7 @@ export const getReportAnonymousByConditionController = async (
       );
       res.json(ApiResponse.success(result, 'success'));
     } else if (reportType === 'board') {
-      const boardId = req.body.boardId;
+      const boardId = req.query.boardId as string;
       const result = await reportsServices.getReportAnonymousByBoardId(parseInt(boardId, 10), parseInt(reportId, 10));
       res.json(ApiResponse.success(result, 'success'));
     }
