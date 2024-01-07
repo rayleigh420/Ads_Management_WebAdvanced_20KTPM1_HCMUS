@@ -29,4 +29,7 @@ export const envConfig = {
   s3BucketName: process.env.S3_BUCKET_NAME as string,
   cloudinaryAPIKey: process.env.CLOUDINARY_API_KEY as string,
   cloudinarySecret: process.env.CLOUDINARY_SECRET as string,
+  emailUser: process.env.EMAIL_USER as string,
+  emailPassword: process.env.EMAIL_PASSWORD as string,
+  emailFrom: process.env.EMAIL_FROM as string,
 }
