@@ -20,7 +20,7 @@ export const getBoardsController = async (
 
     const results = await boardsService.getBoards({ limit: parseInt(limit), skip: parseInt(skip) });
     console.log('🚀 ~ file: boards.controllers.ts:16 ~ results:', req.decodedAuthorization?.userId as string);
-    const dataPaging = getPagingData({data: results, limit:  parseInt(limit),skip: parseInt(skip)});
+    const dataPaging = getPagingData({data: results, count: results[1], limit:  parseInt(limit),skip: parseInt(skip)});
     res.json(ApiResponse.success(dataPaging, 'success'));
   } catch (error) {
     next(error);

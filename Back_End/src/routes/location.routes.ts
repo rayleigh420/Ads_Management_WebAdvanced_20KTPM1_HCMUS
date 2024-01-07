@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import { wrapRequestHandler } from '../utils/handler.ultil';
-import { getBoardsByLocationIdController, getLocationByIdController, getLocationsAnonymousByIdController, getLocationsAnonymousController, getLocationsController } from '../controllers/locations.controller';
+import { getBoardsByLocationIdController, getLocationByIdController, getLocationManageByUserIdController, getLocationsAnonymousByIdController, getLocationsAnonymousController} from '../controllers/locations.controller';
+import { accessTokenValidator } from '../middlewares/users.middlewares';
 const locationsRoute = Router();
 
+//for resident
 locationsRoute.get('/anonymous', wrapRequestHandler(getLocationsAnonymousController));
 locationsRoute.get('/anonymous/boards', wrapRequestHandler(getBoardsByLocationIdController));
-locationsRoute.get('/anonymous/:id', wrapRequestHandler(getLocationsAnonymousByIdController));
-locationsRoute.get('/anonymous/:id/boards', wrapRequestHandler(getLocationsAnonymousByIdController));
 
-locationsRoute.get('/', wrapRequestHandler(getLocationsController));
-locationsRoute.get('/:id', wrapRequestHandler(getLocationByIdController));
+//for officer
+//get all locations in ward/district/departments
+locationsRoute.get('/officer', accessTokenValidator ,wrapRequestHandler(getLocationManageByUserIdController));
 
 export default locationsRoute;
