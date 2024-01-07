@@ -23,10 +23,10 @@ export class AdvertisingLocation {
   @Column("varchar", { name: "long", length: 20 })
   long: string;
 
-  @Column("int", { name: "location_type" })
+  @Column("int", { name: "location_type", default: () => 0 })
   locationType: number;
 
-  @Column("int", { name: "advertising_type" })
+  @Column("int", { name: "advertising_type", default: () => 0})
   advertisingType: number;
 
   @Column("text", { name: "image1", nullable: true })

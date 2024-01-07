@@ -52,3 +52,7 @@ export enum userType{
   WARD_OFFICER = 2
 }
 
+export enum ReportType{
+  LOCATION = 0,
+  BOARD = 1
+}

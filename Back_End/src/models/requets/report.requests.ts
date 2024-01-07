@@ -1,4 +1,5 @@
 export interface ReportReqBody {
+  reportType: number;
   locationId?: number;
   boardId?: number;
   reportForm: number;
@@ -6,4 +7,9 @@ export interface ReportReqBody {
   email?: string;
   phoneNumber: string;
   content: string;
+  address: string;
+  lat: string;
+  long: string;
+  districtName: string;
+  wardName: string;
 }
