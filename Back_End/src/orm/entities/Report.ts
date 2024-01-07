@@ -49,6 +49,9 @@ export class Report {
   @Column("int", { name: "report_form", nullable: true })
   reportForm: number | null;
 
+  @Column("int", { name: "status", default: () => 0 })
+  status: number;
+
   @Column("int", { name: "location_Id", nullable: true, unsigned: true })
   locationId: number | null;
 
