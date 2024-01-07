@@ -1,11 +1,12 @@
 export interface Coordinates {
-    longitude: number,
-    latitude: number
+  id?: string;
+  long: number;
+  lat: number;
 }
 
 export interface CoordinatesPopup {
-    title: string,
-    description: string,
-    location: string,
-    status: string
+  title?: string;
+  description?: string;
+  location?: string;
+  status?: string;
 }

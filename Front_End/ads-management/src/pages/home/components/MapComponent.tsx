@@ -116,7 +116,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         trackResize
         onLoad={handleLoadMap}
         onClick={handleMapClick}
-        zoom={zoom || 14}
+        // zoom={zoom || 14}
         onZoom={(event) => {
           if (setZoom) setZoom(event.viewState.zoom);
         }}

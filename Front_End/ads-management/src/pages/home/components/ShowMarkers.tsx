@@ -1,30 +1,41 @@
-import { getLocationApi } from '@/apis/location/location.api';
-import { AdsOrReportLocationInfo } from '@/core/models/adversise.model';
+import {
+  LocationRESP,
+  convertLocationBoardsRESPToAdvertiseInfo,
+  getBoardByIdLocationApi,
+  getLocationApi,
+} from '@/apis/location/location.api';
+import { AdvertiseInfoType } from '@/core/models/adversise.model';
 import { ICONS } from '@/utils/theme';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { Pagination } from 'antd';
 import { memo, useMemo } from 'react';
 import { MapRef, Marker, Popup } from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
 import LocationPopup from './LocationPopup';
 
 type ShowMarkersProps = {
-  selectedMarker?: AdsOrReportLocationInfo;
-  setSelectedMarker: (location?: AdsOrReportLocationInfo) => void;
-  isZone?: boolean;
+  selectedMarker?: LocationRESP;
+  setSelectedMarker: (location?: LocationRESP) => void;
   isReport?: boolean;
   mapRef: React.MutableRefObject<MapRef | null>;
-  zoom: number;
-  setZoom: (zoom: number) => void;
+  zoom?: number;
   isRefClick: React.MutableRefObject<boolean>;
+  boardAds?: AdvertiseInfoType[];
+  setBoardAds: (boardAds?: AdvertiseInfoType[]) => void;
+  pageBoard: number;
+  setPageBoard: React.Dispatch<React.SetStateAction<number>>;
 };
 
 function ShowMarkers({
   selectedMarker,
   setSelectedMarker,
-  isReport,
+  boardAds,
+  setBoardAds,
   mapRef,
   zoom,
   isRefClick,
+  pageBoard,
+  setPageBoard,
 }: ShowMarkersProps) {
   const { data: dataLocation } = useQuery({
     queryKey: ['location'],
@@ -33,9 +44,20 @@ function ShowMarkers({
     placeholderData: keepPreviousData,
   });
 
-  const handleClickMarker = (location: AdsOrReportLocationInfo) => {
+  const { mutate: mutateBoard } = useMutation({
+    mutationFn: (id: String) => getBoardByIdLocationApi(id),
+    onSuccess: (resp) => {
+      if (resp.data.data) setBoardAds(convertLocationBoardsRESPToAdvertiseInfo(resp.data.data));
+    },
+  });
+
+  const handleClickMarker = (location: LocationRESP) => {
+    isRefClick.current = true;
+    location.id && mutateBoard(location.id);
     setSelectedMarker(location);
   };
+
+  // clusters
   const points = useMemo(() => {
     console.log('dataLocation', dataLocation);
     if (dataLocation) {
@@ -61,9 +83,11 @@ function ShowMarkers({
   const { clusters, supercluster } = useSupercluster({
     points: points,
     bounds,
-    zoom: zoom,
+    zoom: zoom || 14,
     options: { radius: 75, maxZoom: 20 },
   });
+
+  console.log('bounds', boardAds);
 
   return (
     <div>
@@ -106,27 +130,42 @@ function ShowMarkers({
             key={longitude}
             longitude={longitude}
             latitude={latitude}
-            onClick={() => handleClickMarker(cluster.info)}
+            onClick={() =>
+              handleClickMarker({
+                id: cluster.id,
+                lat: latitude,
+                long: longitude,
+              })
+            }
             draggable
           >
             <img src={ICONS.MARKER_ADS_RED} alt='' />
           </Marker>
         );
       })}
-      {selectedMarker?.advertisingLocation && (
+      {selectedMarker?.id && (
         <Popup
-          longitude={selectedMarker.coordinates.longitude}
-          latitude={selectedMarker.coordinates.latitude}
+          longitude={selectedMarker.long}
+          latitude={selectedMarker.lat}
           anchor='bottom'
           onClose={() => setSelectedMarker(undefined)}
           closeOnClick={false}
           focusAfterOpen
         >
           <LocationPopup
-            title='Cổ động chính trị'
-            description='Đất công/ Công viên/ Hành lang an toàn giao thông.'
-            location='Đồng Khởi, Nguyễn Du'
-            status='Đã quy hoạch'
+            title={boardAds?.[pageBoard - 1].name}
+            description={boardAds?.[pageBoard - 1].locationType}
+            location={boardAds?.[pageBoard - 1].address}
+            status={boardAds?.[pageBoard - 1].isPlanned ? 'Dã quy hoạch' : 'Chưa quy hoạch'}
+          />
+          <Pagination
+            simple
+            defaultCurrent={1}
+            defaultPageSize={1}
+            total={boardAds?.length}
+            onChange={(page: number, pageSize: number) => {
+              setPageBoard(page);
+            }}
           />
         </Popup>
       )}

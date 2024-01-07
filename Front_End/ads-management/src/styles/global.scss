@@ -39,12 +39,9 @@
 .mapboxgl-popup.mapboxgl-popup-anchor-bottom {
   max-width: 300px !important;
 }
-
-//close button location pop up
 .mapboxgl-popup-close-button {
-  width: 20px;
-  height: 20px;
-  font-size: 1.8rem;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 //table

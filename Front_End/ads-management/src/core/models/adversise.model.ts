@@ -1,21 +1,21 @@
 import { ReportInput } from '@/pages/form/ReportForm';
 import { Coordinates } from './map.model';
 
-export interface AdvertiseInfo {
+export interface AdvertiseInfoType {
   id: string;
-  typeString: string;
-  type: number;
+  locationType: string;
   address: string;
   size: string;
-  quantity: string;
-  formOfAdvertising: string;
+  quantity: number;
+  advertisingType: string;
   name: string;
   image: string;
+  locationId: string;
+  isPlanned: boolean;
   expirationDate: string;
 }
 export interface AdsOrReportLocationInfo {
   report?: ReportInput;
-  advertisingLocation?: AdvertiseInfo;
-  isZone?: boolean;
+  advertisingLocation?: AdvertiseInfoType;
   coordinates: Coordinates;
 }
