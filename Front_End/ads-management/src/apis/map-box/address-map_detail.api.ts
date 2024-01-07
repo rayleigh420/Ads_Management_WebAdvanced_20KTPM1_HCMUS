@@ -5,5 +5,5 @@ export const getAddressMapDetailApi = async (data: Coordinates) => {
   const params = {
     access_token: import.meta.env.VITE_MAP_BOX_PUBLIC_TOKEN,
   };
-  return await apiMap.get(`/mapbox.places/${data.longitude},${data.latitude}.json`, { params });
+  return await apiMap.get(`/mapbox.places/${data.long},${data.lat}.json`, { params });
 };

@@ -10,9 +10,9 @@ interface CustomMarkerAdvertiseProps {
 const CustomMarkerAdvertise: FC<CustomMarkerAdvertiseProps> = ({ location, handleClickMarker }) => {
   return (
     <Marker
-      key={location.coordinates.longitude}
-      longitude={location.coordinates.longitude}
-      latitude={location.coordinates.latitude}
+      key={location.coordinates.long}
+      longitude={location.coordinates.long}
+      latitude={location.coordinates.lat}
       onClick={() => handleClickMarker(location)}
       draggable
     >

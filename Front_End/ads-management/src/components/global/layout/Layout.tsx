@@ -7,7 +7,7 @@ import SiderMenu from '../sider';
 const { Content } = Layout;
 
 export default function LayoutAll() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
     <Layout className='bg-white'>
