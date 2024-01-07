@@ -5,6 +5,7 @@ import { getPagingData } from '../utils/paging.utils';
 import locationsService from '../services/locations.services';
 import usersService from '../services/users.services';
 import { UserType } from '../models/requets/user.requests';
+import boardsServices from '../services/boards.services';
 
 // export const getLocationsByWardIdController = async (
 //   req: any,

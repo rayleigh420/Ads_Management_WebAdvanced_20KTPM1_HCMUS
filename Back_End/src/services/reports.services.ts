@@ -68,12 +68,14 @@ class ReportService {
     return await this.reportRepository.save(report);
   }
 
-  public async getReportAnonymousByLocationId(locationId: number, reportId: number) {
-    return await this.reportRepository.find({ where: { locationId, id: reportId } });
+  public async getReportAnonymousByLocationId(locationId: number, reportId?: number) {
+    const whereCondition = reportId ? { locationId, id: reportId } : { locationId };
+    return await this.reportRepository.find({ where: whereCondition });
   }
 
-  public async getReportAnonymousByBoardId(boardId: number, reportId: number) {
-    return await this.reportRepository.find({ where: { boardId, id: reportId } });
+  public async getReportAnonymousByBoardId(boardId: number, reportId?: number) {
+    const whereCondition = reportId ? { boardId, id: reportId } : { boardId };
+    return await this.reportRepository.find({ where: whereCondition });
   }
 }
 

@@ -4,6 +4,7 @@ import { myDataSource } from '../orm/connectDb';
 import { AdvertisingLocation } from '../orm/entities/AdvertisingLocation';
 import { District } from '../orm/entities/District';
 import { Ward } from '../orm/entities/Ward';
+import reportsServices from './reports.services';
 
 class LocationService {
   private locationRepository = myDataSource.getRepository(AdvertisingLocation);
@@ -90,31 +91,41 @@ class LocationService {
   }
 
   public async getLocationManageByUserId(userId: number, userType: UserType, wardIds: number[]) {
-      let locations: AdvertisingLocation[] = [];
-      if (userType === UserType.WARD_OFFICER) {
-        const result = await this.wardRepository.createQueryBuilder('ward')
-          .leftJoinAndSelect('ward.wardOfficiers', 'wardOfficiers')
-          .where('wardOfficiers.userId = :userId', { userId })
-          .leftJoinAndSelect('ward.advertisingLocations', 'locations')
-          .getMany();
-
-        locations.push(...result[0].advertisingLocations);
-      } else if (userType === UserType.DISTRICT_OFFICER) {
-        const result = await this.districtRepository.createQueryBuilder('district')
-          .leftJoinAndSelect('district.districtOfficiers', 'districtOfficiers')
-          .where('districtOfficiers.userId = :userId', { userId })
-          .leftJoinAndSelect('district.wards', 'wards')
-          .leftJoinAndSelect('wards.advertisingLocations', 'locations')
-          .getMany();
-
-        const wards = result[0].wards as Ward[];
-        wards.map((ward: Ward) => {
-          if (ward.advertisingLocations.length > 0 && (wardIds.length > 0 ? wardIds.includes(ward.id) : true)) {
-            locations.push(...ward.advertisingLocations);
-          }
-        })
+    const locations: AdvertisingLocation[] = [];
+  
+    const addReportsToLocations = async (advertisingLocations: AdvertisingLocation[]) => {
+      for (const item of advertisingLocations) {
+        const reports = await reportsServices.getReportAnonymousByLocationId(item.id);
+        const location = { ...item, reports };
+        locations.push(location);
       }
-      return locations;
+    };
+  
+    if (userType === UserType.WARD_OFFICER) {
+      const result = await this.wardRepository.createQueryBuilder('ward')
+        .leftJoinAndSelect('ward.wardOfficiers', 'wardOfficiers')
+        .where('wardOfficiers.userId = :userId', { userId })
+        .leftJoinAndSelect('ward.advertisingLocations', 'locations')
+        .getMany();
+  
+      await addReportsToLocations(result[0].advertisingLocations);
+    } else if (userType === UserType.DISTRICT_OFFICER) {
+      const result = await this.districtRepository.createQueryBuilder('district')
+        .leftJoinAndSelect('district.districtOfficiers', 'districtOfficiers')
+        .where('districtOfficiers.userId = :userId', { userId })
+        .leftJoinAndSelect('district.wards', 'wards')
+        .leftJoinAndSelect('wards.advertisingLocations', 'locations')
+        .getMany();
+  
+      const wards = result[0].wards as Ward[];
+      for (const ward of wards) {
+        if (ward.advertisingLocations.length > 0 && (wardIds.length > 0 ? wardIds.includes(ward.id) : true)) {
+          await addReportsToLocations(ward.advertisingLocations);
+        }
+      }
+    }
+  
+    return locations;
   }
 }
 export default new LocationService();
