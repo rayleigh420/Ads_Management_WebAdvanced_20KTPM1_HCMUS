@@ -12,6 +12,7 @@ export type LocationRESP = {
   id?: string;
   lat: number;
   long: number;
+  isPlanned?: number;
 };
 
 export const getLocationApi = async () => {

@@ -11,7 +11,7 @@ export type CustomDateInputProps<T extends object> = {
   beforeDate?: Dayjs;
   isYearOnly?: boolean;
   yearOnly?: string;
-  defaultValue?: Dayjs | null;
+  defaultValue?: Dayjs;
 } & FormItemProps<T>;
 
 export const CustomDateInput = <T extends object>({

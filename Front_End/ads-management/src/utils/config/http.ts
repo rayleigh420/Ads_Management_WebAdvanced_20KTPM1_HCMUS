@@ -15,6 +15,11 @@ export class BaseHTTP {
   constructor() {
     this.axios = axios.create({
       baseURL: import.meta.env.VITE_BACKEND_API_ENDPOINT,
+      // headers: {
+      //   'Content-Type': 'application/json',
+      //   'Access-Control-Allow-Origin': '*',
+      //   'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      // },
     });
 
     this.axios.interceptors.request.use(
@@ -43,6 +48,7 @@ export class BaseHTTP {
   }
 
   public static getInstance() {
+    console.log('BaseHTTP._instance', BaseHTTP._instance);
     if (!BaseHTTP._instance) {
       BaseHTTP._instance = new BaseHTTP();
     }
