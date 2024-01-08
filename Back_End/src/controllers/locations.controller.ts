@@ -78,7 +78,8 @@ export const getLocationsAnonymousController = async (
   next: NextFunction
 ) => {
   try {
-    const results = await locationsService.getLocationsAnonymous();
+    const deviceId = req.headers.device_id as string;
+    const results = await locationsService.getLocationsAnonymous(deviceId);
     console.log('🚀 ~ file: boards.controllers.ts:16 ~ results:', results);
     res.json(ApiResponse.success(results, 'success'));
   } catch (error) {

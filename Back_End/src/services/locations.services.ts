@@ -58,11 +58,12 @@ class LocationService {
   //   return await queryBuilder.getMany();
   // }
 
-  public async getLocationsAnonymous() {
+  public async getLocationsAnonymous(deviceId: string) {
     return await this.locationRepository
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
       .leftJoinAndSelect('location.reports', 'reports')
+      .where('reports.deviceId = :deviceId', { deviceId })
       .getMany();
   }
 
