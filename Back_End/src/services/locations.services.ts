@@ -62,7 +62,7 @@ class LocationService {
     return await this.locationRepository
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
-      // .leftJoinAndSelect('location.district', 'district')
+      .leftJoinAndSelect('location.reports', 'reports')
       .getMany();
   }
 
