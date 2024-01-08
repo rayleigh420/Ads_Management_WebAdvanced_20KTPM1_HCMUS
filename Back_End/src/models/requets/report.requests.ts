@@ -12,4 +12,5 @@ export interface ReportReqBody {
   long: string;
   districtName: string;
   wardName: string;
+  deviceId: string;
 }

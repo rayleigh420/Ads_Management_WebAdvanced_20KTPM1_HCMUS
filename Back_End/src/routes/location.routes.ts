@@ -10,6 +10,6 @@ locationsRoute.get('/anonymous/boards', wrapRequestHandler(getBoardsByLocationId
 
 //for officer
 //get all locations in ward/district/departments
-locationsRoute.get('/officer', accessTokenValidator ,wrapRequestHandler(getLocationManageByUserIdController));
+locationsRoute.get('/officer', accessTokenValidator, wrapRequestHandler(getLocationManageByUserIdController));
 
 export default locationsRoute;
