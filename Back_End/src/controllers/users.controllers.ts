@@ -72,3 +72,12 @@ export const createAccountAdminController = async (
 //     message: 'Logout successfully'
 //   });
 // };
+
+export const forgotPasword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await usersService.forgotPassword(req.body.email as string);
+    res.json(ApiResponse.success(result, USER_MESSAGES.FORGOT_PASSWORD_SENT_SUCCESSED));
+  } catch (error) {
+    next(error);
+  }
+};

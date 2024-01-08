@@ -16,6 +16,8 @@ import { Ward } from '../orm/entities/Ward';
 import { WardOfficier } from '../orm/entities/WardOfficier';
 import { hashPassword } from '../utils/crypto';
 import { signToken, verifyToken } from '../utils/jwt.utils';
+import { sendEmail } from '../utils/mailing.util';
+import { randomPassword } from '../utils/random.util';
 
 class UserService {
   private userRepository = myDataSource.getRepository(User);
@@ -57,9 +59,10 @@ class UserService {
     return savedUser;
   }
 
-  async login({ userId, userType }: { userId: number, userType: UserType }) {
+  async login({ userId, userType }: { userId: number; userType: UserType }) {
     const [newAccessToken, newRefreshToken] = await this.signAccessAndRefreshToken({
-      userId, userType
+      userId,
+      userType
     });
     const { iat, exp } = await this.decodeRefreshToken(newRefreshToken as string);
     const refreshToken = new RefreshToken();
@@ -98,11 +101,11 @@ class UserService {
     return await this.userRepository.findOne({ where: [options] });
   };
 
-  signAccessAndRefreshToken = ({ userId, userType }: { userId: number, userType: UserType }) => {
+  signAccessAndRefreshToken = ({ userId, userType }: { userId: number; userType: UserType }) => {
     return Promise.all([this.signAccessToken({ userId, userType }), this.signRefreshToken({ userId })]);
   };
 
-  private signAccessToken({ userId, userType }: { userId: number, userType: UserType }) {
+  private signAccessToken({ userId, userType }: { userId: number; userType: UserType }) {
     return signToken({
       payload: {
         userId,
@@ -151,6 +154,24 @@ class UserService {
     return await this.districtOfficerRepository.findOneBy({
       userId
     });
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
+
+    if (user) {
+      // Random password and hash
+      const password = randomPassword();
+      const hashedPassword = hashPassword(password);
+
+      // Update password in database
+      user.password = hashedPassword;
+      const userSaved = this.userRepository.save(user);
+
+      // Send mail
+      sendEmail(email, 'Forgot Password - Reset Your Password', password);
+      return userSaved;
+    }
   }
 }
 
