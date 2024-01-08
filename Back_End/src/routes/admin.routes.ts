@@ -1,7 +1,13 @@
 import { Router } from 'express';
 import { wrapRequestHandler } from '../utils/handler.ultil';
 import { createWard, deleteWard, getListWards, updateWard } from '../controllers/wards.controllers';
-import { createDistrict, deleteDistrict, getListDistricts, updateDistrict } from '../controllers/districts.controlers';
+import {
+  createDistrict,
+  deleteDistrict,
+  getListDistricts,
+  getListWardByDistrictId,
+  updateDistrict
+} from '../controllers/districts.controlers';
 import {
   createDistrictValidator,
   createWardValidator,
@@ -20,7 +26,7 @@ adminRouter.delete('/wards/:id', wrapRequestHandler(deleteWard));
 
 // District-management
 adminRouter.get('/districts', wrapRequestHandler(getListDistricts));
-// adminRouter.get('/districts/:id', wrapRequestHandler(createDistrict));
+adminRouter.get('/districts/:id', wrapRequestHandler(getListWardByDistrictId));
 adminRouter.post('/districts', createDistrictValidator, wrapRequestHandler(createDistrict));
 adminRouter.put('/districts/:id', udpateDistrictValidator, wrapRequestHandler(updateDistrict));
 adminRouter.delete('/districts/:id', wrapRequestHandler(deleteDistrict));

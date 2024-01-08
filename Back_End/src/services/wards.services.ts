@@ -17,6 +17,10 @@ class WardService {
     return await this.wardRepository.findOne({ where: option });
   }
 
+  public async findWardByDistrictId(id: number) {
+    return await this.wardRepository.findBy({ districtId: id });
+  }
+
   public async createWard(ward: WardReqBody) {
     return await this.wardRepository.save(ward);
   }
