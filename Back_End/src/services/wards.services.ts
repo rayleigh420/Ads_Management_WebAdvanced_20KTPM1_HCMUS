@@ -1,3 +1,4 @@
+import { FindWardOption } from '../models/requets/admin.requests';
 import { myDataSource } from '../orm/connectDb';
 import { Ward } from '../orm/entities/Ward';
 
@@ -10,6 +11,14 @@ class WardService {
 
   public async getWardById(id: number) {
     return await this.wardRepository.findOneBy({ id });
+  }
+
+  public async findWardByOption(option: FindWardOption) {
+    return await this.wardRepository.findOne({ where: option });
+  }
+
+  public async createWard(ward) {
+    return await this.wardRepository.save(ward);
   }
 
   public async deleteWard(id: number) {
