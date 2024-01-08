@@ -63,6 +63,7 @@ class LocationService {
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
       .leftJoinAndSelect('location.reports', 'reports')
+      .innerJoinAndSelect('location.advertisingBoards', 'boards')
       // .where('reports.deviceId = :deviceId', { deviceId })
       .getMany();
 
