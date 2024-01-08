@@ -19,6 +19,9 @@ export class Report {
   @Column("varchar", { name: "fullname_of_reporter", length: 100 })
   fullnameOfReporter: string;
 
+  @Column("varchar", { name: "device_id", length: 100 })
+  deviceId: string;
+
   @Column("varchar", { name: "email_of_reporter", nullable: true, length: 50 })
   emailOfReporter: string | null;
 

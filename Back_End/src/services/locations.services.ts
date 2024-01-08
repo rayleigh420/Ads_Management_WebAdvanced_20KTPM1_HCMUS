@@ -58,12 +58,20 @@ class LocationService {
   //   return await queryBuilder.getMany();
   // }
 
-  public async getLocationsAnonymous() {
-    return await this.locationRepository
+  public async getLocationsAnonymous(deviceId: string) {
+    const locations = await this.locationRepository
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
       .leftJoinAndSelect('location.reports', 'reports')
+      // .where('reports.deviceId = :deviceId', { deviceId })
       .getMany();
+
+    const result = locations.map((location) => {
+      location.reports = location.reports.filter(report => report.deviceId === deviceId);
+      return location;
+    });
+
+    return result;
   }
 
   public async getLocationsAnonymousById(id: number) {
