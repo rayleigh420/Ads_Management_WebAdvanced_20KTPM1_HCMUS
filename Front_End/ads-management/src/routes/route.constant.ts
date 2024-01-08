@@ -6,6 +6,8 @@ export const MY_ROUTE = {
   COMPANY_DETAIL: 'company/:id',
   LOGIN: '/login',
   DISTRICT: 'district',
+  WARD: 'ward',
+  DISTRICT_EDIT: 'district/:id',
   ADS: {
     self: 'ads',
     detail: (id: string) => `ads/${id}`,

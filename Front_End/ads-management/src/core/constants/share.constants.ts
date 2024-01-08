@@ -9,4 +9,4 @@ export const STORAGE = {
   USER_TYPE: 'userType',
 };
 
-export const USER_TYPE_ARRAY = ['ward', 'district', 'city'];
+export const USER_TYPE_ARRAY = ['city', 'district', 'ward'];
