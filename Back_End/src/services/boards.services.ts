@@ -1,4 +1,5 @@
 // import { Board } from "../entities/board.entity";
+import { BoardReqBody } from '../models/requets/admin.requests';
 import { myDataSource } from '../orm/connectDb';
 import { AdvertisingBoard } from '../orm/entities/AdvertisingBoard';
 import { District } from '../orm/entities/District';
@@ -22,6 +23,32 @@ class BoardService {
       .leftJoinAndSelect('board.location', 'location')
       .where('board.id = :id', { id })
       .getOne();
+  }
+
+  public async getListBoard() {
+    return this.boardRepository.find();
+  }
+
+  public async createBoard(board: BoardReqBody) {
+    return this.boardRepository.save(board);
+  }
+
+  public async updateBoard(id: number, board: BoardReqBody) {
+    const _board = await this.boardRepository.findOneBy({ id });
+    _board.locationId = board.locationId;
+    _board.boardType = board.boardType;
+    _board.quantity = board.quantity;
+    _board.image1 = board?.image1;
+    _board.expireDate = board.expireDate;
+    _board.width = board?.width;
+    _board.height = board?.height;
+    _board.image2 = board?.image2;
+
+    return this.boardRepository.save(_board);
+  }
+
+  public async deleteBoard(id: number) {
+    return this.boardRepository.delete({ id });
   }
 }
 

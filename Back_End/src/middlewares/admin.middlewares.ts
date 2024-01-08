@@ -113,3 +113,40 @@ export const udpateDistrictValidator = validate(
     }
   })
 );
+
+export const BoardReqValidator = validate(
+  checkSchema({
+    locationId: {
+      isNumeric: true,
+      notEmpty: true,
+      errorMessage: 'Invalid location id'
+    },
+    boardType: {
+      isNumeric: true,
+      notEmpty: true,
+      errorMessage: 'Invalid board type'
+    },
+    quantity: {
+      isNumeric: true,
+      notEmpty: true,
+      errorMessage: 'Invalid quantity'
+    },
+    image1: {
+      isString: true,
+      errorMessage: 'Invalid image'
+    },
+    expireDate: {
+      notEmpty: true,
+      isISO8601: true,
+      errorMessage: 'Invalid date'
+    },
+    width: {
+      isFloat: true,
+      errorMessage: 'Invalid width'
+    },
+    heigh: {
+      isFloat: true,
+      errorMessage: 'Invalid height'
+    }
+  })
+);
