@@ -6,7 +6,7 @@ import { myDataSource } from './orm/connectDb';
 import paginate from 'express-paginate';
 import dotenv from 'dotenv';
 import indexRouter from './routes/index.routes';
-// import cors from 'cors';
+import cors from 'cors';
 
 dotenv.config();
 const PORT = process.env.PORT || 3001;
@@ -20,13 +20,13 @@ myDataSource
     console.error('Error during Data Source initialization:', err);
   });
 
-//cors
-// const options = {
-//   origin: '*',
-//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//   preflightContinue: false,
-//   optionsSuccessStatus: 204
-// };
+cors
+const options = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
 
 // app.use(cors(options));
 app.use(express.json());
