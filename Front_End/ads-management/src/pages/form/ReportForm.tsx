@@ -25,7 +25,7 @@ export type ReportInput = {
   lat?: number;
   long?: number;
   address?: string;
-  wardName?: string;
+  districtWard?: string;
   districtName?: string;
   status?: number;
 };
@@ -93,6 +93,7 @@ export default function ReportForm({ initialValues, setOpen }: ReportFormProps) 
   });
   useEffect(() => {
     if (initialValues) {
+      console.log('initialValues', initialValues);
       const k = Cookie.get(STORAGE.REPORT);
       const localReport = k ? JSON.parse(k) : undefined;
       if (localReport) {
@@ -100,6 +101,7 @@ export default function ReportForm({ initialValues, setOpen }: ReportFormProps) 
           if (initialValues.boardId) return item.boardId == initialValues.boardId;
           if (initialValues.locationId) return item.locationId == initialValues.locationId;
         });
+        if (board.length === 0) return;
         if (initialValues.reportType === 1) {
           mutateGetReport({
             reportType: 'board',

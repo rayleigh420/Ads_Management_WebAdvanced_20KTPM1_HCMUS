@@ -2,7 +2,7 @@ import {
   LocationRESP,
   convertLocationBoardsRESPToAdvertiseInfo,
   getBoardByIdLocationApi,
-  getLocationApi,
+  getLocationByResidentApi,
 } from '@/apis/location/location.api';
 import { AdvertiseInfoType } from '@/core/models/adversise.model';
 import { ICONS } from '@/utils/theme';
@@ -39,7 +39,7 @@ function ShowMarkers({
 }: ShowMarkersProps) {
   const { data: dataLocation } = useQuery({
     queryKey: ['location'],
-    queryFn: () => getLocationApi(),
+    queryFn: () => getLocationByResidentApi(),
     select: (resp) => resp.data.data,
     placeholderData: keepPreviousData,
   });

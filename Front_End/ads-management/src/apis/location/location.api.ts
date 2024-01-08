@@ -15,8 +15,12 @@ export type LocationRESP = {
   isPlanned?: number;
 };
 
-export const getLocationApi = async () => {
+export const getLocationByResidentApi = async () => {
   return api.get<BaseResponse<LocationRESP[]>>('/locations/anonymous');
+};
+
+export const getLocationByOfficerApi = async () => {
+  return api.get<BaseResponse<LocationRESP[]>>('/locations/officer');
 };
 
 export const getBoardByIdLocationApi = async (locationId: String) => {
