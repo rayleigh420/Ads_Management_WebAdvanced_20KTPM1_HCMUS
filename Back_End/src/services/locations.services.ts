@@ -78,6 +78,7 @@ class LocationService {
     return this.locationRepository
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.advertisingBoards', 'boards')
+      .leftJoinAndSelect('boards.reports', 'reports')
       .where('location.id = :id', { id })
       .getOne();
   }
