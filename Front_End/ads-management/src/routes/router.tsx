@@ -18,6 +18,9 @@ import {
 } from '@/pages';
 import { createBrowserRouter } from 'react-router-dom';
 import { MY_ROUTE } from './route.constant';
+import CityDistrictManagementPage from '@/pages/city/district';
+import CityWardManagementPage from '@/pages/city/ward';
+import EditDistrict from '@/pages/city/district/[slug]';
 
 const router = createBrowserRouter([
   {
@@ -59,6 +62,22 @@ const router = createBrowserRouter([
               { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
               { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
               { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'city',
+        element: <PrivateRoute type={UserType.city} />,
+        children: [
+          {
+            path: '',
+            element: <LayoutCity />,
+            children: [
+              { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
+              { path: MY_ROUTE.DISTRICT, element: <CityDistrictManagementPage /> },
+              { path: MY_ROUTE.WARD, element: <CityWardManagementPage /> },
+              { path: MY_ROUTE.DISTRICT_EDIT, element: <EditDistrict /> },
             ],
           },
         ],

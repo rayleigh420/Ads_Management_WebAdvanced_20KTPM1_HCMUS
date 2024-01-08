@@ -29,6 +29,14 @@ export const getBoardByIdLocationApi = async (locationId: String) => {
   });
 };
 
+export const getDistrictApi = async () => {
+  return api.get<BaseResponse<LocationRESP[]>>('/admins/districts');
+};
+
+export const deleteDistrictApi = async (id: any) => {
+  return api.delete<BaseResponse<LocationRESP[]>>(`/admins/districts/${id}`);
+};
+
 export const convertLocationBoardsRESPToAdvertiseInfo = (
   locationBoardsRESP: LocationBoardsRESP,
 ): AdvertiseInfoType[] => {
