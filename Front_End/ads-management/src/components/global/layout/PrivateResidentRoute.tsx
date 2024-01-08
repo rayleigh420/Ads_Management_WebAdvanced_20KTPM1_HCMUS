@@ -5,13 +5,13 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-export default function PrivateRoute({ type }: { type: UserType }) {
+export default function PrivateResidentRoute() {
   const auth = useSelector((state: RootState) => state.auth);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (auth.type !== type && auth.isLogin === false) {
+    if (auth.type !== UserType.resident && !auth.isLogin) {
       navigate(MY_ROUTE.LOGIN);
     }
   }, [auth]);

@@ -18,6 +18,7 @@ const LocationInfo = ({ location }: LocationInfoProps) => {
   const { mutate: mutateAddressDetail } = useMutation({
     mutationFn: (data: Coordinates) => getAddressMapDetailApi(data),
     onSuccess: (res) => {
+      console.log('eeeere', res.data.features[0]);
       setName(res.data.features[0].text);
       if (res.data.features[0].properties.address === undefined) {
         setAddressExisted(false);

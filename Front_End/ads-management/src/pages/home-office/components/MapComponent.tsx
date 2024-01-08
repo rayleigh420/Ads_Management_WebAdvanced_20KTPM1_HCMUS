@@ -17,17 +17,10 @@ interface MapComponentProps {
   onMapClick: (event: MapLayerMouseEvent) => void;
   children?: React.ReactNode;
   mapRef?: React.MutableRefObject<MapRef | null>;
-  zoom?: number;
   setZoom?: (zoom: number) => void;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({
-  onMapClick,
-  children,
-  mapRef,
-  zoom,
-  setZoom,
-}) => {
+const MapComponent: React.FC<MapComponentProps> = ({ onMapClick, children, mapRef, setZoom }) => {
   const mapStyleIndex = useRef<number>(0);
   const [mapStyle, setMapStyle] = useState(MAP_STYLES[mapStyleIndex.current]);
   const geoControlRef = useRef<GeolocateControl>(null);
@@ -116,7 +109,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
         trackResize
         onLoad={handleLoadMap}
         onClick={handleMapClick}
-        // zoom={zoom || 14}
         onZoom={(event) => {
           if (setZoom) setZoom(event.viewState.zoom);
         }}

@@ -12,7 +12,7 @@ import LocationInfo from './components/LocationInfo';
 import MapComponent from './components/MapComponent';
 import ShowMarkers from './components/ShowMarkers';
 
-const HomePage = () => {
+const HomeOfficerPage = () => {
   const [selectedMarker, setSelectedMarker] = useState<Coordinates>();
   const [boardAds, setBoardAds] = useState<AdvertiseInfoType[]>();
   const [isReport, setIsReport] = useState<boolean>(true);
@@ -63,7 +63,7 @@ const HomePage = () => {
       </div>
 
       <div className='w-full flex'>
-        <MapComponent onMapClick={handleMapClick} mapRef={mapRef} zoom={zoom} setZoom={setZoom}>
+        <MapComponent onMapClick={handleMapClick} mapRef={mapRef} setZoom={setZoom}>
           <div>
             <ShowMarkers
               setSelectedMarker={handleSelectedMarker}
@@ -100,4 +100,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default HomeOfficerPage;

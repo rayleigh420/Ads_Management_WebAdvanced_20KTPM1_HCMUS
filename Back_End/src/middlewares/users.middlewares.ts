@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { checkSchema } from 'express-validator';
+import { check, checkSchema } from 'express-validator';
 import { ErrorWithStatus } from '../models/error';
 import { validate } from '../utils/validator';
 import usersServices from '../services/users.services';
@@ -57,7 +57,7 @@ export const registerValidator = validate(
       custom: {
         options: async (value, { req }) => {
           const { email } = req.body;
-          const findOptions:  FindUserOptions = { email };
+          const findOptions: FindUserOptions = { email };
           const isEmailExist = await usersServices.findUserByOptions(findOptions);
           if (isEmailExist) {
             throw new Error('Email address already in use');
@@ -75,15 +75,37 @@ export const accessTokenValidator = validate(
       Authorization: {
         custom: {
           options: async (value: string, { req }) => {
-            const accessToken = (value || '').split(' ')[1]
-            return await verifyAccessToken(accessToken, req)
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req);
           }
         }
       }
     },
     ['headers']
   )
-)
+);
+
+export const forgotPasswordValidator = validate(
+  checkSchema({
+    email: {
+      notEmpty: true,
+      isEmail: true,
+      normalizeEmail: true,
+      errorMessage: 'Invalid email address',
+      custom: {
+        options: async (value, { req }) => {
+          const { email } = req.body;
+          const findOptions: FindUserOptions = { email };
+          const isEmailExist = await usersServices.findUserByOptions(findOptions);
+          if (!isEmailExist) {
+            throw new Error('Email address does not exist in system');
+          }
+          return true;
+        }
+      }
+    }
+  })
+);
 
 // export const refreshTokenValidator = validate(
 //   checkSchema(

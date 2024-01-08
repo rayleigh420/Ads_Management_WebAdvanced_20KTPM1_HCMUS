@@ -1,6 +1,8 @@
 import { loginApi } from '@/apis/auth/auth.api';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
-import { STORAGE } from '@/core/constants/share.constants';
+import { STORAGE, USER_TYPE_ARRAY } from '@/core/constants/share.constants';
+import { UserType } from '@/core/enums/user-type.enum';
+import { getEnum } from '@/core/parser/enum.parser';
 import { loginSuccess } from '@/store/auth/auth.slice';
 import { BaseHTTP } from '@/utils/config/http';
 import Icon from '@ant-design/icons';
@@ -23,17 +25,32 @@ export default function LoginPage() {
   const { mutate: mutateLogin } = useMutation({
     mutationFn: (data: LoginFormData) => loginApi(data),
     onSuccess: (resp) => {
-      Cookie.set(STORAGE.ACCESS_TOKEN, resp.data.data.newAccessToken, {
+      Cookie.set(STORAGE.ACCESS_TOKEN, resp.data.data?.newAccessToken!, {
         path: '/',
       });
-      Cookie.set(STORAGE.REFRESH_TOKEN, resp.data.data.newRefreshToken, {
+      Cookie.set(STORAGE.ACCESS_TOKEN, resp.data.data?.newAccessToken!, {
         path: '/',
       });
+      Cookie.set(
+        STORAGE.USER_TYPE,
+        getEnum<UserType>(USER_TYPE_ARRAY[resp.data.data?.userType!], UserType) ||
+          UserType.resident,
+        {
+          path: '/',
+        },
+      );
       BaseHTTP.getInstance().config({
-        accessToken: resp.data.data.newAccessToken,
+        accessToken: resp.data.data?.newAccessToken!,
       });
 
-      dispatch(loginSuccess({ token: resp.data.data.newAccessToken }));
+      dispatch(
+        loginSuccess({
+          userToken: resp.data.data?.newAccessToken!,
+          type:
+            getEnum<UserType>(USER_TYPE_ARRAY[resp.data.data?.userType!], UserType) ||
+            UserType.resident,
+        }),
+      );
       navigate('/');
     },
   });

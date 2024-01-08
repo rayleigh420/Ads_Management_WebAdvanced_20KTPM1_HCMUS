@@ -5,4 +5,8 @@ export const EMAIL_VALIDATION_CODE_LENGTH = 6;
 export const STORAGE = {
   ACCESS_TOKEN: 'accessToken',
   REFRESH_TOKEN: 'refreshToken',
+  REPORT: 'report',
+  USER_TYPE: 'userType',
 };
+
+export const USER_TYPE_ARRAY = ['ward', 'district', 'city'];

@@ -2,7 +2,7 @@ import {
   LocationRESP,
   convertLocationBoardsRESPToAdvertiseInfo,
   getBoardByIdLocationApi,
-  getLocationApi,
+  getLocationByResidentApi,
 } from '@/apis/location/location.api';
 import { AdvertiseInfoType } from '@/core/models/adversise.model';
 import { ICONS } from '@/utils/theme';
@@ -39,7 +39,7 @@ function ShowMarkers({
 }: ShowMarkersProps) {
   const { data: dataLocation } = useQuery({
     queryKey: ['location'],
-    queryFn: () => getLocationApi(),
+    queryFn: () => getLocationByResidentApi(),
     select: (resp) => resp.data.data,
     placeholderData: keepPreviousData,
   });
@@ -69,6 +69,7 @@ function ShowMarkers({
           category: index,
         },
         id: data.id,
+        isPlanned: data.isPlanned,
         geometry: {
           type: 'Point',
           coordinates: [data.long, data.lat],
@@ -86,8 +87,6 @@ function ShowMarkers({
     zoom: zoom || 14,
     options: { radius: 75, maxZoom: 20 },
   });
-
-  console.log('bounds', boardAds);
 
   return (
     <div>
@@ -124,7 +123,7 @@ function ShowMarkers({
             </Marker>
           );
         }
-
+        console.log('isCluster', cluster.isPlanned);
         return (
           <Marker
             key={longitude}
@@ -139,7 +138,10 @@ function ShowMarkers({
             }
             draggable
           >
-            <img src={ICONS.MARKER_ADS_RED} alt='' />
+            <img
+              src={cluster.isPlanned === 1 ? ICONS.MARKER_ADS_RED : ICONS.MARKER_ADS_GREEN}
+              alt=''
+            />
           </Marker>
         );
       })}
@@ -153,10 +155,10 @@ function ShowMarkers({
           focusAfterOpen
         >
           <LocationPopup
-            title={boardAds?.[pageBoard - 1].name}
-            description={boardAds?.[pageBoard - 1].locationType}
-            location={boardAds?.[pageBoard - 1].address}
-            status={boardAds?.[pageBoard - 1].isPlanned ? 'Dã quy hoạch' : 'Chưa quy hoạch'}
+            title={boardAds?.[pageBoard - 1]?.name}
+            description={boardAds?.[pageBoard - 1]?.locationType}
+            location={boardAds?.[pageBoard - 1]?.address}
+            status={boardAds?.[pageBoard - 1]?.isPlanned ? 'Dã quy hoạch' : 'Chưa quy hoạch'}
           />
           <Pagination
             simple

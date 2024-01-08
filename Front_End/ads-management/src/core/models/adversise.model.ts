@@ -19,3 +19,9 @@ export interface AdsOrReportLocationInfo {
   advertisingLocation?: AdvertiseInfoType;
   coordinates: Coordinates;
 }
+
+export type ReportTypeLocal = {
+  reportId: number;
+  locationId?: number;
+  boardId?: number;
+};

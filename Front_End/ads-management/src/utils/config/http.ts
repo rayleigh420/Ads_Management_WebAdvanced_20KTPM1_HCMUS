@@ -1,5 +1,6 @@
+import { handleError } from '@/core/helpers/noti-error.helper';
+import { store } from '@/store';
 import { logoutSuccess } from '@/store/auth/auth.slice';
-import { authStore } from '@/store/auth/auth.store';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import nProgress from 'nprogress';
 
@@ -15,6 +16,11 @@ export class BaseHTTP {
   constructor() {
     this.axios = axios.create({
       baseURL: import.meta.env.VITE_BACKEND_API_ENDPOINT,
+      // headers: {
+      //   'Content-Type': 'application/json',
+      //   'Access-Control-Allow-Origin': '*',
+      //   'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      // },
     });
 
     this.axios.interceptors.request.use(
@@ -23,6 +29,7 @@ export class BaseHTTP {
         return config;
       },
       (error: AxiosError): Promise<AxiosError> => {
+        handleError(error);
         return Promise.reject(error);
       },
     );
@@ -35,14 +42,16 @@ export class BaseHTTP {
       (error: AxiosError): Promise<AxiosError> => {
         nProgressHandler('stop');
         if ([401, 403].includes(error.response?.status || 0)) {
-          authStore.dispatch(logoutSuccess());
-        }
+          store.dispatch(logoutSuccess());
+        } else handleError(error);
+
         return Promise.reject(error);
       },
     );
   }
 
   public static getInstance() {
+    console.log('BaseHTTP._instance', BaseHTTP._instance);
     if (!BaseHTTP._instance) {
       BaseHTTP._instance = new BaseHTTP();
     }

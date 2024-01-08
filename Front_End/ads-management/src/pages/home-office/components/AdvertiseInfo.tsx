@@ -43,15 +43,22 @@ function AdvertiseInfoComponent({ advertiseInfo }: { advertiseInfo?: AdvertiseIn
             </Modal>
           </div>
           <Modal
+            // centered
             centered
             open={modal1Open}
             onOk={() => setModal1Open(false)}
             onCancel={() => setModal1Open(false)}
-            footer=''
             width={1000}
-            style={{ top: 20 }}
+            className='my-3'
+            // style={{ top: 20 }}
           >
-            <ReportForm />
+            <ReportForm
+              setOpen={setModal1Open}
+              initialValues={{
+                boardId: advertiseInfo.id,
+                reportType: 1,
+              }}
+            />
           </Modal>
         </div>
       ) : (

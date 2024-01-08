@@ -6,7 +6,7 @@ import SiderMenu from '../sider';
 
 const { Content } = Layout;
 
-export default function LayoutAll() {
+export default function LayoutCity() {
   const [collapsed, setCollapsed] = useState(true);
 
   return (

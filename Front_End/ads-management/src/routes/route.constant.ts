@@ -1,16 +1,16 @@
 export const MY_ROUTE = {
-  HOME: '/',
-  REPORT: '/report',
-  REQUIRE_LISENCE: '/require',
-  REQUIRE_EDIT: '/require/:id',
-  COMPANY_DETAIL: '/company/:id',
+  HOME: '',
+  REPORT: 'report',
+  REQUIRE_LISENCE: 'require',
+  REQUIRE_EDIT: 'require/:id',
+  COMPANY_DETAIL: 'company/:id',
   LOGIN: '/login',
-  DISTRICT: '/district',
+  DISTRICT: 'district',
   ADS: {
-    self: '/ads',
-    detail: (id: string) => `/ads/${id}`,
-    REQUIRE_EDIT: '/ads/required-edit',
-    LOCATION: '/ads/location',
+    self: 'ads',
+    detail: (id: string) => `ads/${id}`,
+    REQUIRE_EDIT: 'ads/required-edit',
+    LOCATION: 'ads/location',
   },
 };
 
