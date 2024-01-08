@@ -20,7 +20,6 @@ myDataSource
     console.error('Error during Data Source initialization:', err);
   });
 
-
 const options = {
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -28,7 +27,7 @@ const options = {
   optionsSuccessStatus: 204
 };
 
-// app.use(cors(options));
+app.use(cors(options));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(paginate.middleware(5, 50));
