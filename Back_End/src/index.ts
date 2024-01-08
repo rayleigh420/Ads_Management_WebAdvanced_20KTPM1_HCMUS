@@ -20,7 +20,7 @@ myDataSource
     console.error('Error during Data Source initialization:', err);
   });
 
-cors
+
 const options = {
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
