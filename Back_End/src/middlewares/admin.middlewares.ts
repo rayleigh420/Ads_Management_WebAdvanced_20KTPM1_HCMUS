@@ -16,8 +16,44 @@ export const createWardValidator = validate(
       isNumeric: true,
       custom: {
         options: async (value, { req }) => {
-          const { districtId } = req.body;
-          const findOptions: FindWardOption = { districtId };
+          const { name } = req.body;
+          const findOptions: FindWardOption = { name };
+          const isWardExist = await wardsServices.findWardByOption(findOptions);
+          if (isWardExist) {
+            throw new Error('Ward is already in system');
+          }
+          return true;
+        }
+      }
+    }
+  })
+);
+
+export const updateWardValidator = validate(
+  checkSchema({
+    name: {
+      notEmpty: true,
+      isString: true,
+      errorMessage: 'Invalid name',
+      custom: {
+        options: async (value, { req }) => {
+          const id = req.params.id;
+          const findOptions: FindWardOption = { id };
+          const isWardExist = await wardsServices.findWardByOption(findOptions);
+          if (!isWardExist) {
+            throw new Error('Ward does not exist in system');
+          }
+          return true;
+        }
+      }
+    },
+    districtId: {
+      notEmpty: true,
+      isNumeric: true,
+      custom: {
+        options: async (value, { req }) => {
+          const { name, districtId } = req.body;
+          const findOptions: FindWardOption = { name, districtId };
           const isWardExist = await wardsServices.findWardByOption(findOptions);
           if (isWardExist) {
             throw new Error('Ward is already in system');
@@ -42,6 +78,34 @@ export const createDistrictValidator = validate(
           const isDistrictExist = await districtsServices.findDistrictByOption(findOptions);
           if (isDistrictExist) {
             throw new Error('District is already in system');
+          }
+          return true;
+        }
+      }
+    }
+  })
+);
+
+export const udpateDistrictValidator = validate(
+  checkSchema({
+    name: {
+      notEmpty: true,
+      isString: true,
+      errorMessage: 'Invalid name',
+      custom: {
+        options: async (value, { req }) => {
+          const id = req.params.id;
+          const findOptionsId: FindDistrictOption = { id };
+          const isDistrictIdExist = await districtsServices.findDistrictByOption(findOptionsId);
+          if (!isDistrictIdExist) {
+            throw new Error('District does not exist in system');
+          }
+
+          const { name } = req.body;
+          const findOptionsName: FindDistrictOption = { name };
+          const isDistrictNameExist = await districtsServices.findDistrictByOption(findOptionsName);
+          if (isDistrictNameExist) {
+            throw new Error('District name is already in system');
           }
           return true;
         }

@@ -1,4 +1,4 @@
-import { FindDistrictOption } from '../models/requets/admin.requests';
+import { DistrictReqBody, FindDistrictOption } from '../models/requets/admin.requests';
 import { myDataSource } from '../orm/connectDb';
 import { District } from '../orm/entities/District';
 
@@ -19,6 +19,12 @@ class DistrictService {
 
   public async createDistrict(district) {
     return await this.districtRepository.save(district);
+  }
+
+  public async updateDistrict(id: number, district: DistrictReqBody) {
+    const _district = await this.districtRepository.findOneBy({ id });
+    _district.name = district.name;
+    return this.districtRepository.save(_district);
   }
 
   public async deleteDistrict(id: number) {
