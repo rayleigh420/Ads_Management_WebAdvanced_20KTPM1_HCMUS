@@ -13,6 +13,8 @@ export type CustomSelectInputProps<T> = {
   classNameForm?: string;
   options?: OptionItems;
   showSearch?: boolean;
+  defaultValue?: any;
+  onChange?: (value: any) => void;
 };
 
 const CustomSelectInput = <T extends object>({
@@ -24,6 +26,8 @@ const CustomSelectInput = <T extends object>({
   classNameForm,
   options,
   showSearch,
+  defaultValue,
+  onChange,
 }: CustomSelectInputProps<T>) => {
   return (
     <Form.Item
@@ -35,8 +39,10 @@ const CustomSelectInput = <T extends object>({
     >
       <Select
         className={`h-[39px] ${classNameSelect}`}
+        onChange={onChange}
         disabled={disabled}
         options={options}
+        defaultValue={defaultValue}
         showSearch={showSearch}
       />
     </Form.Item>

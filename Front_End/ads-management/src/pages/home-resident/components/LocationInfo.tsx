@@ -1,6 +1,6 @@
 import { getAddressMapDetailApi } from '@/apis/map-box/address-map_detail.api';
 import { Coordinates } from '@/core/models/map.model';
-import { ReportForm } from '@/pages';
+import { ReportFormModal } from '@/pages';
 import { CheckCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Modal } from 'antd';
@@ -69,13 +69,13 @@ const LocationInfo = ({ location }: LocationInfoProps) => {
             className='my-3'
             // style={{ top: 20 }}
           >
-            <ReportForm
+            <ReportFormModal
               setOpen={setModal}
               initialValues={{
                 lat: location?.lat,
                 long: location?.long,
                 address: address,
-                districtWard: dataRef.current[0]?.text,
+                wardName: dataRef.current[0]?.text,
                 districtName: dataRef.current[2]?.text,
                 reportType: 0,
               }}

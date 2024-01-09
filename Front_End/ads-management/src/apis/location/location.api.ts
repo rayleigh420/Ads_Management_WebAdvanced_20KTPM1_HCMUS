@@ -13,14 +13,26 @@ export type LocationRESP = {
   lat: number;
   long: number;
   isPlanned?: number;
+  reports?: any[];
+  advertisingBoards?: any[];
 };
 
 export const getLocationByResidentApi = async () => {
   return api.get<BaseResponse<LocationRESP[]>>('/locations/anonymous');
 };
+export type ReportOfficerREQ = {
+  limit?: number;
+  skip?: number;
+};
 
-export const getLocationByOfficerApi = async () => {
-  return api.get<BaseResponse<LocationRESP[]>>('/locations/officer');
+export const getLocationByOfficerApi = async (params?: ReportOfficerREQ) => {
+  if (!params) {
+    params = {
+      limit: 0,
+      skip: 0,
+    };
+  }
+  return api.get<BaseResponse<{ items: LocationRESP[] }>>('/locations/officer', { params });
 };
 
 export const getBoardByIdLocationApi = async (locationId: String) => {

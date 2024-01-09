@@ -3,7 +3,7 @@ export { default as AdsRequiredEditPage } from './ads-require-edit/AdsRequiredEd
 export { default as DistrictManagementPage } from './district-management/DistrictManagementPage';
 export { default as AdDetailForm } from './form/AdDetailForm';
 export { default as CompanyDetailForm } from './form/CompanyDetailForm';
-export { default as ReportForm } from './form/ReportForm';
+export { default as ReportFormModal } from './form/ReportForm';
 export { default as RequireEditForm } from './form/RequireEditForm';
 export { default as RequireLisenceForm } from './form/RequireLisenceForm';
 export { default as HomeOfficerPage } from './home-office/HomeOfficerPage';

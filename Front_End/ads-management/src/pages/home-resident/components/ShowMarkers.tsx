@@ -17,6 +17,7 @@ type ShowMarkersProps = {
   selectedMarker?: LocationRESP;
   setSelectedMarker: (location?: LocationRESP) => void;
   isReport?: boolean;
+  isPlanned: number;
   mapRef: React.MutableRefObject<MapRef | null>;
   zoom?: number;
   isRefClick: React.MutableRefObject<boolean>;
@@ -33,6 +34,8 @@ function ShowMarkers({
   setBoardAds,
   mapRef,
   zoom,
+  isPlanned,
+  isReport,
   isRefClick,
   pageBoard,
   setPageBoard,
@@ -59,9 +62,14 @@ function ShowMarkers({
 
   // clusters
   const points = useMemo(() => {
-    console.log('dataLocation', dataLocation);
     if (dataLocation) {
-      return dataLocation.map((data, index) => ({
+      let dataAll: LocationRESP[] = [];
+      dataAll = dataLocation;
+      if (isPlanned !== 3) dataAll = dataLocation.filter((data) => data.isPlanned === isPlanned);
+      if (!isReport) {
+        dataAll = dataLocation.filter((data) => data.reports?.length === 0);
+      }
+      return dataAll.map((data, index) => ({
         type: 'Feature',
         properties: {
           cluster: false,
@@ -70,6 +78,8 @@ function ShowMarkers({
         },
         id: data.id,
         isPlanned: data.isPlanned,
+        reports: data.reports,
+        advertisingBoards: data.advertisingBoards,
         geometry: {
           type: 'Point',
           coordinates: [data.long, data.lat],
@@ -77,7 +87,7 @@ function ShowMarkers({
       }));
     }
     return [];
-  }, [dataLocation]);
+  }, [dataLocation, isPlanned]);
 
   const bounds: any = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
 
@@ -123,7 +133,6 @@ function ShowMarkers({
             </Marker>
           );
         }
-        console.log('isCluster', cluster.isPlanned);
         return (
           <Marker
             key={longitude}
@@ -139,13 +148,19 @@ function ShowMarkers({
             draggable
           >
             <img
-              src={cluster.isPlanned === 1 ? ICONS.MARKER_ADS_RED : ICONS.MARKER_ADS_GREEN}
+              src={
+                cluster.advertisingBoards.length !== 0
+                  ? cluster.isPlanned === 1
+                    ? ICONS.MARKER_ADS_RED
+                    : ICONS.MARKER_ADS_VIOLET
+                  : ICONS.MARKER_ADS_BLUE
+              }
               alt=''
             />
           </Marker>
         );
       })}
-      {selectedMarker?.id && (
+      {selectedMarker?.id && boardAds?.[pageBoard - 1]?.name && (
         <Popup
           longitude={selectedMarker.long}
           latitude={selectedMarker.lat}

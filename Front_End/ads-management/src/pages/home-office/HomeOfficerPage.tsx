@@ -91,7 +91,10 @@ const HomeOfficerPage = () => {
         </MapComponent>
         <div className='ml-6 w-[25%]'>
           <div className='flex flex-col gap-5'>
-            <AdvertiseInfoComponent advertiseInfo={boardAds?.[pageBoard - 1]} />
+            <AdvertiseInfoComponent
+              advertiseInfo={boardAds?.[pageBoard - 1]}
+              location={selectedMarker}
+            />
             {!selectedMarker?.id && <LocationInfo location={selectedMarker} />}
           </div>
         </div>

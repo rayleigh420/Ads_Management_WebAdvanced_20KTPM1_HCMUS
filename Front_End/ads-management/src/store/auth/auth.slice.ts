@@ -1,5 +1,7 @@
+import { STORAGE } from '@/core/constants/share.constants';
 import { UserType } from '@/core/enums/user-type.enum';
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 
 type AuthState = {
   userToken: string | null;
@@ -30,6 +32,9 @@ const authSlice = createSlice({
       state.userToken = null;
       state.isLogin = false;
       state.type = UserType.resident;
+      Cookies.remove(STORAGE.ACCESS_TOKEN);
+      Cookies.remove(STORAGE.REFRESH_TOKEN);
+      Cookies.remove(STORAGE.USER_TYPE);
     },
   },
 });

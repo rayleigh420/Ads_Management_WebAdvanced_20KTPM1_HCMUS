@@ -16,6 +16,7 @@ export class BaseHTTP {
   constructor() {
     this.axios = axios.create({
       baseURL: import.meta.env.VITE_BACKEND_API_ENDPOINT,
+
       // headers: {
       //   'Content-Type': 'application/json',
       //   'Access-Control-Allow-Origin': '*',
@@ -58,11 +59,13 @@ export class BaseHTTP {
     return BaseHTTP._instance;
   }
 
-  public config(config: any) {
-    const { accessToken } = config;
+  public config(config: { accessToken?: string; device_id?: string }) {
+    const { accessToken, device_id } = config;
     BaseHTTP.getInstance().axios.interceptors.request.use(
       (request) => {
-        request.headers.Authorization = `Bearer ${accessToken}`;
+        console.log('request', device_id);
+        if (accessToken) request.headers.Authorization = `Bearer ${accessToken}`;
+        if (device_id) request.headers.device_id = device_id;
         return request;
       },
       (error) => {

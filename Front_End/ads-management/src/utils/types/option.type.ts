@@ -1,6 +1,6 @@
 export type OptionItem = {
   label: string;
-  value: string | number | boolean;
+  value: string | number | boolean | null;
   disabled?: boolean;
 };
 

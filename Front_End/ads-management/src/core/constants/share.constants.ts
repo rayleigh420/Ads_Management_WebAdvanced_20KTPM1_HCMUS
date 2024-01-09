@@ -7,6 +7,7 @@ export const STORAGE = {
   REFRESH_TOKEN: 'refreshToken',
   REPORT: 'report',
   USER_TYPE: 'userType',
+  DEVICE_ID: 'deviceId',
 };
 
 export const USER_TYPE_ARRAY = ['city', 'district', 'ward'];

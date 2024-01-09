@@ -1,4 +1,4 @@
-import '../../styles/global.scss';
+// import '../../styles/global.scss';
 const NotFoundPage = () => {
   return (
     <div className='wrapper'>

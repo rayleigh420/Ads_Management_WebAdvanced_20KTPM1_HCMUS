@@ -21,7 +21,7 @@ export const CustomEditorInput = <T extends object>({
     <Form.Item<T> label={label} name={name as any} labelCol={{ span: 24 }} rules={rules}>
       <Editor
         disabled={disabled}
-        apiKey='t8nah5tn0cpxgd8k8raf0zzt0c4pxf3rl54o1ys4xfto7k0a'
+        apiKey={import.meta.env.VITE_TINY_API_KEY}
         initialValue={defaultValue}
         onInit={() => 'gfd'}
         ref={refEditor}

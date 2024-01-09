@@ -38,9 +38,9 @@ function ShowMarkers({
   setPageBoard,
 }: ShowMarkersProps) {
   const { data: dataLocation } = useQuery({
-    queryKey: ['location'],
+    queryKey: ['location-officer'],
     queryFn: () => getLocationByOfficerApi(),
-    select: (resp) => resp.data.data,
+    select: (resp) => resp.data.data?.items,
     placeholderData: keepPreviousData,
   });
 
@@ -70,6 +70,7 @@ function ShowMarkers({
         },
         id: data.id,
         isPlanned: data.isPlanned,
+        reports: data.reports,
         geometry: {
           type: 'Point',
           coordinates: [data.long, data.lat],
@@ -139,7 +140,13 @@ function ShowMarkers({
             draggable
           >
             <img
-              src={cluster.isPlanned === 1 ? ICONS.MARKER_ADS_RED : ICONS.MARKER_ADS_GREEN}
+              src={
+                cluster.reports.length !== 0
+                  ? cluster.isPlanned === 1
+                    ? ICONS.MARKER_ADS_RED
+                    : ICONS.MARKER_ADS_VIOLET
+                  : ICONS.MARKER_ADS_BLUE
+              }
               alt=''
             />
           </Marker>
@@ -158,7 +165,7 @@ function ShowMarkers({
             title={boardAds?.[pageBoard - 1]?.name}
             description={boardAds?.[pageBoard - 1]?.locationType}
             location={boardAds?.[pageBoard - 1]?.address}
-            status={boardAds?.[pageBoard - 1]?.isPlanned ? 'Dã quy hoạch' : 'Chưa quy hoạch'}
+            status={boardAds?.[pageBoard - 1]?.isPlanned ? 'Đã quy hoạch' : 'Chưa quy hoạch'}
           />
           <Pagination
             simple

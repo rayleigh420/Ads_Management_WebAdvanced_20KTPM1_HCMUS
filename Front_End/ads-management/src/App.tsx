@@ -1,3 +1,4 @@
+import { getOrSetDeviceId } from '@/utils/config/diviceId';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -25,6 +26,12 @@ function App() {
         accessToken: Cookies.get(STORAGE.ACCESS_TOKEN),
       });
       dispatch(loginSuccess({ type: userType, userToken: Cookies.get(STORAGE.ACCESS_TOKEN) }));
+    } else {
+      const deviceId = getOrSetDeviceId();
+      console.log('deviceId', deviceId);
+      BaseHTTP.getInstance().config({
+        device_id: deviceId,
+      });
     }
   }, []);
 
