@@ -15,6 +15,10 @@ export default {
           bgunsuccess: 'rgb(229 246 253)',
         },
       },
+      fontFamily: {
+        inter: 'Inter, sans-serif',
+        roboto: 'Roboto, sans-serif',
+      },
     },
   },
   plugins: [],

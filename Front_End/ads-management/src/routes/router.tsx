@@ -12,15 +12,15 @@ import {
   HomeResidentPage,
   LoginPage,
   NotFoundPage,
-  ReportForm,
+  ReportFormModal,
   RequireEditForm,
   RequireLisenceForm,
 } from '@/pages';
+import CityDistrictManagementPage from '@/pages/city/district';
+import EditDistrict from '@/pages/city/district/[slug]';
+import CityWardManagementPage from '@/pages/city/ward';
 import { createBrowserRouter } from 'react-router-dom';
 import { MY_ROUTE } from './route.constant';
-import CityDistrictManagementPage from '@/pages/city/district';
-import CityWardManagementPage from '@/pages/city/ward';
-import EditDistrict from '@/pages/city/district/[slug]';
 
 const router = createBrowserRouter([
   {
@@ -28,14 +28,14 @@ const router = createBrowserRouter([
     element: <PublicRoute />,
     children: [
       {
-        path: 'resident',
+        path: UserType.resident,
         element: <PrivateResidentRoute />,
         children: [
           {
             element: <LayoutResident />,
             children: [
               { path: MY_ROUTE.HOME, element: <HomeResidentPage /> },
-              { path: MY_ROUTE.REPORT, element: <ReportForm /> },
+              { path: MY_ROUTE.REPORT, element: <ReportFormModal /> },
               { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
@@ -47,15 +47,15 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'ward',
-        element: <PrivateRoute type={UserType.city} />,
+        path: UserType.ward,
+        element: <PrivateRoute type={UserType.ward} />,
         children: [
           {
             path: '',
             element: <LayoutCity />,
             children: [
               { path: MY_ROUTE.HOME, element: <HomeOfficerPage /> },
-              { path: MY_ROUTE.REPORT, element: <ReportForm /> },
+              { path: MY_ROUTE.REPORT, element: <ReportFormModal /> },
               { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
@@ -67,7 +67,27 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'city',
+        path: UserType.district,
+        element: <PrivateRoute type={UserType.district} />,
+        children: [
+          {
+            path: '',
+            element: <LayoutCity />,
+            children: [
+              { path: MY_ROUTE.HOME, element: <HomeOfficerPage /> },
+              { path: MY_ROUTE.REPORT, element: <ReportFormModal /> },
+              { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
+              { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
+              { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
+              { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
+              { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
+              { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
+            ],
+          },
+        ],
+      },
+      {
+        path: UserType.city,
         element: <PrivateRoute type={UserType.city} />,
         children: [
           {

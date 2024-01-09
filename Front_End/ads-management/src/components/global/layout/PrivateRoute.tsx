@@ -11,8 +11,11 @@ export default function PrivateRoute({ type }: { type: UserType }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (auth.type !== type && auth.isLogin === false) {
-      navigate(MY_ROUTE.LOGIN);
+    console.log('auth', auth.type);
+    console.log('auth', auth.isLogin);
+    console.log('auth', type);
+    if (auth.type !== type) {
+      if (auth.isLogin !== true && auth.isLogin !== undefined) navigate(MY_ROUTE.LOGIN);
     }
   }, [auth]);
 

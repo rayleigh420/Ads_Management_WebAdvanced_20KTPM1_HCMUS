@@ -2,12 +2,11 @@ import { ReportREQ, createReportApi, getReportApi } from '@/apis/report/report.a
 import { CustomEditorInput } from '@/components/ui/form/CustomEditorInput';
 import CustomSelectInput from '@/components/ui/form/CustomSelectInput';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
-import { STORAGE } from '@/core/constants/share.constants';
+import { getOrSetDeviceId } from '@/utils/config/diviceId';
 import { UploadOutlined } from '@ant-design/icons';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Divider, Form, Image, Upload } from 'antd';
-import Cookie from 'js-cookie';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 export type ReportInput = {
@@ -19,13 +18,12 @@ export type ReportInput = {
   content: Object;
   file: File;
   reportForm: string;
-  reportType?: 0 | 1;
   locationId?: string;
   boardId?: string;
   lat?: number;
   long?: number;
   address?: string;
-  districtWard?: string;
+  wardName?: string;
   districtName?: string;
   status?: number;
 };
@@ -39,81 +37,59 @@ function isVietnamesePhoneNumber(number: string) {
   return /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
 }
 
-export default function ReportForm({ initialValues, setOpen }: ReportFormProps) {
+export default function ReportFormModal({ initialValues, setOpen }: ReportFormProps) {
   const [form] = Form.useForm<ReportInput>();
   const [fileList, setFileList] = useState([]);
   const ref = useRef<any>(null);
   const [isCreate, setIsCreate] = useState<boolean>(true);
   const [image, setImage] = useState<string>('');
+
+  const queryClient = useQueryClient();
+
   const { mutate: mutateReport } = useMutation({
     mutationFn: (data: ReportInput) => createReportApi(data),
     onSuccess: (resp) => {
       // save local storage
-      const k = Cookie.get(STORAGE.REPORT);
-      const localReport = {
-        key: [
-          {
-            locationId: resp.data.data?.locationId,
-            reportId: resp.data.data?.id!,
-            boardId: resp.data.data?.boardId,
-          },
-        ],
-      };
-
-      const updatedReport = k ? { key: [...JSON.parse(k).key, ...localReport.key] } : localReport;
-
-      Cookie.set(STORAGE.REPORT, JSON.stringify(updatedReport), {
-        path: '/',
-      });
+      getOrSetDeviceId();
 
       // show success
       toast.success('Báo cáo thành công');
+      queryClient.invalidateQueries({ queryKey: ['location'] });
+
       form.resetFields();
       setOpen && setOpen(false);
     },
   });
+
+  const handleSetReportForm = (resp: any) => {
+    console.log('resp', resp.data.data[0]);
+    if (resp.data.data) {
+      form.setFieldsValue({
+        id: resp.data.data[0].id,
+        fullname: resp.data.data[0].fullnameOfReporter,
+        email: resp.data.data[0].emailOfReporter,
+        phoneNumber: resp.data.data[0].phoneNumberOfReporter,
+        reportForm: resp.data.data[0].reportForm,
+        content: resp.data.data[0].content,
+        status: resp.data.data[0].status,
+      });
+      setImage(resp.data.data[0].image1);
+      setIsCreate(false);
+    }
+  };
+
   const { mutate: mutateGetReport } = useMutation({
     mutationFn: (data: ReportREQ) => getReportApi(data),
-    onSuccess: (resp) => {
-      console.log('resp', resp.data.data[0]);
-      if (resp.data.data) {
-        form.setFieldsValue({
-          id: resp.data.data[0].id,
-          fullname: resp.data.data[0].fullnameOfReporter,
-          email: resp.data.data[0].emailOfReporter,
-          phoneNumber: resp.data.data[0].phoneNumberOfReporter,
-          reportForm: resp.data.data[0].reportForm,
-          content: resp.data.data[0].content,
-          status: resp.data.data[0].status,
-        });
-        setImage(resp.data.data[0].image1);
-        setIsCreate(false);
-      }
-    },
+    onSuccess: handleSetReportForm,
   });
+
   useEffect(() => {
-    if (initialValues) {
-      console.log('initialValues', initialValues);
-      const k = Cookie.get(STORAGE.REPORT);
-      const localReport = k ? JSON.parse(k) : undefined;
-      if (localReport) {
-        const board = localReport.key.filter((item: any) => {
-          if (initialValues.boardId) return item.boardId == initialValues.boardId;
-          if (initialValues.locationId) return item.locationId == initialValues.locationId;
-        });
-        if (board.length === 0) return;
-        if (initialValues.reportType === 1) {
-          mutateGetReport({
-            reportType: 'board',
-            ...board[0],
-          });
-        } else if (initialValues.reportType === 0) {
-          mutateGetReport({
-            reportType: 'location',
-            ...board[0],
-          });
-        }
-      }
+    console.log('initialValues', initialValues);
+    if (initialValues.boardId || initialValues.locationId) {
+      mutateGetReport({
+        boardId: initialValues?.boardId,
+        locationId: initialValues?.locationId,
+      });
     }
   }, [initialValues]);
 
@@ -123,7 +99,6 @@ export default function ReportForm({ initialValues, setOpen }: ReportFormProps) 
     }
 
     const formData: ReportInput = { ...values, ...initialValues };
-    if (!values.reportType) values.reportType = 0;
 
     mutateReport(formData);
   };

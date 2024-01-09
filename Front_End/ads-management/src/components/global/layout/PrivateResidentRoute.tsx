@@ -11,8 +11,11 @@ export default function PrivateResidentRoute() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (auth.type !== UserType.resident && !auth.isLogin) {
-      navigate(MY_ROUTE.LOGIN);
+    console.log('auth re', auth.type);
+    console.log('auth re', !auth.isLogin);
+    if (auth.type !== UserType.resident) {
+      if (!auth.isLogin) navigate(MY_ROUTE.LOGIN);
+      else navigate(`/${auth.type}`);
     }
   }, [auth]);
 
