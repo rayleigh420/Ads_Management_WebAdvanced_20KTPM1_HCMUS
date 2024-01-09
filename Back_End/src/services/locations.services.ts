@@ -63,15 +63,14 @@ class LocationService {
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
       .leftJoinAndSelect('location.reports', 'reports')
-      .innerJoinAndSelect('location.advertisingBoards', 'boards')
-      // .where('reports.deviceId = :deviceId', { deviceId })
+      .leftJoinAndSelect('location.advertisingBoards', 'boards')
       .getMany();
-
-    const result = locations.map((location) => {
-      location.reports = location.reports.filter(report => report.deviceId === deviceId);
-      return location;
+  
+    const result = locations.filter(location => {
+      const hasReportWithDeviceId = location.reports.some(report => report.deviceId === deviceId);
+      return hasReportWithDeviceId || location.advertisingBoards.length > 0;
     });
-
+  
     return result;
   }
 
