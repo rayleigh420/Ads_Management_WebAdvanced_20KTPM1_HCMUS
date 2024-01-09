@@ -128,17 +128,26 @@ export const getLocationManageByUserIdController = async (
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
     const wardIdsString = req.query.wardIds as string;
+    let results: any;
     let listWardId = [];
     if (wardIdsString) {
       listWardId = wardIdsString.split(',').map((item: string) => parseInt(item, 10));
     }
 
 
-    if (userType === UserType.WARD_OFFICER || userType === UserType.DISTRICT_OFFICER || userType === UserType.DEPARTMENT_OFFICER) {
-      const results = await locationsService.getLocationManageByUserId(userId, userType, listWardId);
-      const count = results.length;
+    if (userType === UserType.WARD_OFFICER) {
+      const wardOfficer = await usersService.getWardOfficerByUserId(userId); 
+      const wardId = wardOfficer.manageWardId;
+      console.log("🚀 ~ wardId:", wardId)
+      results = await locationsService.getLocationManageWard(wardId);
 
-      let data: any;
+      
+    }
+    else {
+      throw new Error('can not access this route');
+    }
+    const count = results.length;
+    let data: any;
       if (limit === 0 && skip === 0) {
         data = results;
       } else {
@@ -147,10 +156,6 @@ export const getLocationManageByUserIdController = async (
 
       const dataPaging = getPagingData({ data, count, limit, skip });
       return res.json(ApiResponse.success(dataPaging, 'success'));
-    }
-    else {
-      throw new Error('can not access this route');
-    }
   } catch (error) {
     next(error);
   }

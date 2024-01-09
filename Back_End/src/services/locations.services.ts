@@ -74,6 +74,7 @@ class LocationService {
     return result;
   }
 
+
   public async getLocationsAnonymousById(id: number) {
     return this.locationRepository
       .createQueryBuilder('location')
@@ -99,41 +100,52 @@ class LocationService {
       .getOne();
   }
 
-  public async getLocationManageByUserId(userId: number, userType: UserType, wardIds: number[]) {
-    const locations: AdvertisingLocation[] = [];
-  
-    const addReportsToLocations = async (advertisingLocations: AdvertisingLocation[]) => {
-      for (const item of advertisingLocations) {
-        const reports = await reportsServices.getReportAnonymousByLocationId(item.id);
-        const location = { ...item, reports };
-        locations.push(location);
-      }
-    };
-  
-    if (userType === UserType.WARD_OFFICER) {
-      const result = await this.wardRepository.createQueryBuilder('ward')
-        .leftJoinAndSelect('ward.wardOfficiers', 'wardOfficiers')
-        .where('wardOfficiers.userId = :userId', { userId })
-        .leftJoinAndSelect('ward.advertisingLocations', 'locations')
-        .getMany();
-  
-      await addReportsToLocations(result[0].advertisingLocations);
-    } else if (userType === UserType.DISTRICT_OFFICER) {
-      const result = await this.districtRepository.createQueryBuilder('district')
-        .leftJoinAndSelect('district.districtOfficiers', 'districtOfficiers')
-        .where('districtOfficiers.userId = :userId', { userId })
-        .leftJoinAndSelect('district.wards', 'wards')
-        .leftJoinAndSelect('wards.advertisingLocations', 'locations')
-        .getMany();
-  
-      const wards = result[0].wards as Ward[];
-      for (const ward of wards) {
-        if (ward.advertisingLocations.length > 0 && (wardIds.length > 0 ? wardIds.includes(ward.id) : true)) {
-          await addReportsToLocations(ward.advertisingLocations);
-        }
-      }
-    }
-  
+  public async getLocationManageWard(wardId: number) {
+    // let locations: any = [];
+
+    // const addReportsToLocations = async (advertisingLocations: AdvertisingLocation[]) => {
+    //   for (const item of advertisingLocations) {
+    //     const reports = await reportsServices.getReportAnonymousByLocationId(item.id);
+    //     const location = { ...item, reports };
+    //     locations.push(location);
+    //   }
+    // };
+
+    // if (userType === UserType.WARD_OFFICER) {
+    //     const result = await this.wardRepository.createQueryBuilder('ward')
+    //       .leftJoinAndSelect('ward.wardOfficiers', 'wardOfficiers')
+    //       .where('wardOfficiers.userId = :userId', { userId })
+    //       .leftJoinAndSelect('ward.advertisingLocations', 'locations')
+    //       .getMany();
+    // console.log("🚀 ~ file: locations.services.ts:157 ~ LocationService ~ getLocationManageByUserId ~ result", result);
+    //     await addReportsToLocations(result[0].advertisingLocations);
+
+   const locations = await this.locationRepository
+      .createQueryBuilder('location')
+      .leftJoinAndSelect('location.ward', 'ward')
+      .leftJoinAndSelect('location.reports', 'reports')
+      .leftJoinAndSelect('location.advertisingBoards', 'boards')
+      .leftJoinAndSelect('boards.reports', 'boardReports')
+      .where('ward.id = :wardId', { wardId })
+      // .where('reports.deviceId = :deviceId', { deviceId })
+      .getMany();
+
+    // } else if (userType === UserType.DISTRICT_OFFICER) {
+    //   const result = await this.districtRepository.createQueryBuilder('district')
+    //     .leftJoinAndSelect('district.districtOfficiers', 'districtOfficiers')
+    //     .where('districtOfficiers.userId = :userId', { userId })
+    //     .leftJoinAndSelect('district.wards', 'wards')
+    //     .leftJoinAndSelect('wards.advertisingLocations', 'locations')
+    //     .getMany();
+
+    //   const wards = result[0].wards as Ward[];
+    //   for (const ward of wards) {
+    //     if (ward.advertisingLocations.length > 0 && (wardIds.length > 0 ? wardIds.includes(ward.id) : true)) {
+    //       await addReportsToLocations(ward.advertisingLocations);
+    //     }
+    //   }
+    // }
+
     return locations;
   }
 }

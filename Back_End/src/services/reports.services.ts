@@ -84,6 +84,17 @@ class ReportService {
     }
   }
 
+  public async getReportForOfficer(locationId?: number, boardId?: number) {
+    if (locationId) {
+      return await this.reportRepository.find({ where: {  locationId } });
+    }
+    else {
+      const result = await this.reportRepository.find({ where: { boardId } });
+      console.log("🚀 ~ file: reports.services.ts:84 ~ ReportService ~ getReportAnonymousByDeviceId ~ result:", result)
+      return result
+    }
+  }
+
 
   // public async getReportAnonymousByBoardId(boardId: number, reportId?: number, ) {
   //   const whereCondition = reportId ? { boardId, id: reportId } : { boardId };

@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { wrapRequestHandler } from '../utils/handler.ultil';
-import { createReport, getReportAnonymousByConditionController } from '../controllers/reports.controller';
+import { createReport, getReportAnonymousByConditionController, getReportByConditionController } from '../controllers/reports.controller';
 import { createReportValidate } from '../middlewares/report.middlewares';
 import multer from 'multer';
+import { accessTokenValidator } from '../middlewares/users.middlewares';
 
 const reportsRouter = Router();
 
-// reportsRouter.get('/:id', wrapRequestHandler());
+// anonymous
 reportsRouter.get('/anonymous', wrapRequestHandler(getReportAnonymousByConditionController));
 
 const upload = multer({
@@ -17,5 +18,8 @@ const upload = multer({
   }
 });
 reportsRouter.post('/anonymous', upload.single('file'), createReportValidate, wrapRequestHandler(createReport));
+
+//officer
+reportsRouter.get('/officer', accessTokenValidator, wrapRequestHandler(getReportByConditionController));
 
 export default reportsRouter;
