@@ -64,7 +64,8 @@ export const USER_MESSAGES = {
   UPLOAD_SUCCESS: 'Upload success',
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
   GET_VIDEO_STATUS_SUCCESS: 'Get video status success',
-  FORGOT_PASSWORD_SENT_SUCCESSED: 'New password was sent'
+  FORGOT_PASSWORD_SENT_SUCCESSED: 'New password was sent',
+  NOT_ACCESS_PERMISSION: 'Not have access permission'
 } as const;
 
 export const TWEETS_MESSAGES = {

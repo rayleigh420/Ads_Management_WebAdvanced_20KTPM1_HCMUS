@@ -3,6 +3,23 @@ import { validate } from '../utils/validator';
 import { FindDistrictOption, FindWardOption, WardReqBody } from '../models/requets/admin.requests';
 import wardsServices from '../services/wards.services';
 import districtsServices from '../services/districts.services';
+import { verifyAccessToken } from '../utils/common.util';
+
+export const authorizationAdminValidator = validate(
+  checkSchema(
+    {
+      Authorization: {
+        custom: {
+          options: async (value: string, { req }) => {
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req, 0);
+          }
+        }
+      }
+    },
+    ['headers']
+  )
+);
 
 export const createWardValidator = validate(
   checkSchema({

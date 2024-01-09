@@ -10,6 +10,7 @@ import {
 } from '../controllers/districts.controlers';
 import {
   BoardReqValidator,
+  authorizationAdminValidator,
   createDistrictValidator,
   createWardValidator,
   udpateDistrictValidator,
@@ -18,6 +19,7 @@ import {
 import { createBoard, deleteBoard, getListBoards, updateBoard } from '../controllers/boards.controllers';
 
 const adminRouter = Router();
+adminRouter.use(authorizationAdminValidator);
 
 // Ward-management
 adminRouter.get('/wards', wrapRequestHandler(getListWards));
