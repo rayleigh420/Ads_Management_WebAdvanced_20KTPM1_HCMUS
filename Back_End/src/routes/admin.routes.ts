@@ -10,6 +10,8 @@ import {
 } from '../controllers/districts.controlers';
 import {
   BoardReqValidator,
+  OfficerToDistrictValidator,
+  OfficerToWardValidator,
   authorizationAdminValidator,
   createDistrictValidator,
   createWardValidator,
@@ -17,6 +19,7 @@ import {
   updateWardValidator
 } from '../middlewares/admin.middlewares';
 import { createBoard, deleteBoard, getListBoards, updateBoard } from '../controllers/boards.controllers';
+import { addOfficerToDistrict, addOfficerToWard } from '../controllers/admins.controllers';
 
 const adminRouter = Router();
 adminRouter.use(authorizationAdminValidator);
@@ -40,5 +43,11 @@ adminRouter.get('/boards', wrapRequestHandler(getListBoards));
 adminRouter.post('/boards', BoardReqValidator, wrapRequestHandler(createBoard));
 adminRouter.put('/borad/:id', BoardReqValidator, wrapRequestHandler(updateBoard));
 adminRouter.delete('/board/:id', wrapRequestHandler(deleteBoard));
+
+// Report-management
+
+// Officer-management
+adminRouter.post('/district-officer', OfficerToDistrictValidator, wrapRequestHandler(addOfficerToDistrict));
+adminRouter.post('/ward-officer', OfficerToWardValidator, wrapRequestHandler(addOfficerToWard));
 
 export default adminRouter;

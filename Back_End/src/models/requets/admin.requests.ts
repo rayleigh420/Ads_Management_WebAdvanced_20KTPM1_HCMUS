@@ -28,3 +28,13 @@ export interface BoardReqBody {
   height?: number;
   image2?: string;
 }
+
+export interface OfficerToDistrict {
+  userId: number;
+  districtId: number;
+}
+
+export interface OfficerToWard {
+  userId: number;
+  wardId: number;
+}

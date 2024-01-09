@@ -4,6 +4,11 @@ import { FindDistrictOption, FindWardOption, WardReqBody } from '../models/reque
 import wardsServices from '../services/wards.services';
 import districtsServices from '../services/districts.services';
 import { verifyAccessToken } from '../utils/common.util';
+import { DataSource } from 'typeorm';
+import { myDataSource } from '../orm/connectDb';
+import { User } from '../orm/entities/User';
+import { District } from '../orm/entities/District';
+import { Ward } from '../orm/entities/Ward';
 
 export const authorizationAdminValidator = validate(
   checkSchema(
@@ -164,6 +169,80 @@ export const BoardReqValidator = validate(
     heigh: {
       isFloat: true,
       errorMessage: 'Invalid height'
+    }
+  })
+);
+
+export const OfficerToDistrictValidator = validate(
+  checkSchema({
+    userId: {
+      notEmpty: true,
+      isNumeric: true,
+      errorMessage: 'Invalid name',
+      custom: {
+        options: async (value, { req }) => {
+          const user = await myDataSource.getRepository(User).findOneBy({ id: req.body.userId });
+          if (user == null || user.userType != 1) {
+            throw new Error('User does not exist in system or User is not district officer');
+          }
+          return true;
+        }
+      }
+    },
+    districtId: {
+      notEmpty: true,
+      isNumeric: true,
+      errorMessage: 'Invalid district id',
+      custom: {
+        options: async (value, { req }) => {
+          const district = await myDataSource
+            .getRepository(District)
+            .createQueryBuilder('district')
+            .where('district.id = :id', { id: req.body.districtId })
+            .getOne();
+          if (district == null) {
+            throw new Error('District does not exist in system');
+          }
+          return true;
+        }
+      }
+    }
+  })
+);
+
+export const OfficerToWardValidator = validate(
+  checkSchema({
+    userId: {
+      notEmpty: true,
+      isNumeric: true,
+      errorMessage: 'Invalid name',
+      custom: {
+        options: async (value, { req }) => {
+          const user = await myDataSource.getRepository(User).findOneBy({ id: req.body.userId });
+          if (user == null || user.userType != 2) {
+            throw new Error('User does not exist in system or User is not district officer');
+          }
+          return true;
+        }
+      }
+    },
+    wardId: {
+      notEmpty: true,
+      isNumeric: true,
+      errorMessage: 'Invalid ward id',
+      custom: {
+        options: async (value, { req }) => {
+          const ward = await myDataSource
+            .getRepository(Ward)
+            .createQueryBuilder('ward')
+            .where('ward.id = :id', { id: req.body.wardId })
+            .getOne();
+          if (ward == null) {
+            throw new Error('Ward does not exist in system');
+          }
+          return true;
+        }
+      }
     }
   })
 );
