@@ -4,6 +4,7 @@ import { ApiResponse } from '../models/responses/base.response';
 import reportsServices from '../services/reports.services';
 import { ReportReqBody } from '../models/requets/report.requests';
 import { getPagingData } from '../utils/paging.utils';
+import usersServices from '../services/users.services';
 
 export const createReport = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -36,18 +37,22 @@ export const getReportAnonymousByConditionController = async (
 };
 
 export const getReportByConditionController = async (
-  req: Request<ParamsDictionary, any, any>,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
   try {
     // const reportType = req.query.reportType as string;
+    const userId = req.decodedAuthorization.userId;
     const locationId = req.query.locationId as string;
     const boardId = req.query.boardId as string;
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
-    const results = await reportsServices.getReportForOfficer(parseInt(locationId, 10), parseInt(boardId, 10));
+    const wardOfficer = await usersServices.getWardOfficerByUserId(parseInt(userId, 10)); 
+    const wardId = wardOfficer.manageWardId;
+
+    const results = await reportsServices.getReportForOfficer(parseInt(locationId, 10), parseInt(boardId, 10), wardId);
     const count = results.length;
     let data: any;
     if (limit === 0 && skip === 0) {

@@ -21,12 +21,26 @@ class ReportService {
     }
 
     const resultUpload = await uploadToCloudinary(file);
-    const { reportType, locationId, districtName, wardName, address, lat, long, boardId, reportForm, fullname, email, phoneNumber, content } = payload;
+    const {
+      reportType,
+      locationId,
+      districtName,
+      wardName,
+      address,
+      lat,
+      long,
+      boardId,
+      reportForm,
+      fullname,
+      email,
+      phoneNumber,
+      content
+    } = payload;
 
     let location: any;
-    console.log("reportType", reportType)
-    console.log("reportTypeenum", ReportType.LOCATION)
-    console.log("locationId", locationId)
+    console.log('reportType', reportType);
+    console.log('reportTypeenum', ReportType.LOCATION);
+    console.log('locationId', locationId);
     // console.log("check ", reportType == ReportType.LOCATION && locationId == undefined);
     // return
     if (reportType == ReportType.LOCATION && locationId == undefined) {
@@ -35,8 +49,8 @@ class ReportService {
       if (!district) {
         throw new Error('District not found');
       }
-      console.log("dítrict", district)
-      console.log("🚀 ~ file: reports.services.ts:45 ~ ReportService ~ createReport ~ wardName:", wardName)
+      console.log('dítrict', district);
+      console.log('🚀 ~ file: reports.services.ts:45 ~ ReportService ~ createReport ~ wardName:', wardName);
 
       const ward = await this.wardRepository.findOne({
         where: {
@@ -48,7 +62,7 @@ class ReportService {
       if (!ward) {
         throw new Error('Ward not found');
       }
-      console.log("ward", ward)
+      console.log('ward', ward);
 
       const newLocation = this.advertisingLocationRepository.create({ address, lat, long, wardId: ward.id });
       location = await this.advertisingLocationRepository.save(newLocation);
@@ -76,30 +90,45 @@ class ReportService {
   public async getReportAnonymousByDeviceId(deviceId: string = '', locationId?: number, boardId?: number) {
     if (locationId) {
       return await this.reportRepository.find({ where: { deviceId, locationId } });
-    }
-    else {
+    } else {
       const result = await this.reportRepository.find({ where: { deviceId, boardId } });
-      console.log("🚀 ~ file: reports.services.ts:84 ~ ReportService ~ getReportAnonymousByDeviceId ~ result:", result)
-      return result
+      console.log('🚀 ~ file: reports.services.ts:84 ~ ReportService ~ getReportAnonymousByDeviceId ~ result:', result);
+      return result;
     }
   }
 
-  public async getReportForOfficer(locationId?: number, boardId?: number) {
+  public async getReportForOfficer(locationId?: number, boardId?: number, wardId?: number) {
     if (locationId) {
-      return await this.reportRepository.find({ where: {  locationId } });
-    }
-    else {
+      return await this.reportRepository.find({ where: { locationId } });
+    } else if (boardId) {
       const result = await this.reportRepository.find({ where: { boardId } });
-      console.log("🚀 ~ file: reports.services.ts:84 ~ ReportService ~ getReportAnonymousByDeviceId ~ result:", result)
-      return result
+      console.log('🚀 ~ file: reports.services.ts:84 ~ ReportService ~ getReportAnonymousByDeviceId ~ result:', result);
+      return result;
+    } else {
+      //find all location in ward
+      const locations = await this.advertisingLocationRepository.createQueryBuilder('location')
+        .leftJoinAndSelect('location.ward', 'ward')
+        .where('ward.id = :wardId', { wardId })
+        .leftJoinAndSelect('location.reports', 'reports')
+        .leftJoinAndSelect('location.advertisingBoards', 'advertisingBoards')
+        .leftJoinAndSelect('advertisingBoards.reports', 'boardReports')
+        .getMany();
+      //find all report in location and report in board in location
+      const reports: any = [];
+
+      locations.forEach((location) => {
+        if (location.reports.length > 0) {
+          reports.push(...location.reports);
+        }
+        const advertisingBoards = location.advertisingBoards;
+        advertisingBoards.forEach((board) => {
+          reports.push(...board.reports);
+        });
+      });
+
+      return reports;
     }
   }
-
-
-  // public async getReportAnonymousByBoardId(boardId: number, reportId?: number, ) {
-  //   const whereCondition = reportId ? { boardId, id: reportId } : { boardId };
-  //   return await this.reportRepository.find({ where: whereCondition });
-  // }
 }
 
 export default new ReportService();
