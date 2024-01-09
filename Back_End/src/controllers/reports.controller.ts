@@ -7,7 +7,8 @@ import { ReportReqBody } from '../models/requets/report.requests';
 export const createReport = async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log('report', req.body.reportType);
-    const result = await reportsServices.createReport(req.body as ReportReqBody, req.file);
+    const deviceId = req.headers.device_id as string;
+    const result = await reportsServices.createReport(req.body as ReportReqBody, req.file, deviceId);
     res.json(ApiResponse.success(result, 'success'));
   } catch (error) {
     console.log(error);
@@ -25,6 +26,7 @@ export const getReportAnonymousByConditionController = async (
     const locationId = req.query.locationId as string;
     const boardId = req.query.boardId as string;
     const deviceId = req.headers.device_id as string;
+    console.log("🚀 ~ deviceId:", deviceId)
     const result = await reportsServices.getReportAnonymousByDeviceId(deviceId, parseInt(locationId, 10), parseInt(boardId, 10));
     res.json(ApiResponse.success(result, 'success'));
   } catch (error) {

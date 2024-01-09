@@ -15,7 +15,7 @@ class ReportService {
   private wardRepository = myDataSource.getRepository(Ward);
   private advertisingLocationRepository = myDataSource.getRepository(AdvertisingLocation);
 
-  public async createReport(payload: ReportReqBody, file: Express.Multer.File) {
+  public async createReport(payload: ReportReqBody, file: Express.Multer.File, deviceId: string) {
     if (!file) {
       throw new Error('Please upload a file');
     }
@@ -63,7 +63,7 @@ class ReportService {
       phoneNumberOfReporter: phoneNumber,
       content,
       image1: resultUpload.url,
-      deviceId: payload.deviceId
+      deviceId
     });
 
     return await this.reportRepository.save(report);
