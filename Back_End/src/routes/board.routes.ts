@@ -1,12 +1,14 @@
 import { Router } from 'express';
-import { getAllBoardsManageByUserId, getBoardByIdController, getBoardsController } from '../controllers/boards.controllers';
+import { getAllBoardsManageByUserId, getBoardByIdController, getBoardsController, getListBoards } from '../controllers/boards.controllers';
 import { wrapRequestHandler } from '../utils/handler.ultil';
 import { accessTokenValidator } from '../middlewares/users.middlewares';
 import { getBoardsByLocationIdController } from '../controllers/locations.controller';
+import { authorizationOfficerValidator } from '../middlewares/admin.middlewares';
 
 const boardsRouter = Router();
 
 //for map page
+boardsRouter.get('/', authorizationOfficerValidator, wrapRequestHandler(getListBoards));
 boardsRouter.get('/anonymous', wrapRequestHandler(getBoardsByLocationIdController));
 boardsRouter.get('/anonymous/:id', wrapRequestHandler(getBoardByIdController));
 
