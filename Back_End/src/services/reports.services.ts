@@ -1,7 +1,7 @@
 // import { Board } from "../entities/board.entity";
 import { Like } from 'typeorm';
 import { ReportType } from '../constants/enum';
-import { ReportReqBody } from '../models/requets/report.requests';
+import { ReportReqBody, UpdateReportBody } from '../models/requets/report.requests';
 import { myDataSource } from '../orm/connectDb';
 import { AdvertisingLocation } from '../orm/entities/AdvertisingLocation';
 import { District } from '../orm/entities/District';
@@ -128,6 +128,18 @@ class ReportService {
 
       return reports;
     }
+  }
+
+  public async updateReport(payload: UpdateReportBody) {
+    const { id, status, handleMethod } = payload;
+    console.log("🚀 ~ ReportService ~ updateReport ~ payload:", payload)
+    const report = await this.reportRepository.findOne({ where: { id } });
+    if (!report) {
+      throw new Error('Report not found');
+    }
+    report.status = status;
+    report.handleMethod = handleMethod;
+    return await this.reportRepository.save(report);
   }
 }
 

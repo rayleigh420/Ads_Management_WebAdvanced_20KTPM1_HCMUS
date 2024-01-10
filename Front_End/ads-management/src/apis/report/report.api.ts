@@ -9,6 +9,11 @@ type ReportRESP = {
   id: number;
 };
 
+export type PagingREQ = {
+  limit?: number;
+  skip?: number;
+};
+
 export const createReportApi = async (body: ReportInput) => {
   const id = getOrSetDeviceId();
   return await api.post<BaseResponse<ReportRESP>>('/reports/anonymous', body, {
@@ -25,6 +30,12 @@ export type ReportREQ = {
 };
 export const getReportApi = async (params: ReportREQ) => {
   return await api.get<any>('/reports/anonymous', {
+    params,
+  });
+};
+
+export const getReportOfficerApi = async (params: ReportREQ & PagingREQ) => {
+  return await api.get<any>('/reports/officer', {
     params,
   });
 };

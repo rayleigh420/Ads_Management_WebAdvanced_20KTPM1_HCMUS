@@ -4,7 +4,7 @@ import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PlusOutlined } from '@ant-design/icons';
 import { columnsAdsLocationPage, mockData } from './components/AdsLocationPageColumns';
 
-export default function AdsLocationPage() {
+export default function AdsLocationListPage() {
   return (
     <div className='w-full '>
       <div className='flex justify-between items-center'>

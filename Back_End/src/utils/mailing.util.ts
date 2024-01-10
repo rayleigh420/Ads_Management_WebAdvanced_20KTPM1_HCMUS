@@ -20,14 +20,16 @@ const transporter = nodemailer.createTransport({
   logger: true
 });
 
-export const sendEmail = async (to: string, subject: string, text: string) => {
+export const sendEmail = async (to: string, subject: string, text: string, htmlOption?: string) => {
+  console.log("🚀 ~ sendEmail ~ htmlOption:", htmlOption)
   const renderedTemplate = ejs.render(emailTemplate, { text });
   const mailOptions = {
     from: emailFrom,
     to,
     subject,
     text,
-    html: renderedTemplate,
+    //if html is null so html: renderedTemplate
+    html: htmlOption ? htmlOption : renderedTemplate,
     headers: { 'x-myheader': 'test header' }
   };
 
@@ -35,3 +37,4 @@ export const sendEmail = async (to: string, subject: string, text: string) => {
 
   console.log('Message sent: %s', info.response);
 };
+

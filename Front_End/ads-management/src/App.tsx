@@ -25,6 +25,7 @@ function App() {
       BaseHTTP.getInstance().config({
         accessToken: Cookies.get(STORAGE.ACCESS_TOKEN),
       });
+      console.log('auth set', Cookies.get(STORAGE.ACCESS_TOKEN));
       dispatch(loginSuccess({ type: userType, userToken: Cookies.get(STORAGE.ACCESS_TOKEN) }));
     } else {
       const deviceId = getOrSetDeviceId();

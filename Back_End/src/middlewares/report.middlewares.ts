@@ -1,5 +1,5 @@
-import { checkSchema } from 'express-validator';
-import { validate } from '../utils/validator';
+import { checkSchema } from 'express-validator'
+import { validate } from '../utils/validator'
 
 export const createReportValidate = validate(
   checkSchema(
@@ -41,4 +41,4 @@ export const createReportValidate = validate(
     },
     ['body']
   )
-);
+)

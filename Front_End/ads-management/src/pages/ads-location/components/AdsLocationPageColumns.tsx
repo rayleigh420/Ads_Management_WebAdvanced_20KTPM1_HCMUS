@@ -1,5 +1,5 @@
-import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons';
-import { Dropdown, MenuProps } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { MenuProps } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { Link } from 'react-router-dom';
 
@@ -44,11 +44,15 @@ export const columnsAdsLocationPage: ColumnsType<AdsManagementPageColumns> = [
     dataIndex: 'operation',
     key: 'operation',
     render: () => (
-      <Dropdown menu={{ items }} trigger={['click']} placement='bottomRight'>
-        <div className='flex justify-center'>
-          <MoreOutlined />
+      <div className='flex items-center gap-3 justify-center'>
+        {/* hover background */}
+        <div className='flex items-center gap-2 cursor-pointer hover:text-blue-500'>
+          <EditOutlined /> Yêu cầu chỉnh sửa
         </div>
-      </Dropdown>
+        <div className='flex items-center gap-2  cursor-pointer hover:text-red-500'>
+          <DeleteOutlined /> Xóa
+        </div>
+      </div>
     ),
   },
 ];

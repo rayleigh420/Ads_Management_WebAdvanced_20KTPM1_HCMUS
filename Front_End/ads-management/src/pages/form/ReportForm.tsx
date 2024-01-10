@@ -1,13 +1,22 @@
-import { ReportREQ, createReportApi, getReportApi } from '@/apis/report/report.api';
+import {
+  PagingREQ,
+  ReportREQ,
+  createReportApi,
+  getReportApi,
+  getReportOfficerApi,
+} from '@/apis/report/report.api';
 import { CustomEditorInput } from '@/components/ui/form/CustomEditorInput';
 import CustomSelectInput from '@/components/ui/form/CustomSelectInput';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
+import { UserType } from '@/core/enums/user-type.enum';
+import { RootState } from '@/store';
 import { getOrSetDeviceId } from '@/utils/config/diviceId';
 import { UploadOutlined } from '@ant-design/icons';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Divider, Form, Image, Upload } from 'antd';
+import { Button, Divider, Form, Image, Pagination, Upload } from 'antd';
 import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 export type ReportInput = {
   id?: string;
@@ -43,6 +52,9 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
   const ref = useRef<any>(null);
   const [isCreate, setIsCreate] = useState<boolean>(true);
   const [image, setImage] = useState<string>('');
+  const auth = useSelector((state: RootState) => state.auth);
+  const [data, setData] = useState<any>(null);
+  const [pageBoard, setPageBoard] = useState<number>(1);
 
   const queryClient = useQueryClient();
 
@@ -64,6 +76,7 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
   const handleSetReportForm = (resp: any) => {
     console.log('resp', resp.data.data[0]);
     if (resp.data.data) {
+      setData(null);
       form.setFieldsValue({
         id: resp.data.data[0].id,
         fullname: resp.data.data[0].fullnameOfReporter,
@@ -83,13 +96,60 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
     onSuccess: handleSetReportForm,
   });
 
+  const { mutate: mutateGetReportOfficer } = useMutation({
+    mutationFn: (data: ReportREQ & PagingREQ) => getReportOfficerApi(data),
+    onSuccess: (resp) => {
+      console.log('image', resp.data.data.items);
+      if (resp.data.data.items) {
+        console.log('image sad');
+        setIsCreate(false);
+        setData(resp.data.data.items);
+        form.setFieldsValue({
+          id: resp.data.data.items[0].id,
+          fullname: resp.data.data.items[0].fullnameOfReporter,
+          email: resp.data.data.items[0].emailOfReporter,
+          phoneNumber: resp.data.data.items[0].phoneNumberOfReporter,
+          reportForm: resp.data.data.items[0].reportForm,
+          content: resp.data.data.items[0].content,
+          status: resp.data.data.items[0].status,
+        });
+        setImage(resp.data.data[0].image1);
+        console.log('image', resp.data.data[0].image1);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        id: data[pageBoard - 1].id,
+        fullname: data[pageBoard - 1].fullnameOfReporter,
+        email: data[pageBoard - 1].emailOfReporter,
+        phoneNumber: data[pageBoard - 1].phoneNumberOfReporter,
+        reportForm: data[pageBoard - 1].reportForm,
+        content: data[pageBoard - 1].content,
+        status: data[pageBoard - 1].status,
+      });
+      setImage(data[pageBoard - 1].image1);
+      setIsCreate(false);
+    }
+  }, [pageBoard]);
+
   useEffect(() => {
     console.log('initialValues', initialValues);
     if (initialValues.boardId || initialValues.locationId) {
-      mutateGetReport({
-        boardId: initialValues?.boardId,
-        locationId: initialValues?.locationId,
-      });
+      if (auth.type !== UserType.resident) {
+        mutateGetReportOfficer({
+          limit: 0,
+          skip: 0,
+          boardId: initialValues?.boardId,
+          locationId: initialValues?.locationId,
+        });
+      } else
+        mutateGetReport({
+          boardId: initialValues?.boardId,
+          locationId: initialValues?.locationId,
+        });
     }
   }, [initialValues]);
 
@@ -114,7 +174,7 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
           colon={false}
           form={form}
           labelAlign='left'
-          className='mt-11'
+          className='mt-11 flex justify-center flex-col gap-5'
         >
           <CustomTextInput<ReportInput>
             name='fullname'
@@ -208,6 +268,19 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
               <div className=''>
                 <HCaptcha sitekey='d28eb78d-8dfb-4499-a7bb-46f87d8c5553' />
               </div>
+            </div>
+          )}
+          {data !== null && (
+            <div className='flex justify-between mt-5 mx-auto'>
+              <Pagination
+                // simple
+                defaultCurrent={1}
+                defaultPageSize={1}
+                total={data?.length}
+                onChange={(page: number, pageSize: number) => {
+                  setPageBoard(page);
+                }}
+              />
             </div>
           )}
         </Form>

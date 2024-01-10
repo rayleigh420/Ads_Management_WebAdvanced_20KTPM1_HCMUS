@@ -28,6 +28,9 @@ export class Report {
   @Column("varchar", { name: "phone_number_of_reporter", length: 12 })
   phoneNumberOfReporter: string;
 
+  @Column("varchar", { name: "handle_method", length: 100 })
+  handleMethod: string | null;
+
   @Column("text", { name: "content" })
   content: string;
 

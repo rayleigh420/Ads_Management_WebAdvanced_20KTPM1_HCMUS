@@ -14,3 +14,9 @@ export interface ReportReqBody {
   wardName: string;
   deviceId: string;
 }
+
+export interface UpdateReportBody{
+  id: number;
+  status: number;
+  handleMethod: string;
+}
