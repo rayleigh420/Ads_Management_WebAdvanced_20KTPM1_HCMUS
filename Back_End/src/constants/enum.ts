@@ -56,3 +56,8 @@ export enum ReportType{
   LOCATION = 0,
   BOARD = 1
 }
+
+export enum ReportStatus{
+  IN_PROCESS = 0,
+  DONE = 1
+}
