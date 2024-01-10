@@ -1,6 +1,6 @@
+import { LocationRESP } from '@/apis/location/location.api';
 import { CustomPin } from '@/components/ui';
 import { AdvertiseInfoType } from '@/core/models/adversise.model';
-import { Coordinates } from '@/core/models/map.model';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { Switch } from 'antd';
 import { MapLayerMouseEvent } from 'mapbox-gl';
@@ -13,7 +13,7 @@ import MapComponent from './components/MapComponent';
 import ShowMarkers from './components/ShowMarkers';
 
 const HomeOfficerPage = () => {
-  const [selectedMarker, setSelectedMarker] = useState<Coordinates>();
+  const [selectedMarker, setSelectedMarker] = useState<LocationRESP>();
   const [boardAds, setBoardAds] = useState<AdvertiseInfoType[]>();
   const [isReport, setIsReport] = useState<boolean>(true);
   const [isZone, setIsZone] = useState<boolean>(true);
@@ -24,7 +24,7 @@ const HomeOfficerPage = () => {
   const isSelectedMarker = useRef(false);
 
   const handleSelectedMarker = useCallback(
-    (location?: Coordinates) => {
+    (location?: LocationRESP) => {
       if (location) {
         isSelectedMarker.current = true;
       }

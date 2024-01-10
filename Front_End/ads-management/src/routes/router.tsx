@@ -87,8 +87,8 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: UserType.city,
-        element: <PrivateRoute type={UserType.city} />,
+        path: UserType.admin,
+        element: <PrivateRoute type={UserType.admin} />,
         children: [
           {
             path: '',

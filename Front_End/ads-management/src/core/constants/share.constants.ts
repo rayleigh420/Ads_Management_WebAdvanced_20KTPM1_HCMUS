@@ -10,4 +10,4 @@ export const STORAGE = {
   DEVICE_ID: 'deviceId',
 };
 
-export const USER_TYPE_ARRAY = ['city', 'district', 'ward'];
+export const USER_TYPE_ARRAY = ['admin', 'district', 'ward'];
