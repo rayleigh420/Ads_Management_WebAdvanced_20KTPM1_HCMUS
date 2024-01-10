@@ -2,11 +2,11 @@ import { Layout } from 'antd';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../Header';
-import SiderMenu from '../sider';
+import SiderMenuWard from '../sider/SiderWard';
 
 const { Content } = Layout;
 
-export default function LayoutCity() {
+export default function LayoutWard() {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
@@ -16,7 +16,7 @@ export default function LayoutCity() {
         className='site-layout'
         style={{ marginLeft: collapsed ? 138 : 347, transition: 'all 0.2s' }}
       >
-        <SiderMenu collapsed={collapsed} setCollapsed={setCollapsed} />
+        <SiderMenuWard collapsed={collapsed} setCollapsed={setCollapsed} />
       </Layout>
       <Layout
         className={`${

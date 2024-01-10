@@ -5,7 +5,7 @@ import { handleError } from '@/core/helpers/noti-error.helper';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Form, Modal } from 'antd';
 import { useEffect } from 'react';
-import { adminDistrictListKeys } from '../index';
+import { adminWardListKeys } from '../AdminWardPage';
 
 type EditDistrictModalProps = {
   isOpen: boolean;
@@ -38,18 +38,14 @@ export type EditDistrictInput = {
   name: string;
 };
 
-export default function EditDistrictModal({
-  isOpen,
-  setIsOpen,
-  initialValue,
-}: EditDistrictModalProps) {
+export default function EditWardModal({ isOpen, setIsOpen, initialValue }: EditDistrictModalProps) {
   const [form] = Form.useForm<EditDistrictInput>();
 
   const queryClient = useQueryClient();
   const { mutate: muteAddDistrict } = useMutation({
     mutationFn: (data: EditDistrictInput) => createDistrictApi(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: adminDistrictListKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: adminWardListKeys.lists() });
       setIsOpen(false);
       form.resetFields();
     },
@@ -59,7 +55,7 @@ export default function EditDistrictModal({
   const { mutate: muteEditDistrict } = useMutation({
     mutationFn: (data: EditDistrictInput) => editDistrictApi(data, initialValue?.id!),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: adminDistrictListKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: adminWardListKeys.lists() });
       setIsOpen(false);
       form.resetFields();
     },

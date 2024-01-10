@@ -1,22 +1,17 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
-import { getBoardByOfficerApi } from '@/apis/location/location.api';
-import { ButtonPrimary } from '@/components/ui';
+import { getReportOfficerApi } from '@/apis/report/report.api';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
-import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  AdsManagementPageColumns,
-  columnsAdsLocationPage,
-} from './components/AdsLocationPageColumns';
+import { columnsAdsLocationPage } from './components/reportColumns';
 
 export const adminAdsKey = initKeys('admin-ads');
 
-export default function AdsLocationListPage() {
+export default function ReportListPage() {
   const [searchParams] = useSearchParams();
 
   const { initialPaging } = useMemo(() => {
@@ -27,26 +22,15 @@ export default function AdsLocationListPage() {
     return { initialPaging };
   }, [searchParams]);
 
-  const { filter, handlePageChange, handleFilterChange } = usePaging<any>({
+  const { filter, handlePageChange } = usePaging<any>({
     initialPaging,
   });
 
-  const adminAds = useQuery({
+  const wardReports = useQuery({
     queryKey: adminAdsKey.list(filter),
-    queryFn: () => getBoardByOfficerApi(filter),
+    queryFn: () => getReportOfficerApi(filter),
     select: (resp) => {
-      const items: AdsManagementPageColumns[] = [];
-      for (let i = 0; i < resp.data.data?.items.length; i++) {
-        items.push({
-          id: resp.data.data?.items[i].id,
-          boardType: resp.data.data?.items[i].boardType,
-          address: resp.data.data?.items[i].location.address,
-          quantity: resp.data.data?.items[i].quantity,
-          image1: resp.data.data?.items[i].image1,
-          expireDate: resp.data.data?.items[i].expireDate,
-          size: `${resp.data.data?.items[i].width}m x ${resp.data.data?.items[i].height}m`,
-        });
-      }
+      const items = resp.data.data?.items || [];
       const pageInfo: PagingState = resp.data.data
         ? {
             limit: resp.data.data?.pageSize,
@@ -60,18 +44,18 @@ export default function AdsLocationListPage() {
   });
 
   return (
-    <div className='w-[1200px] mx-auto '>
-      <div className='flex justify-between items-center'>
-        <h1 className={`font-bold text-2xl my-0 `}>Quản lý điểm đặt quảng cáo</h1>
-        <div className='flex justify-end my-3'>
+    <div className='w-[1000px] mx-auto'>
+      <div className='flex justify-center items-center mb-5'>
+        <h1 className={`font-bold text-2xl my-0 `}>Danh sách các báo cáo</h1>
+        {/* <div className='flex justify-end my-3'>
           <ButtonPrimary icon={<PlusOutlined />} title='Thêm quảng cáo' />
-        </div>
+        </div> */}
       </div>
 
-      <CustomTableCore<AdsManagementPageColumns>
+      <CustomTableCore
         columns={columnsAdsLocationPage}
-        data={adminAds.data?.items!}
-        paging={adminAds.data?.pageInfo}
+        data={wardReports.data?.items}
+        paging={wardReports.data?.pageInfo}
         onChange={handlePageChange}
       />
     </div>

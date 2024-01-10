@@ -6,13 +6,18 @@ export const MY_ROUTE = {
   COMPANY_DETAIL: 'company/:id',
   LOGIN: '/login',
   DISTRICT: 'district',
-  WARD: 'ward',
   DISTRICT_EDIT: 'district/:id',
   ADS: {
     self: 'ads',
     detail: (id: string) => `ads/${id}`,
     REQUIRE_EDIT: 'ads/required-edit',
     LOCATION: 'ads/location',
+  },
+  WARD: {
+    self: 'ward',
+    detail: (id: string) => `ward/${id}`,
+    REPORT: `/ward/reports`,
+    REPORT_DETAIL: (id: string) => `/ward/reports/${id}`,
   },
 };
 

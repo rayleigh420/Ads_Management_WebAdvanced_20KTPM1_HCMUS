@@ -16,16 +16,16 @@ type SiderMenuProps = {
 };
 
 const routes: {
-  key: MenuIconType;
+  key: string;
   label: string;
+  icon: MenuIconType;
   children?: { key: string; label: string }[];
 }[] = [
-  { key: 'report', label: 'Báo cáo' },
-  { key: 'district', label: 'Quản lý quận' },
-  { key: 'ward', label: 'Quản lý phường' },
+  { key: 'reports', label: 'Danh sách báo cáo', icon: 'ward' },
   {
     key: 'ads',
     label: 'Quản lý quảng cáo',
+    icon: 'ads',
     children: [
       { key: MY_ROUTE.ADS.REQUIRE_EDIT, label: 'Danh sách yêu cầu chỉnh sửa' },
       { key: MY_ROUTE.ADS.LOCATION, label: 'Danh sách điểm đặt quảng cáo' },
@@ -33,7 +33,7 @@ const routes: {
   },
 ];
 
-export default function SiderMenu({ collapsed, setCollapsed }: SiderMenuProps) {
+export default function SiderMenuWard({ collapsed, setCollapsed }: SiderMenuProps) {
   const [selectedKeys, setSelectedKeys] = useState('');
   const [openKeys, setOpenKeys] = useState('');
 
@@ -84,7 +84,7 @@ export default function SiderMenu({ collapsed, setCollapsed }: SiderMenuProps) {
               <SubMenu
                 key={route.key}
                 title={<div className='pl-4 font-bold text-base'>{route.label}</div>}
-                icon={<MenuIcon icon={route.key} isActive={isSubmenuActive(route.key)} />}
+                icon={<MenuIcon icon={route.icon} isActive={isSubmenuActive(route.key)} />}
                 // onTitleClick={() => handleClickSubMenu(route.key)}
               >
                 {route.children.map((child) => (
@@ -106,7 +106,7 @@ export default function SiderMenu({ collapsed, setCollapsed }: SiderMenuProps) {
           return (
             <Item
               key={route.key}
-              icon={<MenuIcon icon={route.key} isActive={!!selectedKeys.includes(route.key)} />}
+              icon={<MenuIcon icon={route.icon} isActive={!!selectedKeys.includes(route.key)} />}
               onClick={() => {
                 setSelectedKeys(route.key);
                 setOpenKeys('');

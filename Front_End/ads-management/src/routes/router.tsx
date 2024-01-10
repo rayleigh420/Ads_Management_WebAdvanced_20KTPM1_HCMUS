@@ -1,4 +1,4 @@
-import { LayoutCity, LayoutResident } from '@/components/global/layout';
+import { LayoutCity, LayoutResident, LayoutWard } from '@/components/global/layout';
 import PrivateResidentRoute from '@/components/global/layout/PrivateResidentRoute';
 import PrivateRoute from '@/components/global/layout/PrivateRoute';
 import PublicRoute from '@/components/global/layout/PublicRoute';
@@ -7,7 +7,6 @@ import {
   AdsLocationPage,
   AdsRequiredEditPage,
   CompanyDetailForm,
-  DistrictManagementPage,
   HomeOfficerPage,
   HomeResidentPage,
   LoginPage,
@@ -16,9 +15,9 @@ import {
   RequireEditForm,
   RequireLisenceForm,
 } from '@/pages';
-import CityDistrictManagementPage from '@/pages/city/district';
-import EditDistrict from '@/pages/city/district/[slug]';
-import CityWardManagementPage from '@/pages/city/ward';
+import AdminDistrictManagementPage from '@/pages/admin/district';
+import AdminWardPage from '@/pages/admin/ward/AdminWardPage';
+import ReportListPage from '@/pages/wards/ReportListPage';
 import { createBrowserRouter } from 'react-router-dom';
 import { MY_ROUTE } from './route.constant';
 
@@ -39,7 +38,7 @@ const router = createBrowserRouter([
               { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
-              { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
+              // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
               { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
               { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
             ],
@@ -52,14 +51,15 @@ const router = createBrowserRouter([
         children: [
           {
             path: '',
-            element: <LayoutCity />,
+            element: <LayoutWard />,
             children: [
               { path: MY_ROUTE.HOME, element: <HomeOfficerPage /> },
-              { path: MY_ROUTE.REPORT, element: <ReportFormModal /> },
+              { path: MY_ROUTE.WARD.REPORT, element: <ReportListPage /> },
+              { path: `${MY_ROUTE.WARD.REPORT}/:id`, element: <ReportFormModal /> },
               { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
-              { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
+              // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
               { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
               { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
             ],
@@ -79,7 +79,7 @@ const router = createBrowserRouter([
               { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
-              { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
+              // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
               { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
               { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
             ],
@@ -95,9 +95,11 @@ const router = createBrowserRouter([
             element: <LayoutCity />,
             children: [
               { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
-              { path: MY_ROUTE.DISTRICT, element: <CityDistrictManagementPage /> },
-              { path: MY_ROUTE.WARD, element: <CityWardManagementPage /> },
-              { path: MY_ROUTE.DISTRICT_EDIT, element: <EditDistrict /> },
+              { path: MY_ROUTE.DISTRICT, element: <AdminDistrictManagementPage /> },
+              {
+                path: `${MY_ROUTE.DISTRICT}/${MY_ROUTE.WARD.self}/:id`,
+                element: <AdminWardPage />,
+              },
             ],
           },
         ],

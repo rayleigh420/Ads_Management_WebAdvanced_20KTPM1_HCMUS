@@ -34,6 +34,10 @@ export const getReportApi = async (params: ReportREQ) => {
   });
 };
 
+export const getReportByIdApi = async (id: string) => {
+  return await api.get<any>(`/reports/${id}`);
+};
+
 export const getReportOfficerApi = async (params: ReportREQ & PagingREQ) => {
   return await api.get<any>('/reports/officer', {
     params,

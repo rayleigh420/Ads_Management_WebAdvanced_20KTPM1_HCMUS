@@ -1,6 +1,5 @@
 export { default as AdsLocationPage } from './ads-location/AdsLocationPage';
 export { default as AdsRequiredEditPage } from './ads-require-edit/AdsRequiredEditPage';
-export { default as DistrictManagementPage } from './district-management/DistrictManagementPage';
 export { default as AdDetailForm } from './form/AdDetailForm';
 export { default as CompanyDetailForm } from './form/CompanyDetailForm';
 export { default as ReportFormModal } from './form/ReportForm';

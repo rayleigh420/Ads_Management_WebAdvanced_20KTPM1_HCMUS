@@ -5,7 +5,8 @@ import {
 } from '@/core/constants/location-type.contants';
 import { AdvertiseInfoType } from '@/core/models/adversise.model';
 import { api } from '@/utils/config/http';
-import { BaseResponse } from '@/utils/types/response.type';
+import { BaseResponse, PagingResponse } from '@/utils/types/response.type';
+import { PagingREQ } from '../report/report.api';
 import { LocationBoardsRESP } from './location.response';
 
 export type LocationRESP = {
@@ -32,7 +33,7 @@ export const getLocationByOfficerApi = async (params?: ReportOfficerREQ) => {
       skip: 0,
     };
   }
-  return api.get<BaseResponse<{ items: LocationRESP[] }>>('/locations/officer', { params });
+  return api.get<PagingResponse<LocationRESP>>('/locations/officer', { params });
 };
 
 export const getBoardByIdLocationApi = async (locationId: String) => {
@@ -41,8 +42,23 @@ export const getBoardByIdLocationApi = async (locationId: String) => {
   });
 };
 
-export const getDistrictApi = async () => {
-  return api.get<BaseResponse<LocationRESP[]>>('/admins/districts');
+export type AdsManagementPagRESP = {
+  id: number;
+  boardType: number;
+  location: {
+    address: string;
+  };
+  quantity: number;
+  image1: string;
+  expireDate: string;
+  width: string;
+  height: string;
+};
+
+export const getBoardByOfficerApi = async (params: PagingREQ) => {
+  return api.get<PagingResponse<AdsManagementPagRESP>>('/boards/officer', {
+    params,
+  });
 };
 
 export const deleteDistrictApi = async (id: any) => {

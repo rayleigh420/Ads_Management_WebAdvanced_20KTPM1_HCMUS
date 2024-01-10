@@ -1,4 +1,5 @@
-import { deleteDistrictApi, getDistrictApi } from '@/apis/district/district.api';
+import { deleteDistrictApi } from '@/apis/district/district.api';
+import { getWardApi } from '@/apis/ward/ward.api';
 import { ButtonPrimary } from '@/components/ui';
 import ModalConfirm from '@/components/ui/button-primary/ModalConfirm';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
@@ -7,20 +8,24 @@ import { initKeys } from '@/core/models/query-key.util';
 import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import { columnsDistrictManagement } from './components/DistrictManagementColumns';
-import EditDistrictModal from './components/EditDistrictModal';
-export const adminDistrictListKeys = initKeys('admin-district');
+import { useParams } from 'react-router-dom';
+import { columnsWardManagement } from './components/DistrictManagementColumns';
+import EditWardModal from './components/EditDistrictModal';
+export const adminWardListKeys = initKeys('admin-ward');
 
-export default function AdminDistrictManagementPage() {
+export default function AdminWardPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
   const [value, setValue] = useState<any>({});
   const idRef = useRef<string | null>(null);
+  const { id } = useParams();
 
   const { data: dataWards, refetch } = useQuery({
-    queryKey: adminDistrictListKeys.all,
-    queryFn: () => getDistrictApi(),
-    select: (resp) => resp.data.data,
+    queryKey: adminWardListKeys.all,
+    queryFn: () => getWardApi(),
+    select: (resp) => {
+      return resp.data.data.filter((item: any) => item.districtId === id);
+    },
     placeholderData: keepPreviousData,
   });
 
@@ -55,7 +60,7 @@ export default function AdminDistrictManagementPage() {
   return (
     <div className='w-[960px] mx-auto '>
       <div className='flex justify-between items-center'>
-        <h1 className={`font-bold text-2xl my-0 `}>Quản lý quận</h1>
+        <h1 className={`font-bold text-2xl my-0 `}>Quản lý phường</h1>
         <div className='flex justify-end my-3'>
           <ButtonPrimary
             icon={<PlusOutlined />}
@@ -64,10 +69,10 @@ export default function AdminDistrictManagementPage() {
           />
         </div>
       </div>
-      <EditDistrictModal isOpen={isOpen} setIsOpen={setIsOpen} initialValue={value} />
+      <EditWardModal isOpen={isOpen} setIsOpen={setIsOpen} initialValue={value} />
 
       <CustomTableCore
-        columns={columnsDistrictManagement(handleDelete, handleEdit)}
+        columns={columnsWardManagement(handleDelete, handleEdit)}
         data={dataWards?.slice().reverse()}
         paging={{ limit: 20, skip: 0, total: 10 }}
       />

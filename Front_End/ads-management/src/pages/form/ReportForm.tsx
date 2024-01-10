@@ -3,6 +3,7 @@ import {
   ReportREQ,
   createReportApi,
   getReportApi,
+  getReportByIdApi,
   getReportOfficerApi,
 } from '@/apis/report/report.api';
 import { CustomEditorInput } from '@/components/ui/form/CustomEditorInput';
@@ -17,7 +18,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Divider, Form, Image, Pagination, Upload } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 export type ReportInput = {
   id?: string;
   fullname: string;
@@ -52,11 +55,13 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
   const ref = useRef<any>(null);
   const [isCreate, setIsCreate] = useState<boolean>(true);
   const [image, setImage] = useState<string>('');
+  const [content, setContent] = useState();
   const auth = useSelector((state: RootState) => state.auth);
   const [data, setData] = useState<any>(null);
   const [pageBoard, setPageBoard] = useState<number>(1);
 
   const queryClient = useQueryClient();
+  const { id } = useParams();
 
   const { mutate: mutateReport } = useMutation({
     mutationFn: (data: ReportInput) => createReportApi(data),
@@ -87,6 +92,7 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
         status: resp.data.data[0].status,
       });
       setImage(resp.data.data[0].image1);
+      setContent(resp.data.data[0].content);
       setIsCreate(false);
     }
   };
@@ -94,6 +100,28 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
   const { mutate: mutateGetReport } = useMutation({
     mutationFn: (data: ReportREQ) => getReportApi(data),
     onSuccess: handleSetReportForm,
+  });
+
+  const { mutate: mutateGetReportById } = useMutation({
+    mutationFn: (id: string) => getReportByIdApi(id),
+    onSuccess: (resp) => {
+      console.log('resp', resp.data.data);
+      if (resp.data.data) {
+        setData(null);
+        form.setFieldsValue({
+          id: resp.data.data.id,
+          fullname: resp.data.data.fullnameOfReporter,
+          email: resp.data.data.emailOfReporter,
+          phoneNumber: resp.data.data.phoneNumberOfReporter,
+          reportForm: resp.data.data.reportForm,
+          content: resp.data.data.content,
+          status: resp.data.data.status,
+        });
+        setImage(resp.data.data.image1);
+        setContent(resp.data.data.content);
+        setIsCreate(false);
+      }
+    },
   });
 
   const { mutate: mutateGetReportOfficer } = useMutation({
@@ -114,7 +142,7 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
           status: resp.data.data.items[0].status,
         });
         setImage(resp.data.data[0].image1);
-        console.log('image', resp.data.data[0].image1);
+        setContent(resp.data.data[0].content);
       }
     },
   });
@@ -131,13 +159,15 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
         status: data[pageBoard - 1].status,
       });
       setImage(data[pageBoard - 1].image1);
+      setContent(data[pageBoard - 1].content);
       setIsCreate(false);
     }
   }, [pageBoard]);
 
   useEffect(() => {
-    console.log('initialValues', initialValues);
-    if (initialValues.boardId || initialValues.locationId) {
+    if (id) {
+      mutateGetReportById(id);
+    } else if (initialValues.boardId || initialValues.locationId) {
       if (auth.type !== UserType.resident) {
         mutateGetReportOfficer({
           limit: 0,
@@ -219,20 +249,27 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
               ]}
             />
           </div>
-          <CustomEditorInput<ReportInput>
-            label='Nội dung báo cáo'
-            name='content'
-            refEditor={ref}
-            rules={[{ required: true, message: 'Please input your report content!' }]}
-            disabled={!isCreate}
-            onChange={(value) => {
-              // console.log('editor', editor.getContent());
-              console.log('content', typeof value);
-              // console.log('content', _);
-              form.setFieldValue('content', value);
-              form.validateFields(['content']);
-            }}
-          />
+          {isCreate ? (
+            <CustomEditorInput<ReportInput>
+              label='Nội dung báo cáo'
+              name='content'
+              refEditor={ref}
+              rules={[{ required: true, message: 'Please input your report content!' }]}
+              disabled={!isCreate}
+              onChange={(value) => {
+                // console.log('editor', editor.getContent());
+                console.log('content', typeof value);
+                // console.log('content', _);
+                form.setFieldValue('content', value);
+                form.validateFields(['content']);
+              }}
+            />
+          ) : (
+            <>
+              <div> Nội dung báo cáo</div>
+              <div dangerouslySetInnerHTML={{ __html: content! }} />
+            </>
+          )}
 
           <Form.Item<ReportInput>
             label='Hình ảnh báo cáo'
