@@ -4,6 +4,7 @@ import boardsRouter from './board.routes';
 import reportsRouter from './report.routes';
 import locationsRoute from './location.routes';
 import adminRouter from './admin.routes';
+import licenseRouter from './license.routes';
 
 const indexRouter = Router();
 
@@ -12,5 +13,6 @@ indexRouter.use('/admins', adminRouter);
 indexRouter.use('/boards', boardsRouter);
 indexRouter.use('/reports', reportsRouter);
 indexRouter.use('/locations', locationsRoute);
+indexRouter.use('/licenses', licenseRouter);
 
 export default indexRouter;

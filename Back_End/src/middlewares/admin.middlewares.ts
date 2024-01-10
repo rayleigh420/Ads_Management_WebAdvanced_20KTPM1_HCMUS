@@ -26,6 +26,54 @@ export const authorizationAdminValidator = validate(
   )
 );
 
+export const authorizationOfficerValidator = validate(
+  checkSchema(
+    {
+      Authorization: {
+        custom: {
+          options: async (value: string, { req }) => {
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req);
+          }
+        }
+      }
+    },
+    ['headers']
+  )
+);
+
+export const authorizationWardOfficerValidator = validate(
+  checkSchema(
+    {
+      Authorization: {
+        custom: {
+          options: async (value: string, { req }) => {
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req, 2);
+          }
+        }
+      }
+    },
+    ['headers']
+  )
+);
+
+export const authorizationDistrictOfficerValidator = validate(
+  checkSchema(
+    {
+      Authorization: {
+        custom: {
+          options: async (value: string, { req }) => {
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req, 1);
+          }
+        }
+      }
+    },
+    ['headers']
+  )
+);
+
 export const createWardValidator = validate(
   checkSchema({
     name: {

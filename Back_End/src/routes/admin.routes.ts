@@ -39,7 +39,7 @@ adminRouter.put('/districts/:id', udpateDistrictValidator, wrapRequestHandler(up
 adminRouter.delete('/districts/:id', wrapRequestHandler(deleteDistrict));
 
 // Board-management
-adminRouter.get('/boards', wrapRequestHandler(getListBoards));
+// adminRouter.get('/boards', wrapRequestHandler(getListBoards));
 adminRouter.post('/boards', BoardReqValidator, wrapRequestHandler(createBoard));
 adminRouter.put('/borad/:id', BoardReqValidator, wrapRequestHandler(updateBoard));
 adminRouter.delete('/board/:id', wrapRequestHandler(deleteBoard));
