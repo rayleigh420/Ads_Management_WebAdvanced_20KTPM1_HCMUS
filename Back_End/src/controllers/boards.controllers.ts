@@ -6,6 +6,7 @@ import { ApiResponse } from '../models/responses/base.response';
 import { getPagingData } from '../utils/paging.utils';
 import usersServices from '../services/users.services';
 import { BoardReqBody } from '../models/requets/admin.requests';
+import { UserType } from '../models/requets/user.requests';
 
 export const getBoardsController = async (req: any, res: Response, next: NextFunction) => {
   try {
@@ -79,15 +80,29 @@ export const deleteBoard = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-// export const getBoardByLocationIdController = async (
-//   req: Request<ParamsDictionary, any, any>,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const id = req.query.locationId as string;
-//     const result = await boardsService.getBoardByLocationId(parseInt(id, 10));
-//     res.json(ApiResponse.success(result, 'success'));
-//   } catch (error) {
-//     next(error);
-//   }
+export const getAllBoardsManageByUserId = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.decodedAuthorization?.userId as number;
+    const userType = req.decodedAuthorization?.userType as number;
+    const limit = parseInt(req.query.limit as string);
+    const skip = parseInt(req.query.skip as string);
+    if (userType === UserType.WARD_OFFICER) {
+      const wardOfficer = await usersServices.getWardOfficerByUserId(userId);
+      const wardId = wardOfficer.manageWardId;
+      console.log('🚀 ~ wardId:', wardId);
+      const results = await boardsService.getAllBoardManageWard(wardId);
+      let data: any;
+      const count = results.length;
+      if (limit === 0 && skip === 0) {
+        data = results;
+      } else {
+        data = results.splice(skip, limit);
+        console.log("🚀 ~ getAllBoardsManageByUserId ~ data:", data)
+      }
+      const dataPaging = getPagingData({ data: results, count, limit, skip });
+      return res.json(ApiResponse.success(dataPaging, 'success'));
+    }
+  } catch (error) {
+    next(error);
+  }
+};

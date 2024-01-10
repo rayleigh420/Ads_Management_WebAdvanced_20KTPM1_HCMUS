@@ -50,6 +50,17 @@ class BoardService {
   public async deleteBoard(id: number) {
     return this.boardRepository.delete({ id });
   }
+
+  public async getAllBoardManageWard(wardId: number) {
+    const boards = await this.boardRepository
+    .createQueryBuilder('board')
+    .leftJoinAndSelect('board.location', 'location')
+    .leftJoinAndSelect('location.ward', 'ward')
+    .where('ward.id = :wardId', { wardId })
+    // .where('reports.deviceId = :deviceId', { deviceId })
+    .getMany();
+    return boards;
+  }
 }
 
 export default new BoardService();
