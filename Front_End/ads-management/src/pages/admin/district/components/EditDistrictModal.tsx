@@ -5,7 +5,8 @@ import { handleError } from '@/core/helpers/noti-error.helper';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Form, Modal } from 'antd';
 import { useEffect } from 'react';
-import { adminDistrictListKeys } from '../index';
+import { toast } from 'react-toastify';
+import { adminDistrictListKeys } from '../AdminDistrictManagementPage';
 
 type EditDistrictModalProps = {
   isOpen: boolean;
@@ -52,6 +53,7 @@ export default function EditDistrictModal({
       queryClient.invalidateQueries({ queryKey: adminDistrictListKeys.lists() });
       setIsOpen(false);
       form.resetFields();
+      toast.success('Thêm quận thành công');
     },
     onError: handleError,
   });
@@ -62,6 +64,7 @@ export default function EditDistrictModal({
       queryClient.invalidateQueries({ queryKey: adminDistrictListKeys.lists() });
       setIsOpen(false);
       form.resetFields();
+      toast.success('Sửa quận thành công');
     },
     onError: handleError,
   });

@@ -1,12 +1,13 @@
 import { deleteDistrictApi, getDistrictApi } from '@/apis/district/district.api';
-import { ButtonPrimary } from '@/components/ui';
+import { ButtonPrimary, CustomTableCore } from '@/components/ui';
 import ModalConfirm from '@/components/ui/button-primary/ModalConfirm';
-import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { handleError } from '@/core/helpers/noti-error.helper';
 import { initKeys } from '@/core/models/query-key.util';
+import { MY_ROUTE } from '@/routes/route.constant';
 import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { columnsDistrictManagement } from './components/DistrictManagementColumns';
 import EditDistrictModal from './components/EditDistrictModal';
 export const adminDistrictListKeys = initKeys('admin-district');
@@ -50,7 +51,12 @@ export default function AdminDistrictManagementPage() {
     }
   }, [isOpen]);
 
-  // console.log('dataWards', dataWards?.reverse());
+  const navigate = useNavigate();
+  const handleNavigate = (record: any) => {
+    navigate(MY_ROUTE.WARD.detail(record.id), {
+      state: { name: (record as any).name },
+    });
+  };
 
   return (
     <div className='w-[960px] mx-auto '>
@@ -67,7 +73,7 @@ export default function AdminDistrictManagementPage() {
       <EditDistrictModal isOpen={isOpen} setIsOpen={setIsOpen} initialValue={value} />
 
       <CustomTableCore
-        columns={columnsDistrictManagement(handleDelete, handleEdit)}
+        columns={columnsDistrictManagement(handleDelete, handleEdit, handleNavigate)}
         data={dataWards?.slice().reverse()}
         paging={{ limit: 20, skip: 0, total: 10 }}
       />

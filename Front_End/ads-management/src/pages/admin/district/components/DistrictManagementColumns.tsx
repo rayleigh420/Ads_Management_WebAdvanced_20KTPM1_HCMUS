@@ -1,7 +1,5 @@
-import { MY_ROUTE } from '@/routes/route.constant';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
-import { Link } from 'react-router-dom';
 
 export type DistrictManagementColumns = {
   id: string;
@@ -11,6 +9,7 @@ export type DistrictManagementColumns = {
 export const columnsDistrictManagement = (
   onDelete: any,
   onEdit: (data: any) => void,
+  onNavigate: any,
 ): ColumnsType<DistrictManagementColumns> => {
   return [
     { title: 'No.', dataIndex: 'id' },
@@ -40,15 +39,24 @@ export const columnsDistrictManagement = (
       title: 'xem phường',
       dataIndex: 'operation',
       key: 'operation',
-      render: (_, record: any) => (
-        <Link to={`${MY_ROUTE.WARD.detail(record.id)}`}>
-          <div className='flex items-center gap-3 justify-center'>
+      render: (_, record: any) => {
+        // const navigate = useNavigate();
+        // const handleNavigate = () => {
+        //   navigate(MY_ROUTE.WARD.detail(record.id), {
+        //     state: { name: record.name },
+        //   });
+        // };
+        return (
+          <div
+            className='flex items-center gap-3 justify-center'
+            onClick={() => onNavigate(record)}
+          >
             <div className='flex items-center gap-2 cursor-pointer hover:text-red-500'>
               <EyeOutlined /> Chi tiết
             </div>
           </div>
-        </Link>
-      ),
+        );
+      },
     },
   ];
 };

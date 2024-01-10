@@ -15,7 +15,7 @@ import {
   RequireEditForm,
   RequireLisenceForm,
 } from '@/pages';
-import AdminDistrictManagementPage from '@/pages/admin/district';
+import AdminDistrictManagementPage from '@/pages/admin/district/AdminDistrictManagementPage';
 import AdminWardPage from '@/pages/admin/ward/AdminWardPage';
 import ReportListPage from '@/pages/wards/ReportListPage';
 import { createBrowserRouter } from 'react-router-dom';

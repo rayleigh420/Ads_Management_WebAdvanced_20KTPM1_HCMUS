@@ -1,18 +1,20 @@
-import { createDistrictApi, editDistrictApi } from '@/apis/district/district.api';
+import { createWardApi, editWardApi } from '@/apis/ward/ward.api';
 import ButtonBig from '@/components/ui/button-primary/ButtonBig';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
 import { handleError } from '@/core/helpers/noti-error.helper';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Form, Modal } from 'antd';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { adminWardListKeys } from '../AdminWardPage';
 
 type EditDistrictModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   initialValue?: {
-    name: string;
-    id: string;
+    name?: string;
+    districtId: string;
+    id?: string;
   };
 };
 
@@ -36,27 +38,32 @@ type EditDistrictModalProps = {
 
 export type EditDistrictInput = {
   name: string;
+  districtId: string;
 };
 
 export default function EditWardModal({ isOpen, setIsOpen, initialValue }: EditDistrictModalProps) {
   const [form] = Form.useForm<EditDistrictInput>();
 
   const queryClient = useQueryClient();
-  const { mutate: muteAddDistrict } = useMutation({
-    mutationFn: (data: EditDistrictInput) => createDistrictApi(data),
+  const { mutate: muteAddWard } = useMutation({
+    mutationFn: (data: EditDistrictInput) =>
+      createWardApi({ ...data, districtId: initialValue?.districtId! }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminWardListKeys.lists() });
       setIsOpen(false);
+      toast.success('Thêm phường thành công');
       form.resetFields();
     },
     onError: handleError,
   });
 
-  const { mutate: muteEditDistrict } = useMutation({
-    mutationFn: (data: EditDistrictInput) => editDistrictApi(data, initialValue?.id!),
+  const { mutate: muteEditWard } = useMutation({
+    mutationFn: (data: EditDistrictInput) =>
+      editWardApi({ ...data, districtId: initialValue?.districtId! }, initialValue?.id!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminWardListKeys.lists() });
       setIsOpen(false);
+      toast.success('Sửa phường thành công');
       form.resetFields();
     },
     onError: handleError,
@@ -88,8 +95,8 @@ export default function EditWardModal({ isOpen, setIsOpen, initialValue }: EditD
       <Form
         name='setting-security'
         onFinish={(data) => {
-          if (initialValue) muteEditDistrict(data);
-          else muteAddDistrict(data);
+          if (initialValue?.id) muteEditWard(data);
+          else muteAddWard(data);
         }}
         autoComplete='off'
         colon={false}
@@ -107,7 +114,7 @@ export default function EditWardModal({ isOpen, setIsOpen, initialValue }: EditD
         </div>
         <CustomTextInput<EditDistrictInput>
           name='name'
-          placeholder='Vui lòng nhập tên quận'
+          placeholder='Vui lòng nhập tên phường'
           rules={[{ required: true, message: 'Please input name ' }]}
           classNameForm='w-full my-5'
         />

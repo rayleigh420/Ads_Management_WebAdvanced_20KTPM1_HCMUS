@@ -1,5 +1,4 @@
-import { deleteDistrictApi } from '@/apis/district/district.api';
-import { getWardApi } from '@/apis/ward/ward.api';
+import { deleteWardApi, getWardApi } from '@/apis/ward/ward.api';
 import { ButtonPrimary } from '@/components/ui';
 import ModalConfirm from '@/components/ui/button-primary/ModalConfirm';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
@@ -7,10 +6,11 @@ import { handleError } from '@/core/helpers/noti-error.helper';
 import { initKeys } from '@/core/models/query-key.util';
 import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { columnsWardManagement } from './components/DistrictManagementColumns';
-import EditWardModal from './components/EditDistrictModal';
+import EditWardModal from './components/EditWardModal';
 export const adminWardListKeys = initKeys('admin-ward');
 
 export default function AdminWardPage() {
@@ -19,21 +19,26 @@ export default function AdminWardPage() {
   const [value, setValue] = useState<any>({});
   const idRef = useRef<string | null>(null);
   const { id } = useParams();
+  const location = useLocation();
+
+  const nameDistrict = useMemo(() => location.state?.name || 'Không có dữ liệu', [location]);
 
   const { data: dataWards, refetch } = useQuery({
     queryKey: adminWardListKeys.all,
     queryFn: () => getWardApi(),
     select: (resp) => {
-      return resp.data.data.filter((item: any) => item.districtId === id);
+      console.log('resp', resp.data.data);
+      return resp.data.data.filter((item: any) => item.districtId == id);
     },
     placeholderData: keepPreviousData,
   });
 
-  const { mutate: muteDeleteDistrict } = useMutation({
-    mutationFn: (id: string) => deleteDistrictApi(id),
+  const { mutate: muteDeleteWard } = useMutation({
+    mutationFn: (id: string) => deleteWardApi(id),
     onSuccess: () => {
       refetch();
       setIsOpenConfirm(false);
+      toast.success('Xóa phường thành công');
     },
     onError: handleError,
   });
@@ -59,17 +64,22 @@ export default function AdminWardPage() {
 
   return (
     <div className='w-[960px] mx-auto '>
+      <h1>{nameDistrict}</h1>
       <div className='flex justify-between items-center'>
         <h1 className={`font-bold text-2xl my-0 `}>Quản lý phường</h1>
         <div className='flex justify-end my-3'>
           <ButtonPrimary
             icon={<PlusOutlined />}
-            title='Thêm Quận'
+            title='Thêm Phường'
             onClick={() => setIsOpen(true)}
           />
         </div>
       </div>
-      <EditWardModal isOpen={isOpen} setIsOpen={setIsOpen} initialValue={value} />
+      <EditWardModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        initialValue={{ ...value, districtId: id }}
+      />
 
       <CustomTableCore
         columns={columnsWardManagement(handleDelete, handleEdit)}
@@ -83,7 +93,7 @@ export default function AdminWardPage() {
         setIsOpen={setIsOpenConfirm}
         className='mt-5'
         onConfirm={() => {
-          muteDeleteDistrict(idRef.current!);
+          muteDeleteWard(idRef.current!);
         }}
       />
     </div>
