@@ -45,6 +45,16 @@ export const getReportAnonymousByConditionController = async (
   }
 };
 
+export const getReportByIdController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const reportId = req.params.id as string;
+    const result = await reportsServices.getReportById(parseInt(reportId, 10));
+    res.json(ApiResponse.success(result, 'success'));
+  } catch (error) {
+    next(error);
+  }
+}
+
 export const getReportByConditionController = async (req: any, res: Response, next: NextFunction) => {
   try {
     // const reportType = req.query.reportType as string;

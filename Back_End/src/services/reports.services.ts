@@ -146,6 +146,10 @@ class ReportService {
     report.handleMethod = handleMethod;
     return await this.reportRepository.save(report);
   }
+
+  public async getReportById(id: number) {
+    return await this.reportRepository.findOne({ where: { id } });
+  }
 }
 
 export default new ReportService();

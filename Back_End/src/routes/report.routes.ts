@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import { wrapRequestHandler } from '../utils/handler.ultil';
-import { createReport, getReportAnonymousByConditionController, getReportByConditionController, updateReportController } from '../controllers/reports.controller';
+import { createReport, getReportAnonymousByConditionController, getReportByConditionController, getReportByIdController, updateReportController } from '../controllers/reports.controller';
 import { createReportValidate } from '../middlewares/report.middlewares';
 import multer from 'multer';
 import { accessTokenValidator } from '../middlewares/users.middlewares';
+import { getBoardByIdController } from '../controllers/boards.controllers';
 
 const reportsRouter = Router();
 
 // anonymous
+reportsRouter.get('/:id', wrapRequestHandler(getReportByIdController));
 reportsRouter.get('/anonymous', wrapRequestHandler(getReportAnonymousByConditionController));
 
 const upload = multer({
