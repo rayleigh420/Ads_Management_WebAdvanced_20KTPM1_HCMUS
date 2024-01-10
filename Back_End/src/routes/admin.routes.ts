@@ -19,7 +19,12 @@ import {
   updateWardValidator
 } from '../middlewares/admin.middlewares';
 import { createBoard, deleteBoard, getListBoards, updateBoard } from '../controllers/boards.controllers';
-import { addOfficerToDistrict, addOfficerToWard } from '../controllers/admins.controllers';
+import {
+  addOfficerToDistrict,
+  addOfficerToWard,
+  approveLicense,
+  cancelLicense
+} from '../controllers/admins.controllers';
 
 const adminRouter = Router();
 adminRouter.use(authorizationAdminValidator);
@@ -49,5 +54,9 @@ adminRouter.delete('/board/:id', wrapRequestHandler(deleteBoard));
 // Officer-management
 adminRouter.post('/district-officer', OfficerToDistrictValidator, wrapRequestHandler(addOfficerToDistrict));
 adminRouter.post('/ward-officer', OfficerToWardValidator, wrapRequestHandler(addOfficerToWard));
+
+// License-management
+adminRouter.get('/approve-license/:id', wrapRequestHandler(approveLicense));
+adminRouter.delete('/cancel-license/:id', wrapRequestHandler(cancelLicense));
 
 export default adminRouter;

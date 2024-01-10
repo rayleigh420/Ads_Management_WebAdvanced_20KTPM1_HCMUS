@@ -15,6 +15,14 @@ class LicenseService {
     return await this.licenseRepository.save(license_request);
   }
 
+  public async approveLicense(id: number) {
+    const license = await this.licenseRepository.findOneBy({ id });
+    if (license) {
+      license.status = 1;
+      this.licenseRepository.save(license);
+    }
+  }
+
   public async deleteLicense(id: number) {
     return await this.licenseRepository.delete({ id });
   }
