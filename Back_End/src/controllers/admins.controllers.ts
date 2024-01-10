@@ -3,6 +3,7 @@ import { ApiResponse } from '../models/responses/base.response';
 import adminServices from '../services/admin.services';
 import { OfficerToDistrict, OfficerToWard } from '../models/requets/admin.requests';
 import licenseServices from '../services/license.services';
+import reportsServices from '../services/reports.services';
 
 export const addOfficerToDistrict = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -34,6 +35,15 @@ export const approveLicense = async (req: Request, res: Response, next: NextFunc
 export const cancelLicense = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await licenseServices.deleteLicense(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getListReport = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await reportsServices.getListReport();
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);

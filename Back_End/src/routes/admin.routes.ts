@@ -23,7 +23,8 @@ import {
   addOfficerToDistrict,
   addOfficerToWard,
   approveLicense,
-  cancelLicense
+  cancelLicense,
+  getListReport
 } from '../controllers/admins.controllers';
 
 const adminRouter = Router();
@@ -50,6 +51,7 @@ adminRouter.put('/borad/:id', BoardReqValidator, wrapRequestHandler(updateBoard)
 adminRouter.delete('/board/:id', wrapRequestHandler(deleteBoard));
 
 // Report-management
+adminRouter.get('/reports', wrapRequestHandler(getListReport));
 
 // Officer-management
 adminRouter.post('/district-officer', OfficerToDistrictValidator, wrapRequestHandler(addOfficerToDistrict));

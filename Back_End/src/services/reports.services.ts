@@ -15,6 +15,10 @@ class ReportService {
   private wardRepository = myDataSource.getRepository(Ward);
   private advertisingLocationRepository = myDataSource.getRepository(AdvertisingLocation);
 
+  public async getListReport() {
+    return await this.reportRepository.find();
+  }
+
   public async createReport(payload: ReportReqBody, file: Express.Multer.File, deviceId: string) {
     if (!file) {
       throw new Error('Please upload a file');
@@ -106,7 +110,8 @@ class ReportService {
       return result;
     } else {
       //find all location in ward
-      const locations = await this.advertisingLocationRepository.createQueryBuilder('location')
+      const locations = await this.advertisingLocationRepository
+        .createQueryBuilder('location')
         .leftJoinAndSelect('location.ward', 'ward')
         .where('ward.id = :wardId', { wardId })
         .leftJoinAndSelect('location.reports', 'reports')
@@ -132,7 +137,7 @@ class ReportService {
 
   public async updateReport(payload: UpdateReportBody) {
     const { id, status, handleMethod } = payload;
-    console.log("🚀 ~ ReportService ~ updateReport ~ payload:", payload)
+    console.log('🚀 ~ ReportService ~ updateReport ~ payload:', payload);
     const report = await this.reportRepository.findOne({ where: { id } });
     if (!report) {
       throw new Error('Report not found');
