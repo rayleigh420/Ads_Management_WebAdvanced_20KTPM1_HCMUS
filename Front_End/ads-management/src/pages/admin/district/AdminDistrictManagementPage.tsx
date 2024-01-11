@@ -8,6 +8,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { columnsDistrictManagement } from './components/DistrictManagementColumns';
 import EditDistrictModal from './components/EditDistrictModal';
 export const adminDistrictListKeys = initKeys('admin-district');
@@ -30,6 +31,7 @@ export default function AdminDistrictManagementPage() {
     onSuccess: () => {
       refetch();
       setIsOpenConfirm(false);
+      toast.success('Xóa quận thành công');
     },
     onError: handleError,
   });

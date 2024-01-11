@@ -17,7 +17,7 @@ export type ReportColumns = {
   status: string;
 };
 
-export const columnsAdsLocationPage: ColumnsType<ReportColumns> = [
+export const columnsAdsLocationPage = (setId: any): ColumnsType<ReportColumns> => [
   { title: 'Id', dataIndex: 'id' },
   { title: 'Tên người báo cáo', dataIndex: 'fullnameOfReporter' },
   { title: 'Email', dataIndex: 'emailOfReporter' },
@@ -53,17 +53,27 @@ export const columnsAdsLocationPage: ColumnsType<ReportColumns> = [
     title: 'Action',
     dataIndex: 'id',
     key: 'id',
-    render: (status) => (
-      <div className='flex flex-col items-center gap-3 justify-center'>
-        <div className='flex items-center gap-2 cursor-pointer hover:text-blue-500'>
-          <EditOutlined /> Xử lý
+    render: (status, record) => {
+      console.log('record', record.status);
+      return (
+        <div className='flex flex-col items-center gap-3 justify-center'>
+          {record.status == '0' ? (
+            <div
+              className='flex items-center gap-2 cursor-pointer hover:text-blue-500'
+              onClick={() => setId(status)}
+            >
+              <EditOutlined /> Xử lý
+            </div>
+          ) : (
+            <></>
+          )}
+          <Link to={`${MY_ROUTE.WARD.REPORT_DETAIL(status)}`}>
+            <div className='flex items-center gap-2  cursor-pointer hover:text-red-500'>
+              <EyeOutlined /> Xem chi tiết
+            </div>
+          </Link>
         </div>
-        <Link to={`${MY_ROUTE.WARD.REPORT_DETAIL(status)}`}>
-          <div className='flex items-center gap-2  cursor-pointer hover:text-red-500'>
-            <EyeOutlined /> Xem chi tiết
-          </div>
-        </Link>
-      </div>
-    ),
+      );
+    },
   },
 ];

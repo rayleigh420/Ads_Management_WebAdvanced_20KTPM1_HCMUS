@@ -5,14 +5,18 @@ import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { Modal } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { columnsAdsLocationPage } from './components/reportColumns';
+import ReportHandleForm from './components/reportHandleForm';
 
 export const adminAdsKey = initKeys('admin-ads');
 
 export default function ReportListPage() {
   const [searchParams] = useSearchParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const [id, setId] = useState<string>('');
 
   const { initialPaging } = useMemo(() => {
     const initialPaging: PagingState = {
@@ -43,6 +47,17 @@ export default function ReportListPage() {
     placeholderData: keepPreviousData,
   });
 
+  const handleSetId = (data: any) => {
+    setId(data);
+    setIsOpen(true);
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      wardReports.refetch();
+    }
+  });
+
   return (
     <div className='w-[1000px] mx-auto'>
       <div className='flex justify-center items-center mb-5'>
@@ -51,13 +66,26 @@ export default function ReportListPage() {
           <ButtonPrimary icon={<PlusOutlined />} title='Thêm quảng cáo' />
         </div> */}
       </div>
-
       <CustomTableCore
-        columns={columnsAdsLocationPage}
+        columns={columnsAdsLocationPage(handleSetId)}
         data={wardReports.data?.items}
         paging={wardReports.data?.pageInfo}
         onChange={handlePageChange}
       />
+      <Modal
+        // centered
+        centered
+        open={isOpen}
+        onOk={() => setIsOpen(false)}
+        onCancel={() => setIsOpen(false)}
+        width={1000}
+        className='my-3'
+        footer={null}
+        // style={{ top: 20 }}
+      >
+        <ReportHandleForm setIsConfirm={setIsOpen} id={id} />
+      </Modal>
+      s
     </div>
   );
 }
