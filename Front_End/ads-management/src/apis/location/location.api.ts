@@ -14,7 +14,11 @@ export type LocationRESP = {
   lat: number;
   long: number;
   isPlanned?: number;
+  locationType?: number;
+  advertisingType?: number;
+  address?: string;
   reports?: any[];
+  image1?: string;
   advertisingBoards?: any[];
 };
 

@@ -12,6 +12,7 @@ export const MY_ROUTE = {
     detail: (id: string) => `ads/${id}`,
     REQUIRE_EDIT: 'ads/required-edit',
     LOCATION: 'ads/location',
+    BOARD: 'ads/boards',
   },
   WARD: {
     self: 'ward',

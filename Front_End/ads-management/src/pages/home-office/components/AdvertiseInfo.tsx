@@ -87,6 +87,7 @@ function AdvertiseInfoComponent({
               width={1000}
               className='my-3'
               // style={{ top: 20 }}
+              footer={null}
             >
               <ReportFormModal
                 setOpen={setModal1Open}

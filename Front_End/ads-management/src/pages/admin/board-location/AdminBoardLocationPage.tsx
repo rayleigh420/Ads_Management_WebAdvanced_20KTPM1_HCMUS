@@ -1,23 +1,24 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
 import { getBoardByOfficerApi } from '@/apis/location/location.api';
-import { ButtonPrimary } from '@/components/ui';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
-import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { Modal } from 'antd';
+import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-  AdsManagementPageColumns,
+  AdminBoardLocationColumns,
   columnsAdsLocationPage,
-} from './components/AdsLocationPageColumns';
+} from './components/AdminBoardLocationColumns';
 
 export const adminAdsKey = initKeys('admin-ads');
 
-export default function AdsLocationListPage() {
+export default function AdminBoardLocationPage() {
   const [searchParams] = useSearchParams();
+  const [modal1Open, setModal1Open] = useState(false);
+  const [id, setId] = useState<any>();
 
   const { initialPaging } = useMemo(() => {
     const initialPaging: PagingState = {
@@ -35,7 +36,7 @@ export default function AdsLocationListPage() {
     queryKey: adminAdsKey.list(filter),
     queryFn: () => getBoardByOfficerApi(filter),
     select: (resp) => {
-      const items: AdsManagementPageColumns[] = [];
+      const items: AdminBoardLocationColumns[] = [];
       for (let i = 0; i < resp.data.data?.items.length; i++) {
         items.push({
           id: resp.data.data?.items[i].id,
@@ -59,21 +60,34 @@ export default function AdsLocationListPage() {
     placeholderData: keepPreviousData,
   });
 
+  const handleLicense = (data: String) => {
+    setId(data);
+    setModal1Open(true);
+  };
+
   return (
     <div className='w-[1200px] mx-auto '>
       <div className='flex justify-between items-center'>
-        <h1 className={`font-bold text-2xl my-0 `}>Quản lý điểm đặt quảng cáo</h1>
-        <div className='flex justify-end my-3'>
-          <ButtonPrimary icon={<PlusOutlined />} title='Thêm quảng cáo' />
-        </div>
+        <h1 className={`font-bold text-2xl my-0 `}>Quản lý các bảng quảng cáo</h1>
       </div>
 
-      <CustomTableCore<AdsManagementPageColumns>
-        columns={columnsAdsLocationPage}
+      <CustomTableCore<AdminBoardLocationColumns>
+        columns={columnsAdsLocationPage(handleLicense)}
         data={adminAds.data?.items!}
         paging={adminAds.data?.pageInfo}
         onChange={handlePageChange}
       />
+      <Modal
+        // centered
+        centered
+        open={modal1Open}
+        onOk={() => setModal1Open(false)}
+        onCancel={() => setModal1Open(false)}
+        width={1000}
+        className='my-3'
+        footer={null}
+        // style={{ top: 20 }}
+      ></Modal>
     </div>
   );
 }

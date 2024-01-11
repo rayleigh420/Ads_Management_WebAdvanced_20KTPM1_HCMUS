@@ -27,7 +27,7 @@ const routes: {
     label: 'Quản lý quảng cáo',
     icon: 'ads',
     children: [
-      { key: MY_ROUTE.ADS.REQUIRE_EDIT, label: 'Danh sách yêu cầu chỉnh sửa' },
+      { key: MY_ROUTE.ADS.BOARD, label: 'Danh sách bảng quảng cáo' },
       { key: MY_ROUTE.ADS.LOCATION, label: 'Danh sách điểm đặt quảng cáo' },
     ],
   },

@@ -28,3 +28,4 @@ export const BOARD_TYPE = [
 export const ADVERTISING_TYPE = ['Cổ động chính trị', 'Quảng cáo thương mại', 'Xã hội hoá'];
 
 export const STATUS_REPORT = ['Đang xử lý', 'Đã xử lý'];
+export const STATUS_LICENSE = ['Chờ cấp phép', 'Đã cấp phép'];

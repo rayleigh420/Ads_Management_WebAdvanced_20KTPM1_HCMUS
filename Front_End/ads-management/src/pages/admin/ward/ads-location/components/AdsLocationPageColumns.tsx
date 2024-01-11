@@ -16,7 +16,7 @@ export type AdsManagementPageColumns = {
   size: string;
 };
 
-export const columnsAdsLocationPage: ColumnsType<AdsManagementPageColumns> = [
+export const columnsAdsLocationPage = (setValue: any): ColumnsType<AdsManagementPageColumns> => [
   { title: 'Id', dataIndex: 'id' },
   {
     title: 'Loại bảng quảng cáo',
@@ -46,9 +46,12 @@ export const columnsAdsLocationPage: ColumnsType<AdsManagementPageColumns> = [
     dataIndex: 'id',
     key: 'id1',
     render: (text) => (
-      <div className='flex flex-col items-center gap-3 justify-center'>
+      <div
+        className='flex flex-col items-center gap-3 justify-center'
+        onClick={() => setValue(text)}
+      >
         <div className='flex items-center gap-2 cursor-pointer hover:text-blue-500'>
-          <EditOutlined /> Yêu cầu chỉnh sửa
+          <EditOutlined /> Cấp phép quảng cáo
         </div>
       </div>
     ),

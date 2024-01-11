@@ -13,10 +13,11 @@ import {
   NotFoundPage,
   ReportFormModal,
   RequireEditForm,
-  RequireLisenceForm,
+  RequireLicenseForm,
 } from '@/pages';
 import AdminDistrictManagementPage from '@/pages/admin/district/AdminDistrictManagementPage';
 import AdminWardPage from '@/pages/admin/ward/AdminWardPage';
+import LocationListPage from '@/pages/admin/ward/location-list/LocationListPage';
 import ReportListPage from '@/pages/wards/ReportListPage';
 import { createBrowserRouter } from 'react-router-dom';
 import { MY_ROUTE } from './route.constant';
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
             children: [
               { path: MY_ROUTE.HOME, element: <HomeResidentPage /> },
               { path: MY_ROUTE.REPORT, element: <ReportFormModal /> },
-              { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
+              { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLicenseForm /> },
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
               // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
@@ -56,12 +57,13 @@ const router = createBrowserRouter([
               { path: MY_ROUTE.HOME, element: <HomeOfficerPage /> },
               { path: MY_ROUTE.WARD.REPORT, element: <ReportListPage /> },
               { path: `${MY_ROUTE.WARD.REPORT}/:id`, element: <ReportFormModal /> },
-              { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
+              { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLicenseForm /> },
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
               // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
               { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
-              { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
+              { path: MY_ROUTE.ADS.BOARD, element: <AdsLocationPage /> },
+              { path: MY_ROUTE.ADS.LOCATION, element: <LocationListPage /> },
             ],
           },
         ],
@@ -76,7 +78,7 @@ const router = createBrowserRouter([
             children: [
               { path: MY_ROUTE.HOME, element: <HomeOfficerPage /> },
               { path: MY_ROUTE.REPORT, element: <ReportFormModal /> },
-              { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLisenceForm /> },
+              { path: MY_ROUTE.REQUIRE_LISENCE, element: <RequireLicenseForm /> },
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
               // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
