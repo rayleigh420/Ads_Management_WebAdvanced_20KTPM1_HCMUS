@@ -1,4 +1,4 @@
-export { default as AdsLocationPage } from './admin/ward/ads-location/AdsLocationPage';
+export { default as AdsLocationPage } from './admin/ward/ward-board-list/WardBoardListPage';
 export { default as AdsRequiredEditPage } from './ads-require-edit/AdsRequiredEditPage';
 export { default as AdDetailForm } from './form/AdDetailForm';
 export { default as CompanyDetailForm } from './form/CompanyDetailForm';

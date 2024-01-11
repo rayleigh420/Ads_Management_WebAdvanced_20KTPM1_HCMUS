@@ -40,6 +40,16 @@ export const getLocationByOfficerApi = async (params?: ReportOfficerREQ) => {
   return api.get<PagingResponse<LocationRESP>>('/locations/officer', { params });
 };
 
+export const getLocationByAdminApi = async (params?: ReportOfficerREQ) => {
+  if (!params) {
+    params = {
+      limit: 0,
+      skip: 0,
+    };
+  }
+  return api.get<PagingResponse<LocationRESP>>('/admins/locations', { params });
+};
+
 export const getBoardByIdLocationApi = async (locationId: String) => {
   return api.get<BaseResponse<LocationBoardsRESP>>('/locations/anonymous/boards', {
     params: { locationId },
@@ -61,6 +71,12 @@ export type AdsManagementPagRESP = {
 
 export const getBoardByOfficerApi = async (params: PagingREQ) => {
   return api.get<PagingResponse<AdsManagementPagRESP>>('/boards/officer', {
+    params,
+  });
+};
+
+export const getBoardByAdminApi = async (params: PagingREQ, id: string) => {
+  return api.get<PagingResponse<AdsManagementPagRESP>>(`/admins/boards/${id}`, {
     params,
   });
 };

@@ -8,14 +8,15 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Modal } from 'antd';
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import RequireLicenseForm from '../../../form/RequireLisenceForm';
 import {
-  AdminBoardLocationColumns,
+  AdsManagementPageColumns,
   columnsAdsLocationPage,
-} from './components/AdminBoardLocationColumns';
+} from './components/WardBoardListPageColumns';
 
 export const adminAdsKey = initKeys('admin-ads');
 
-export default function AdminBoardLocationPage() {
+export default function WardBoardListPage() {
   const [searchParams] = useSearchParams();
   const [modal1Open, setModal1Open] = useState(false);
   const [id, setId] = useState<any>();
@@ -36,7 +37,7 @@ export default function AdminBoardLocationPage() {
     queryKey: adminAdsKey.list(filter),
     queryFn: () => getBoardByOfficerApi(filter),
     select: (resp) => {
-      const items: AdminBoardLocationColumns[] = [];
+      const items: AdsManagementPageColumns[] = [];
       for (let i = 0; i < resp.data.data?.items.length; i++) {
         items.push({
           id: resp.data.data?.items[i].id,
@@ -71,11 +72,11 @@ export default function AdminBoardLocationPage() {
         <h1 className={`font-bold text-2xl my-0 `}>Quản lý các bảng quảng cáo</h1>
       </div>
 
-      <CustomTableCore<AdminBoardLocationColumns>
+      <CustomTableCore<AdsManagementPageColumns>
         columns={columnsAdsLocationPage(handleLicense)}
         data={adminAds.data?.items!}
         paging={adminAds.data?.pageInfo}
-        onChange={handlePageChange}
+        onPageNumberChange={handlePageChange}
       />
       <Modal
         // centered
@@ -87,7 +88,9 @@ export default function AdminBoardLocationPage() {
         className='my-3'
         footer={null}
         // style={{ top: 20 }}
-      ></Modal>
+      >
+        <RequireLicenseForm id={id} setIsOpen={setModal1Open} />
+      </Modal>
     </div>
   );
 }

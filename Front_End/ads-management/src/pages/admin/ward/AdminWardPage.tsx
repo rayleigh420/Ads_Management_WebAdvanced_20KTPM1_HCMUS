@@ -16,8 +16,9 @@ export const adminWardListKeys = initKeys('admin-ward');
 export default function AdminWardPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
-  const [value, setValue] = useState<any>({});
   const idRef = useRef<string | null>(null);
+  const [value, setValue] = useState<any>({});
+
   const { id } = useParams();
   const location = useLocation();
 

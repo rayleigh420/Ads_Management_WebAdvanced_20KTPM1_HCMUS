@@ -1,5 +1,5 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
-import { LicenseREQ, getLicenseListApi } from '@/apis/board/board.api';
+import { getLocationByOfficerApi } from '@/apis/location/location.api';
 import { ButtonPrimary } from '@/components/ui';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
@@ -9,11 +9,11 @@ import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { columnsLicensePage } from './components/LiscenseListColumns';
+import { LocationPageColumns, columnsAdsLocationPage } from './components/LocationPageColumns';
 
 export const adminAdsKey = initKeys('admin-ads');
 
-export default function LicensesListPage() {
+export default function WardLocationListPage() {
   const [searchParams] = useSearchParams();
 
   const { initialPaging } = useMemo(() => {
@@ -28,20 +28,19 @@ export default function LicensesListPage() {
     initialPaging,
   });
 
-  const adminAds = useQuery({
+  const wardLocationsQuery = useQuery({
     queryKey: adminAdsKey.list(filter),
-    queryFn: () => getLicenseListApi(filter),
+    queryFn: () => getLocationByOfficerApi(filter),
     select: (resp) => {
-      const items: ({ status: String } & LicenseREQ)[] = [];
+      const items: LocationPageColumns[] = [];
       for (let i = 0; i < resp.data.data?.items.length; i++) {
         items.push({
-          advertisingBoardId: resp.data.data?.items[i].advertisingBoardId,
-          emailOfCompany: resp.data.data?.items[i].emailOfCompany,
-          phoneNumberOfCompany: resp.data.data?.items[i].phoneNumberOfCompany,
-          addressOfCompany: resp.data.data?.items[i].addressOfCompany,
-          startDate: resp.data.data?.items[i].startDate,
-          endDate: resp.data.data?.items[i].endDate,
-          status: resp.data.data?.items[i].status,
+          id: +resp.data.data?.items[i].id!,
+          locationType: +resp.data.data?.items[i].locationType!,
+          advertisingType: resp.data.data?.items[i].advertisingType!,
+          address: resp.data.data?.items[i].address!,
+          isPlanned: resp.data.data?.items[i].isPlanned!,
+          image1: resp.data.data?.items[i].image1!,
         });
       }
       const pageInfo: PagingState = resp.data.data
@@ -65,11 +64,11 @@ export default function LicensesListPage() {
         </div>
       </div>
 
-      <CustomTableCore
-        columns={columnsLicensePage}
-        data={adminAds.data?.items!}
-        paging={adminAds.data?.pageInfo}
-        onPageNumberChange={handlePageChange}
+      <CustomTableCore<LocationPageColumns>
+        columns={columnsAdsLocationPage}
+        data={wardLocationsQuery.data?.items!}
+        paging={wardLocationsQuery.data?.pageInfo}
+        onChange={handlePageChange}
       />
     </div>
   );

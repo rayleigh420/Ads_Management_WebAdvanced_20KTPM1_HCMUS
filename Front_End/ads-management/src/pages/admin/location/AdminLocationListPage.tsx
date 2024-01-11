@@ -1,5 +1,5 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
-import { getLocationByOfficerApi } from '@/apis/location/location.api';
+import { getLocationByAdminApi } from '@/apis/location/location.api';
 import { ButtonPrimary } from '@/components/ui';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
@@ -7,14 +7,19 @@ import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
 import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { LocationPageColumns, columnsAdsLocationPage } from './components/LocationPageColumns';
+import {
+  LocationPageColumns,
+  columnsAdminLocationPage,
+} from './components/AdminLocationListColumns';
 
 export const adminAdsKey = initKeys('admin-ads');
 
-export default function LocationListPage() {
+export default function AdminLocationListPage() {
   const [searchParams] = useSearchParams();
+  const idRef = useRef<string | null>(null);
+  const [value, setValue] = useState<any>({});
 
   const { initialPaging } = useMemo(() => {
     const initialPaging: PagingState = {
@@ -24,13 +29,13 @@ export default function LocationListPage() {
     return { initialPaging };
   }, [searchParams]);
 
-  const { filter, handlePageChange, handleFilterChange } = usePaging<any>({
+  const { filter, handlePageChange } = usePaging<any>({
     initialPaging,
   });
 
-  const adminAds = useQuery({
+  const adminLocationsQuery = useQuery({
     queryKey: adminAdsKey.list(filter),
-    queryFn: () => getLocationByOfficerApi(filter),
+    queryFn: () => getLocationByAdminApi(filter),
     select: (resp) => {
       const items: LocationPageColumns[] = [];
       for (let i = 0; i < resp.data.data?.items.length; i++) {
@@ -43,6 +48,7 @@ export default function LocationListPage() {
           image1: resp.data.data?.items[i].image1!,
         });
       }
+      console.log(resp.data.data?.pageNumber);
       const pageInfo: PagingState = resp.data.data
         ? {
             limit: resp.data.data?.pageSize,
@@ -55,6 +61,16 @@ export default function LocationListPage() {
     placeholderData: keepPreviousData,
   });
 
+  const handleDelete = (id: any) => {
+    idRef.current = id;
+  };
+
+  const handleEdit = (data: any) => {
+    console.log('data', data);
+    setValue(data);
+    // setIsOpen(true);
+  };
+
   return (
     <div className='w-[1200px] mx-auto '>
       <div className='flex justify-between items-center'>
@@ -65,10 +81,10 @@ export default function LocationListPage() {
       </div>
 
       <CustomTableCore<LocationPageColumns>
-        columns={columnsAdsLocationPage}
-        data={adminAds.data?.items!}
-        paging={adminAds.data?.pageInfo}
-        onChange={handlePageChange}
+        columns={columnsAdminLocationPage(handleEdit, handleDelete)}
+        data={adminLocationsQuery.data?.items!}
+        paging={adminLocationsQuery.data?.pageInfo}
+        onPageNumberChange={handlePageChange}
       />
     </div>
   );

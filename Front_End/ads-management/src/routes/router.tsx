@@ -15,9 +15,11 @@ import {
   RequireEditForm,
   RequireLicenseForm,
 } from '@/pages';
+import AdminBoardLocationPage from '@/pages/admin/board/AdminBoardLocationPage';
 import AdminDistrictManagementPage from '@/pages/admin/district/AdminDistrictManagementPage';
+import AdminLocationListPage from '@/pages/admin/location/AdminLocationListPage';
 import AdminWardPage from '@/pages/admin/ward/AdminWardPage';
-import LocationListPage from '@/pages/admin/ward/location-list/LocationListPage';
+import WardLocationListPage from '@/pages/admin/ward/ward-location-list/WardLocationListPage';
 import ReportListPage from '@/pages/wards/ReportListPage';
 import { createBrowserRouter } from 'react-router-dom';
 import { MY_ROUTE } from './route.constant';
@@ -63,7 +65,7 @@ const router = createBrowserRouter([
               // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
               { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
               { path: MY_ROUTE.ADS.BOARD, element: <AdsLocationPage /> },
-              { path: MY_ROUTE.ADS.LOCATION, element: <LocationListPage /> },
+              { path: MY_ROUTE.ADS.LOCATION, element: <WardLocationListPage /> },
             ],
           },
         ],
@@ -96,7 +98,8 @@ const router = createBrowserRouter([
             path: '',
             element: <LayoutCity />,
             children: [
-              { path: MY_ROUTE.ADS.LOCATION, element: <AdsLocationPage /> },
+              { path: MY_ROUTE.ADS.LOCATION, element: <AdminLocationListPage /> },
+              { path: `${MY_ROUTE.ADS.BOARD}/:id`, element: <AdminBoardLocationPage /> },
               { path: MY_ROUTE.DISTRICT, element: <AdminDistrictManagementPage /> },
               {
                 path: `${MY_ROUTE.DISTRICT}/${MY_ROUTE.WARD.self}/:id`,

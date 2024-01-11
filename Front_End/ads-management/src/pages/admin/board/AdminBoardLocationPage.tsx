@@ -1,25 +1,28 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
-import { getBoardByOfficerApi } from '@/apis/location/location.api';
+import { getBoardByAdminApi } from '@/apis/location/location.api';
+import ModalConfirm from '@/components/ui/button-primary/ModalConfirm';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { Modal } from 'antd';
-import { useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import RequireLicenseForm from '../../../form/RequireLisenceForm';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
-  AdsManagementPageColumns,
-  columnsAdsLocationPage,
-} from './components/AdsLocationPageColumns';
+  AdminBoardLocationColumns,
+  columnsAdminLocationPage,
+} from './components/AdminBoardLocationColumns';
 
 export const adminAdsKey = initKeys('admin-ads');
 
-export default function AdsLocationListPage() {
+export default function AdminBoardLocationPage() {
   const [searchParams] = useSearchParams();
   const [modal1Open, setModal1Open] = useState(false);
-  const [id, setId] = useState<any>();
+  const { id } = useParams();
+  const [isOpenConfirm, setIsOpenConfirm] = useState(false);
+  const idRef = useRef<string | null>(null);
+  const [value, setValue] = useState<any>({});
 
   const { initialPaging } = useMemo(() => {
     const initialPaging: PagingState = {
@@ -35,9 +38,9 @@ export default function AdsLocationListPage() {
 
   const adminAds = useQuery({
     queryKey: adminAdsKey.list(filter),
-    queryFn: () => getBoardByOfficerApi(filter),
+    queryFn: () => getBoardByAdminApi(filter, id as string),
     select: (resp) => {
-      const items: AdsManagementPageColumns[] = [];
+      const items: AdminBoardLocationColumns[] = [];
       for (let i = 0; i < resp.data.data?.items.length; i++) {
         items.push({
           id: resp.data.data?.items[i].id,
@@ -60,37 +63,48 @@ export default function AdsLocationListPage() {
     },
     placeholderData: keepPreviousData,
   });
+  const navigator = useNavigate();
+  useEffect(() => {
+    if (adminAds && adminAds.data?.items?.length === 0) {
+      toast.error('Vị trí này chưa có điểm quảng cáo');
+      navigator(-1);
+    }
+  }, [adminAds]);
 
-  const handleLicense = (data: String) => {
-    setId(data);
-    setModal1Open(true);
+  const handleDelete = (id: any) => {
+    idRef.current = id;
+    setIsOpenConfirm(true);
+  };
+
+  const handleEdit = (data: any) => {
+    console.log('data', data);
+    setValue(data);
+    // setIsOpen(true);
   };
 
   return (
     <div className='w-[1200px] mx-auto '>
       <div className='flex justify-between items-center'>
-        <h1 className={`font-bold text-2xl my-0 `}>Quản lý các bảng quảng cáo</h1>
+        <h1 className={`font-bold text-2xl my-0 `}>
+          Quản lý các bảng quảng cáo của location id: {id}
+        </h1>
       </div>
 
-      <CustomTableCore<AdsManagementPageColumns>
-        columns={columnsAdsLocationPage(handleLicense)}
+      <CustomTableCore<AdminBoardLocationColumns>
+        columns={columnsAdminLocationPage(handleEdit, handleDelete)}
         data={adminAds.data?.items!}
         paging={adminAds.data?.pageInfo}
-        onChange={handlePageChange}
+        onPageNumberChange={handlePageChange}
       />
-      <Modal
-        // centered
-        centered
-        open={modal1Open}
-        onOk={() => setModal1Open(false)}
-        onCancel={() => setModal1Open(false)}
-        width={1000}
-        className='my-3'
-        footer={null}
-        // style={{ top: 20 }}
-      >
-        <RequireLicenseForm id={id} setIsOpen={setModal1Open} />
-      </Modal>
+      <ModalConfirm
+        message='Bạn có chắc chắn muốn xóa quận này?'
+        isOpen={isOpenConfirm}
+        setIsOpen={setIsOpenConfirm}
+        className='mt-5'
+        onConfirm={() => {
+          // muteDeleteWard(idRef.current!);
+        }}
+      />
     </div>
   );
 }

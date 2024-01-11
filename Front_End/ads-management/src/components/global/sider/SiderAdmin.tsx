@@ -24,13 +24,9 @@ const routes: {
   { key: 'district', label: 'Quản lý quận', icons: 'district' },
   { key: 'ward', label: 'Quản lý ', icons: 'ward' },
   {
-    key: 'ads',
-    label: 'Quản lý quảng cáo',
+    key: MY_ROUTE.ADS.LOCATION,
+    label: 'Quản lý điểm đặt quảng cáo',
     icons: 'ads',
-    children: [
-      { key: MY_ROUTE.ADS.REQUIRE_EDIT, label: 'Danh sách bảng quảng cáo' },
-      { key: MY_ROUTE.ADS.LOCATION, label: 'Danh sách điểm đặt quảng cáo' },
-    ],
   },
 ];
 

@@ -8,8 +8,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Modal } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { columnsAdsLocationPage } from './components/reportColumns';
-import ReportHandleForm from './components/reportHandleForm';
+import { columnsAdsLocationPage } from './components/ReportColumns';
+import ReportHandleForm from './components/ReportHandleForm';
 
 export const adminAdsKey = initKeys('admin-ads');
 
@@ -70,7 +70,7 @@ export default function ReportListPage() {
         columns={columnsAdsLocationPage(handleSetId)}
         data={wardReports.data?.items}
         paging={wardReports.data?.pageInfo}
-        onChange={handlePageChange}
+        onPageNumberChange={handlePageChange}
       />
       <Modal
         // centered

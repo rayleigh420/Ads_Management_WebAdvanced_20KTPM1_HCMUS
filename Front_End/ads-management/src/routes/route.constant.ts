@@ -13,6 +13,7 @@ export const MY_ROUTE = {
     REQUIRE_EDIT: 'ads/required-edit',
     LOCATION: 'ads/location',
     BOARD: 'ads/boards',
+    BOARD_DETAIL: (id: string) => `ads/boards/${id}`,
   },
   WARD: {
     self: 'ward',
