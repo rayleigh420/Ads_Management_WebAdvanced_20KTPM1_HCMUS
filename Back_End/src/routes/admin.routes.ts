@@ -24,7 +24,10 @@ import {
   addOfficerToWard,
   approveLicense,
   cancelLicense,
-  getListReport
+  getListReportInDistrictOfBoard,
+  getListReportInDistrictofLocation,
+  getListReportInWardOfBoard,
+  getListReportInWardofLocation
 } from '../controllers/admins.controllers';
 
 const adminRouter = Router();
@@ -51,7 +54,10 @@ adminRouter.put('/borad/:id', BoardReqValidator, wrapRequestHandler(updateBoard)
 adminRouter.delete('/board/:id', wrapRequestHandler(deleteBoard));
 
 // Report-management
-adminRouter.get('/reports', wrapRequestHandler(getListReport));
+adminRouter.get('/location-reports/ward/:id', wrapRequestHandler(getListReportInWardofLocation));
+adminRouter.get('/board-reports/ward/:id', wrapRequestHandler(getListReportInWardOfBoard));
+adminRouter.get('/location-reports/district/:id', wrapRequestHandler(getListReportInDistrictofLocation));
+adminRouter.get('/board-reports/district/:id', wrapRequestHandler(getListReportInDistrictOfBoard));
 
 // Officer-management
 adminRouter.post('/district-officer', OfficerToDistrictValidator, wrapRequestHandler(addOfficerToDistrict));

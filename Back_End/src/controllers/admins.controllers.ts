@@ -41,9 +41,36 @@ export const cancelLicense = async (req: Request, res: Response, next: NextFunct
   }
 };
 
-export const getListReport = async (req: Request, res: Response, next: NextFunction) => {
+export const getListReportInWardofLocation = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await reportsServices.getListReport();
+    const result = await reportsServices.getListReportInWardofLocation(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getListReportInWardOfBoard = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await reportsServices.getListReportInWardOfBoard(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getListReportInDistrictofLocation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await reportsServices.getListReportInDistrictOfLocation(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getListReportInDistrictOfBoard = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await reportsServices.getListReportInDistrictOfBoard(parseInt(req.params.id));
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);
