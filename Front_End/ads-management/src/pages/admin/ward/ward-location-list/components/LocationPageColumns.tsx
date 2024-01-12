@@ -1,5 +1,5 @@
 import { ADVERTISING_TYPE, LOCATION_TYPE } from '@/core/constants/location-type.contants';
-import { EditOutlined } from '@ant-design/icons';
+import { EyeOutlined } from '@ant-design/icons';
 import { Image } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 
@@ -12,7 +12,7 @@ export type LocationPageColumns = {
   image1: string;
 };
 
-export const columnsAdsLocationPage: ColumnsType<LocationPageColumns> = [
+export const columnsAdsLocationPage = (onNavigate: any): ColumnsType<LocationPageColumns> => [
   { title: 'Id', dataIndex: 'id' },
   {
     title: 'Loại vị trí',
@@ -47,10 +47,13 @@ export const columnsAdsLocationPage: ColumnsType<LocationPageColumns> = [
     title: 'Action',
     dataIndex: 'id',
     key: 'id1',
-    render: (text) => (
-      <div className='flex flex-col items-center gap-3 justify-center'>
+    render: (text, record) => (
+      <div
+        className='flex flex-col items-center gap-3 justify-center'
+        onClick={() => onNavigate(record)}
+      >
         <div className='flex items-center gap-2 cursor-pointer hover:text-blue-500'>
-          <EditOutlined /> Yêu cầu chỉnh sửa
+          <EyeOutlined /> Xem các bảng quảng cáo
         </div>
       </div>
     ),

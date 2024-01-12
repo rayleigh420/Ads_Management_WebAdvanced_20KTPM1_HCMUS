@@ -3,11 +3,13 @@ import { ButtonPrimary } from '@/components/ui';
 import ModalConfirm from '@/components/ui/button-primary/ModalConfirm';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { handleError } from '@/core/helpers/noti-error.helper';
+import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
+import { usePaging } from '@/hooks/usePaging';
 import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { columnsWardManagement } from './components/DistrictManagementColumns';
 import EditWardModal from './components/EditWardModal';
@@ -18,18 +20,41 @@ export default function AdminWardPage() {
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
   const idRef = useRef<string | null>(null);
   const [value, setValue] = useState<any>({});
+  const [searchParams] = useSearchParams();
 
   const { id } = useParams();
   const location = useLocation();
 
+  const { initialPaging } = useMemo(() => {
+    const initialPaging: PagingState = {
+      limit: +(searchParams.get('limit') || initialPagingState.limit!),
+      skip: +(searchParams.get('skip') || initialPagingState.skip!),
+    };
+    return { initialPaging };
+  }, [searchParams]);
+
+  const { filter, handlePageChange } = usePaging<any>({
+    initialPaging,
+  });
+
   const nameDistrict = useMemo(() => location.state?.name || 'Không có dữ liệu', [location]);
 
   const { data: dataWards, refetch } = useQuery({
-    queryKey: adminWardListKeys.all,
-    queryFn: () => getWardApi(),
+    queryKey: adminWardListKeys.list(filter),
+    queryFn: () => getWardApi(filter),
     select: (resp) => {
-      console.log('resp', resp.data.data);
-      return resp.data.data.filter((item: any) => item.districtId == id);
+      const items = any;
+      for (let i = 0; i < resp.data.data?.items.length; i++) {
+        if (resp.data.data?.items[i].districtId == id) items.push(resp.data.data?.items[i]);
+      }
+      const pageInfo: PagingState = resp.data.data
+        ? {
+            limit: resp.data.data?.pageSize,
+            skip: resp.data.data?.pageNumber,
+            total: resp.data.data?.totalRecords,
+          }
+        : {};
+      return { items, pageInfo };
     },
     placeholderData: keepPreviousData,
   });
@@ -81,11 +106,11 @@ export default function AdminWardPage() {
         setIsOpen={setIsOpen}
         initialValue={{ ...value, districtId: id }}
       />
-
       <CustomTableCore
         columns={columnsWardManagement(handleDelete, handleEdit)}
-        data={dataWards?.slice().reverse()}
-        paging={{ limit: 20, skip: 0, total: 10 }}
+        data={dataWards?.items?.slice().reverse()}
+        paging={dataWards?.pageInfo}
+        onPageNumberChange={handlePageChange}
       />
 
       <ModalConfirm

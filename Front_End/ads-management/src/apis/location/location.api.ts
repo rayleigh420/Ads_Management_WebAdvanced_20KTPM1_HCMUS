@@ -69,8 +69,8 @@ export type AdsManagementPagRESP = {
   height: string;
 };
 
-export const getBoardByOfficerApi = async (params: PagingREQ) => {
-  return api.get<PagingResponse<AdsManagementPagRESP>>('/boards/officer', {
+export const getBoardByOfficerApi = async (params: PagingREQ, id: string) => {
+  return api.get<PagingResponse<AdsManagementPagRESP>>(`/boards/ward/${id}`, {
     params,
   });
 };
@@ -83,6 +83,10 @@ export const getBoardByAdminApi = async (params: PagingREQ, id: string) => {
 
 export const deleteDistrictApi = async (id: any) => {
   return api.delete<BaseResponse<LocationRESP[]>>(`/admins/districts/${id}`);
+};
+
+export const modififyApi = async (body: any) => {
+  return api.post<any>(`/modifications`, body);
 };
 
 export const convertLocationBoardsRESPToAdvertiseInfo = (

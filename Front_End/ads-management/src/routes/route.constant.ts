@@ -2,7 +2,6 @@ export const MY_ROUTE = {
   HOME: '',
   REPORT: 'report',
   REQUIRE_LISENCE: 'require',
-  REQUIRE_EDIT: 'require/:id',
   COMPANY_DETAIL: 'company/:id',
   LOGIN: '/login',
   DISTRICT: 'district',
@@ -20,6 +19,11 @@ export const MY_ROUTE = {
     detail: (id: string) => `ward/${id}`,
     REPORT: `/ward/reports`,
     REPORT_DETAIL: (id: string) => `/ward/reports/${id}`,
+    REQUIRE: `/ward/ads/location/require`,
+    REQUIRE_EDIT: (id: string) => `/ward/ads/location/require/${id}`,
+    BOARD: `/ward/ads/boards`,
+    BOARD_DETAIL: (id: string) => `ward/ads/boards/${id}`,
+    LICENSE: 'ward/license',
   },
 };
 

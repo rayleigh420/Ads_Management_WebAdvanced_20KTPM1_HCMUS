@@ -4,10 +4,11 @@ import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
+import { MY_ROUTE } from '@/routes/route.constant';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Modal } from 'antd';
 import { useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import RequireLicenseForm from '../../../form/RequireLisenceForm';
 import {
   AdsManagementPageColumns,
@@ -19,7 +20,17 @@ export const adminAdsKey = initKeys('admin-ads');
 export default function WardBoardListPage() {
   const [searchParams] = useSearchParams();
   const [modal1Open, setModal1Open] = useState(false);
-  const [id, setId] = useState<any>();
+  const [idBoard, setIdBoard] = useState<any>();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const memoizedData = useMemo(() => {
+    if (location.state && location.state.data) {
+      return location.state.data;
+    }
+    return null;
+  }, [location.state]);
 
   const { initialPaging } = useMemo(() => {
     const initialPaging: PagingState = {
@@ -33,9 +44,13 @@ export default function WardBoardListPage() {
     initialPaging,
   });
 
+  const handleEdit = (data: any) => {
+    navigate(MY_ROUTE.WARD.REQUIRE_EDIT(data.id), { state: { ...data, ...memoizedData } });
+  };
+
   const adminAds = useQuery({
     queryKey: adminAdsKey.list(filter),
-    queryFn: () => getBoardByOfficerApi(filter),
+    queryFn: () => getBoardByOfficerApi(filter, id as string),
     select: (resp) => {
       const items: AdsManagementPageColumns[] = [];
       for (let i = 0; i < resp.data.data?.items.length; i++) {
@@ -62,7 +77,7 @@ export default function WardBoardListPage() {
   });
 
   const handleLicense = (data: String) => {
-    setId(data);
+    setIdBoard(data);
     setModal1Open(true);
   };
 
@@ -73,7 +88,7 @@ export default function WardBoardListPage() {
       </div>
 
       <CustomTableCore<AdsManagementPageColumns>
-        columns={columnsAdsLocationPage(handleLicense)}
+        columns={columnsAdsLocationPage(handleLicense, handleEdit)}
         data={adminAds.data?.items!}
         paging={adminAds.data?.pageInfo}
         onPageNumberChange={handlePageChange}
@@ -89,7 +104,7 @@ export default function WardBoardListPage() {
         footer={null}
         // style={{ top: 20 }}
       >
-        <RequireLicenseForm id={id} setIsOpen={setModal1Open} />
+        <RequireLicenseForm id={idBoard} setIsOpen={setModal1Open} />
       </Modal>
     </div>
   );

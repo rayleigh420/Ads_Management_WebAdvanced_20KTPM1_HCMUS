@@ -5,16 +5,18 @@ import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
+import { MY_ROUTE } from '@/routes/route.constant';
 import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LocationPageColumns, columnsAdsLocationPage } from './components/LocationPageColumns';
 
 export const adminAdsKey = initKeys('admin-ads');
 
 export default function WardLocationListPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const { initialPaging } = useMemo(() => {
     const initialPaging: PagingState = {
@@ -55,6 +57,10 @@ export default function WardLocationListPage() {
     placeholderData: keepPreviousData,
   });
 
+  const handleNavigate = (data: any) => {
+    navigate(`/${MY_ROUTE.WARD.BOARD_DETAIL(data.id)}`, { state: { data } });
+  };
+
   return (
     <div className='w-[1200px] mx-auto '>
       <div className='flex justify-between items-center'>
@@ -65,10 +71,10 @@ export default function WardLocationListPage() {
       </div>
 
       <CustomTableCore<LocationPageColumns>
-        columns={columnsAdsLocationPage}
+        columns={columnsAdsLocationPage(handleNavigate)}
         data={wardLocationsQuery.data?.items!}
         paging={wardLocationsQuery.data?.pageInfo}
-        onChange={handlePageChange}
+        onPageNumberChange={handlePageChange}
       />
     </div>
   );

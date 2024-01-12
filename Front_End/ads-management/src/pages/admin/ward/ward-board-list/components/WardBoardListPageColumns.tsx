@@ -16,7 +16,10 @@ export type AdsManagementPageColumns = {
   size: string;
 };
 
-export const columnsAdsLocationPage = (setValue: any): ColumnsType<AdsManagementPageColumns> => [
+export const columnsAdsLocationPage = (
+  setValue: any,
+  onEdit: any,
+): ColumnsType<AdsManagementPageColumns> => [
   { title: 'Id', dataIndex: 'id' },
   {
     title: 'Loại bảng quảng cáo',
@@ -45,13 +48,21 @@ export const columnsAdsLocationPage = (setValue: any): ColumnsType<AdsManagement
     title: 'Action',
     dataIndex: 'id',
     key: 'id1',
-    render: (text) => (
-      <div
-        className='flex flex-col items-center gap-3 justify-center'
-        onClick={() => setValue(text)}
-      >
-        <div className='flex items-center gap-2 cursor-pointer hover:text-blue-500'>
-          <EditOutlined /> Cấp phép quảng cáo
+    render: (text, record) => (
+      <div className='flex items-center gap-3 justify-center'>
+        <div
+          className='flex flex-col items-center gap-3 justify-center'
+          onClick={() => setValue(text)}
+        >
+          <div className='flex items-center gap-2 cursor-pointer hover:text-blue-500'>
+            <EditOutlined /> Cấp phép quảng cáo
+          </div>
+        </div>
+        <div
+          className='flex items-center gap-2 cursor-pointer hover:text-red-500'
+          onClick={() => onEdit(record)}
+        >
+          <EditOutlined /> Gửi yêu cầu chỉnh sửa
         </div>
       </div>
     ),
