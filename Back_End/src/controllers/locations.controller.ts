@@ -143,9 +143,29 @@ export const getLocationManageByUserIdController = async (req: any, res: Respons
     if (limit === 0 && skip === 0) {
       data = results
     } else {
-      data = results.splice(skip, limit)
+      data = results.splice(skip - 1, limit)
     }
 
+    const dataPaging = getPagingData({ data, count, limit, skip })
+    return res.json(ApiResponse.success(dataPaging, 'success'))
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getLocationList = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const limit = parseInt(req.query.limit as string)
+    const skip = parseInt(req.query.skip as string)
+
+    const results = await locationsService.getListLocation()
+    const count = results.length
+    let data: any
+    if (limit === 0 && skip === 0) {
+      data = results
+    } else {
+      data = results.splice(skip - 1, limit)
+    }
     const dataPaging = getPagingData({ data, count, limit, skip })
     return res.json(ApiResponse.success(dataPaging, 'success'))
   } catch (error) {

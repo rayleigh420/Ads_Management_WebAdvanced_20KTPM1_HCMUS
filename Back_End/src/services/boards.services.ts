@@ -25,8 +25,12 @@ class BoardService {
       .getOne()
   }
 
-  public async getListBoard() {
-    return this.boardRepository.find()
+  public async getListBoard(id: string) {
+    return this.boardRepository
+      .createQueryBuilder('board')
+      .leftJoinAndSelect('board.location', 'location')
+      .where('location.id = :id', { id })
+      .getMany()
   }
 
   public async createBoard(board: BoardReqBody) {

@@ -1,10 +1,20 @@
+import { createDistrictApi, editDistrictApi } from '@/apis/district/district.api';
 import ButtonBig from '@/components/ui/button-primary/ButtonBig';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
+import { handleError } from '@/core/helpers/noti-error.helper';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Form, Modal } from 'antd';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { adminDistrictListKeys } from '../AdminDistrictManagementPage';
 
 type EditDistrictModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  initialValue?: {
+    name: string;
+    id: string;
+  };
 };
 
 // type CompanyFieldType = {
@@ -29,20 +39,41 @@ export type EditDistrictInput = {
   name: string;
 };
 
-export default function EditDistrictModal({ isOpen, setIsOpen }: EditDistrictModalProps) {
+export default function EditDistrictModal({
+  isOpen,
+  setIsOpen,
+  initialValue,
+}: EditDistrictModalProps) {
   const [form] = Form.useForm<EditDistrictInput>();
 
-  //   const queryClient = useQueryClient();
-  //   const { mutate: mutateClientRegistration } = useMutation({
-  //     mutationFn: (data: AdminSettingClientCreateREQ) => adminSettingClientCreateApi(data),
-  //     onSuccess: () => {
-  //       queryClient.invalidateQueries({ queryKey: adminSettingClientListKeys.lists() });
-  //       setIsOpen(false);
-  //       form.resetFields();
-  //     },
-  //     onError: handleError,
-  //   });
+  const queryClient = useQueryClient();
+  const { mutate: muteAddDistrict } = useMutation({
+    mutationFn: (data: EditDistrictInput) => createDistrictApi(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: adminDistrictListKeys.lists() });
+      setIsOpen(false);
+      form.resetFields();
+      toast.success('Thêm quận thành công');
+    },
+    onError: handleError,
+  });
 
+  const { mutate: muteEditDistrict } = useMutation({
+    mutationFn: (data: EditDistrictInput) => editDistrictApi(data, initialValue?.id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: adminDistrictListKeys.lists() });
+      setIsOpen(false);
+      form.resetFields();
+      toast.success('Sửa quận thành công');
+    },
+    onError: handleError,
+  });
+
+  useEffect(() => {
+    if (initialValue) {
+      form.setFieldsValue(initialValue);
+    }
+  }, [initialValue]);
   //   const handleCreateClient = async (values: EditDistrictInput) => {
   //     mutateClientRegistration(adminSettingClientCreateInputToReq(values));
   //   };
@@ -63,7 +94,10 @@ export default function EditDistrictModal({ isOpen, setIsOpen }: EditDistrictMod
     >
       <Form
         name='setting-security'
-        onFinish={() => {}}
+        onFinish={(data) => {
+          if (initialValue) muteEditDistrict(data);
+          else muteAddDistrict(data);
+        }}
         autoComplete='off'
         colon={false}
         form={form}

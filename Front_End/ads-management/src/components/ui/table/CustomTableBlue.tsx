@@ -1,3 +1,4 @@
+import { PagingREQ, PagingState, initialPagingState } from '@/core/models/paging.type';
 import { Table } from 'antd';
 import { ColumnsType, TableProps } from 'antd/es/table';
 
@@ -7,7 +8,9 @@ export type CustomTableCoreProps<T> = {
   onChange?: (selectedRowKeys: React.Key[], selectedRows: T[]) => void;
   onSelect?: (record: T, selected: boolean, selectedRows: T[]) => void;
   onSelectAll?: (selected: boolean, selectedRows: T[], changeRows: T[]) => void;
+  onPageNumberChange?: ({ limit, skip }: PagingREQ) => void;
   showSelect?: boolean;
+  paging?: PagingState;
   selectedRowKeys?: React.Key[];
   className?: string;
   isBlue?: boolean;
@@ -21,11 +24,17 @@ export default function CustomTableCore<T extends object>({
   onSelect,
   size = 'middle',
   selectedRowKeys,
+  onPageNumberChange,
   showSelect,
   className,
   isBlue = true,
+  paging,
   ...rest
 }: CustomTableCoreProps<T>) {
+  const handlePageChange = (page: number, limit: number) => {
+    onPageNumberChange && onPageNumberChange({ skip: page, limit });
+  };
+
   return (
     <div className='table-blue'>
       <Table
@@ -47,9 +56,10 @@ export default function CustomTableCore<T extends object>({
           position: ['bottomCenter'],
           showSizeChanger: false,
           showQuickJumper: false,
-          pageSize: 10,
-          total: 1,
-          current: 1,
+          onChange: handlePageChange,
+          pageSize: paging?.limit || initialPagingState.limit,
+          total: paging?.total || 1,
+          current: paging?.skip || initialPagingState.skip,
         }}
         className={`${className} ${!isBlue && 'no-blue'}`}
         bordered

@@ -34,8 +34,20 @@ export const getReportApi = async (params: ReportREQ) => {
   });
 };
 
+export const getReportByIdApi = async (id: string) => {
+  return await api.get<any>(`/reports/${id}`);
+};
+
 export const getReportOfficerApi = async (params: ReportREQ & PagingREQ) => {
   return await api.get<any>('/reports/officer', {
     params,
   });
+};
+
+export const handleReportOfficerApi = async (body: {
+  id: string;
+  status: 0 | 1;
+  handleMethod: string;
+}) => {
+  return await api.patch<any>('/reports/officer', body);
 };

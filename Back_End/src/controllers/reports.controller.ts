@@ -73,7 +73,7 @@ export const getReportByConditionController = async (req: any, res: Response, ne
     if (limit === 0 && skip === 0) {
       data = results
     } else {
-      data = results.splice(skip, limit)
+      data = results.splice(skip - 1, limit)
     }
 
     const dataPaging = getPagingData({ data, count, limit, skip })

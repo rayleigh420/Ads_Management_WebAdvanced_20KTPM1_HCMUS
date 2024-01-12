@@ -28,6 +28,10 @@ class LocationService {
       .getMany()
   }
 
+  public async getListLocation() {
+    return this.locationRepository.find()
+  }
+
   // public async getLocationsByWardId({ limit, skip, wardId }: { limit: number; skip: number, wardId: number }) {
   //   const queryBuilder = this.wardRepository
   //     .createQueryBuilder('ward')

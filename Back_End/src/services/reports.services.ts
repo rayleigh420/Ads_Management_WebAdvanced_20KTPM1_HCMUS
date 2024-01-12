@@ -1,13 +1,13 @@
 // import { Board } from "../entities/board.entity";
-import { Like } from 'typeorm'
-import { ReportType } from '../constants/enum'
-import { ReportReqBody, UpdateReportBody } from '../models/requets/report.requests'
-import { myDataSource } from '../orm/connectDb'
-import { AdvertisingLocation } from '../orm/entities/AdvertisingLocation'
-import { District } from '../orm/entities/District'
-import { Report } from '../orm/entities/Report'
-import { Ward } from '../orm/entities/Ward'
-import uploadToCloudinary from '../utils/cloudinary.util'
+import { Like, createQueryBuilder } from 'typeorm';
+import { ReportType } from '../constants/enum';
+import { ReportReqBody, UpdateReportBody } from '../models/requets/report.requests';
+import { myDataSource } from '../orm/connectDb';
+import { AdvertisingLocation } from '../orm/entities/AdvertisingLocation';
+import { District } from '../orm/entities/District';
+import { Report } from '../orm/entities/Report';
+import { Ward } from '../orm/entities/Ward';
+import uploadToCloudinary from '../utils/cloudinary.util';
 
 class ReportService {
   private reportRepository = myDataSource.getRepository(Report)
@@ -15,8 +15,50 @@ class ReportService {
   private wardRepository = myDataSource.getRepository(Ward)
   private advertisingLocationRepository = myDataSource.getRepository(AdvertisingLocation)
 
-  public async getListReport() {
-    return await this.reportRepository.find()
+  public async getListReportInWardofLocation(id: number) {
+    return await this.wardRepository
+      .createQueryBuilder('ward')
+      .leftJoinAndSelect('ward.advertisingLocations', 'advertisingLocations', 'ward.id = :id', {
+        id: id
+      })
+      .leftJoinAndSelect('advertisingLocations.reports', 'report')
+      .where('report.locationId IS NOT NULL')
+      .getOne();
+  }
+
+  public async getListReportInWardOfBoard(id: number) {
+    return await this.wardRepository
+      .createQueryBuilder('ward')
+      .leftJoinAndSelect('ward.advertisingLocations', 'advertisingLocations', 'ward.id = :id', {
+        id: id
+      })
+      .leftJoinAndSelect('advertisingLocations.reports', 'report')
+      .where('report.boardId IS NOT NULL')
+      .getOne();
+  }
+
+  public async getListReportInDistrictOfLocation(id: number) {
+    return await this.districtRepository
+      .createQueryBuilder('district')
+      .leftJoinAndSelect('district.wards', 'ward', 'district.id = :id', {
+        id: id
+      })
+      .leftJoinAndSelect('ward.advertisingLocations', 'advertisingLocations')
+      .leftJoinAndSelect('advertisingLocations.reports', 'report')
+      .where('report.locationId IS NOT NULL')
+      .getOne();
+  }
+
+  public async getListReportInDistrictOfBoard(id: number) {
+    return await this.districtRepository
+      .createQueryBuilder('district')
+      .leftJoinAndSelect('district.wards', 'ward', 'district.id = :id', {
+        id: id
+      })
+      .leftJoinAndSelect('ward.advertisingLocations', 'advertisingLocations')
+      .leftJoinAndSelect('advertisingLocations.reports', 'report')
+      .where('report.boardId IS NOT NULL')
+      .getOne();
   }
 
   public async createReport(payload: ReportReqBody, file: Express.Multer.File, deviceId: string) {

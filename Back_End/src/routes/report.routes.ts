@@ -30,5 +30,6 @@ reportsRouter.post('/anonymous', upload.single('file'), createReportValidate, wr
 //officer
 reportsRouter.get('/officer', accessTokenValidator, wrapRequestHandler(getReportByConditionController))
 reportsRouter.patch('/officer', accessTokenValidator, wrapRequestHandler(updateReportController))
+reportsRouter.get('/:id', wrapRequestHandler(getReportByIdController))
 
 export default reportsRouter

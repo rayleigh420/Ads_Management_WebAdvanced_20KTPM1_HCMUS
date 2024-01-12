@@ -11,7 +11,7 @@ export const getPagingData = ({
 }) => {
   const totalRecords = count
   const items = data
-  const pageNumber = Math.ceil(skip / limit) + 1
+  const pageNumber = skip
   const pageSize = limit ? +limit : 0
   const totalPages = Math.ceil(totalRecords / limit)
 
