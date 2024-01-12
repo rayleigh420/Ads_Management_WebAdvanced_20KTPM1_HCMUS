@@ -18,7 +18,7 @@ import {
   udpateDistrictValidator,
   updateWardValidator
 } from '../middlewares/admin.middlewares'
-import { createBoard, deleteBoard, getListBoards, updateBoard } from '../controllers/boards.controllers'
+import { createBoard, deleteBoard, getListBoardsByIdLocation, updateBoard } from '../controllers/boards.controllers'
 import {
   addOfficerToDistrict,
   addOfficerToWard,
@@ -29,6 +29,7 @@ import {
   getListReportInWardOfBoard,
   getListReportInWardofLocation
 } from '../controllers/admins.controllers'
+import { getLocationList } from '../controllers/locations.controller'
 
 const adminRouter = Router()
 adminRouter.use(authorizationAdminValidator)
@@ -48,11 +49,13 @@ adminRouter.put('/districts/:id', udpateDistrictValidator, wrapRequestHandler(up
 adminRouter.delete('/districts/:id', wrapRequestHandler(deleteDistrict))
 
 // Board-management
-// adminRouter.get('/boards', wrapRequestHandler(getListBoards));
-adminRouter.get('/boards', wrapRequestHandler(getListBoards))
+adminRouter.get('/boards/:id', wrapRequestHandler(getListBoardsByIdLocation))
 adminRouter.post('/boards', BoardReqValidator, wrapRequestHandler(createBoard))
 adminRouter.put('/borad/:id', BoardReqValidator, wrapRequestHandler(updateBoard))
 adminRouter.delete('/board/:id', wrapRequestHandler(deleteBoard))
+
+// location-management
+adminRouter.get('/locations', wrapRequestHandler(getLocationList))
 
 // Report-management
 adminRouter.get('/location-reports/ward/:id', wrapRequestHandler(getListReportInWardofLocation))

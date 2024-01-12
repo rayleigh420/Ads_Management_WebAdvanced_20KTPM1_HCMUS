@@ -44,18 +44,21 @@ export const getBoardByIdController = async (
   }
 }
 
-export const getListBoards = async (req: Request, res: Response, next: NextFunction) => {
+export const getListBoardsByIdLocation = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const id = req.params.id
+    console.log('🚀 ~ file: boards.controllers.ts:47 ~ id:', id)
     const limit = parseInt(req.query.limit as string)
     const skip = parseInt(req.query.skip as string)
 
-    const results = await boardsService.getListBoard()
+    const results = await boardsService.getListBoard(id)
+    console.log('🚀 ~ file: boards.controllers.ts:16 ~ results:', results)
     const count = results.length
     let data: any
     if (limit === 0 && skip === 0) {
       data = results
     } else {
-      data = results.splice(skip, limit)
+      data = results.splice(skip - 1, limit)
     }
     const dataPaging = getPagingData({ data, count, limit, skip })
     return res.json(ApiResponse.success(dataPaging, 'success'))
