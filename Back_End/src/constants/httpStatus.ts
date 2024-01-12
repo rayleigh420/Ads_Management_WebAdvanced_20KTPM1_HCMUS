@@ -10,6 +10,6 @@ const HTTP_STATUS = {
   BAD_REQUEST: 400,
   INTERNAL_SERVER_ERROR: 500,
   PARTIAL_CONTENT: 206
-} as const;
+} as const
 
-export default HTTP_STATUS;
+export default HTTP_STATUS

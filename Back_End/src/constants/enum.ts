@@ -46,18 +46,18 @@ export enum PeopleFollow {
   Following = '1'
 }
 
-export enum userType{
+export enum userType {
   DEPARTMENT_OFFICER = 0,
   DISTRICT_OFFICER = 1,
   WARD_OFFICER = 2
 }
 
-export enum ReportType{
+export enum ReportType {
   LOCATION = 0,
   BOARD = 1
 }
 
-export enum ReportStatus{
+export enum ReportStatus {
   IN_PROCESS = 0,
   DONE = 1
 }

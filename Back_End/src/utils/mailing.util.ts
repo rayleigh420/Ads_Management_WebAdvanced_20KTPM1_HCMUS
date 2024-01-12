@@ -1,10 +1,10 @@
-import nodemailer from 'nodemailer';
-import { envConfig } from '../constants/config';
-import ejs from 'ejs';
-import path from 'path';
-import { emailTemplate } from '../templates/forgotMail.template';
+import nodemailer from 'nodemailer'
+import { envConfig } from '../constants/config'
+import ejs from 'ejs'
+import path from 'path'
+import { emailTemplate } from '../templates/forgotMail.template'
 
-const { emailUser, emailPassword, emailFrom } = envConfig;
+const { emailUser, emailPassword, emailFrom } = envConfig
 // const emailTemplatePath = path.join(__dirname, 'templates', 'forgotMail.template.ejs');
 // const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');
 
@@ -18,11 +18,11 @@ const transporter = nodemailer.createTransport({
     pass: emailPassword
   },
   logger: true
-});
+})
 
 export const sendEmail = async (to: string, subject: string, text: string, htmlOption?: string) => {
-  console.log("🚀 ~ sendEmail ~ htmlOption:", htmlOption)
-  const renderedTemplate = ejs.render(emailTemplate, { text });
+  console.log('🚀 ~ sendEmail ~ htmlOption:', htmlOption)
+  const renderedTemplate = ejs.render(emailTemplate, { text })
   const mailOptions = {
     from: emailFrom,
     to,
@@ -31,10 +31,9 @@ export const sendEmail = async (to: string, subject: string, text: string, htmlO
     //if html is null so html: renderedTemplate
     html: htmlOption ? htmlOption : renderedTemplate,
     headers: { 'x-myheader': 'test header' }
-  };
+  }
 
-  const info = await transporter.sendMail(mailOptions);
+  const info = await transporter.sendMail(mailOptions)
 
-  console.log('Message sent: %s', info.response);
-};
-
+  console.log('Message sent: %s', info.response)
+}

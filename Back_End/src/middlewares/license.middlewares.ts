@@ -1,7 +1,7 @@
-import { checkSchema } from 'express-validator';
-import { validate } from '../utils/validator';
-import { myDataSource } from '../orm/connectDb';
-import { AdvertisingBoard } from '../orm/entities/AdvertisingBoard';
+import { checkSchema } from 'express-validator'
+import { validate } from '../utils/validator'
+import { myDataSource } from '../orm/connectDb'
+import { AdvertisingBoard } from '../orm/entities/AdvertisingBoard'
 
 export const createLicenseRequestValidator = validate(
   checkSchema({
@@ -13,11 +13,11 @@ export const createLicenseRequestValidator = validate(
         options: async (value, { req }) => {
           const board = await myDataSource
             .getRepository(AdvertisingBoard)
-            .findOneBy({ id: req.body.advertisingBoardId });
+            .findOneBy({ id: req.body.advertisingBoardId })
           if (!board) {
-            throw new Error('Board does not exist in system');
+            throw new Error('Board does not exist in system')
           }
-          return true;
+          return true
         }
       }
     },
@@ -49,4 +49,4 @@ export const createLicenseRequestValidator = validate(
       errorMessage: 'Invalid date'
     }
   })
-);
+)

@@ -24,6 +24,7 @@ import {
   addOfficerToWard,
   approveLicense,
   cancelLicense,
+  getListModificationRequest,
   getListReport
 } from '../controllers/admins.controllers';
 
@@ -60,5 +61,8 @@ adminRouter.post('/ward-officer', OfficerToWardValidator, wrapRequestHandler(add
 // License-management
 adminRouter.get('/approve-license/:id', wrapRequestHandler(approveLicense));
 adminRouter.delete('/cancel-license/:id', wrapRequestHandler(cancelLicense));
+
+// Modification-management
+adminRouter.get('/modification-requests', wrapRequestHandler(getListModificationRequest));
 
 export default adminRouter;

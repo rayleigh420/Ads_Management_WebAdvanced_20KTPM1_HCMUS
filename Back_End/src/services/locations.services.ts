@@ -1,15 +1,15 @@
 // import { Board } from "../entities/board.entity";
-import { UserType } from '../models/requets/user.requests';
-import { myDataSource } from '../orm/connectDb';
-import { AdvertisingLocation } from '../orm/entities/AdvertisingLocation';
-import { District } from '../orm/entities/District';
-import { Ward } from '../orm/entities/Ward';
-import reportsServices from './reports.services';
+import { UserType } from '../models/requets/user.requests'
+import { myDataSource } from '../orm/connectDb'
+import { AdvertisingLocation } from '../orm/entities/AdvertisingLocation'
+import { District } from '../orm/entities/District'
+import { Ward } from '../orm/entities/Ward'
+import reportsServices from './reports.services'
 
 class LocationService {
-  private locationRepository = myDataSource.getRepository(AdvertisingLocation);
-  private wardRepository = myDataSource.getRepository(Ward);
-  private districtRepository = myDataSource.getRepository(District);
+  private locationRepository = myDataSource.getRepository(AdvertisingLocation)
+  private wardRepository = myDataSource.getRepository(Ward)
+  private districtRepository = myDataSource.getRepository(District)
 
   public async getLocations({ limit, skip }: { limit: number; skip: number }) {
     if (limit === 0 && skip === 0) {
@@ -17,7 +17,7 @@ class LocationService {
         .createQueryBuilder('location')
         .leftJoinAndSelect('location.ward', 'ward')
         // .leftJoinAndSelect('location.district', 'district')
-        .getMany();
+        .getMany()
     }
     return await this.locationRepository
       .createQueryBuilder('location')
@@ -25,7 +25,7 @@ class LocationService {
       // .leftJoinAndSelect('location.district', 'district')
       .skip(skip)
       .take(limit)
-      .getMany();
+      .getMany()
   }
 
   // public async getLocationsByWardId({ limit, skip, wardId }: { limit: number; skip: number, wardId: number }) {
@@ -64,23 +64,22 @@ class LocationService {
       .leftJoinAndSelect('location.ward', 'ward')
       .leftJoinAndSelect('location.reports', 'reports')
       .leftJoinAndSelect('location.advertisingBoards', 'boards')
-      .getMany();
-  
-    const result = locations.filter(location => {
-      const hasReportWithDeviceId = location.reports.some(report => report.deviceId === deviceId);
-      return hasReportWithDeviceId || location.advertisingBoards.length > 0;
-    });
-  
-    return result;
-  }
+      .getMany()
 
+    const result = locations.filter((location) => {
+      const hasReportWithDeviceId = location.reports.some((report) => report.deviceId === deviceId)
+      return hasReportWithDeviceId || location.advertisingBoards.length > 0
+    })
+
+    return result
+  }
 
   public async getLocationsAnonymousById(id: number) {
     return this.locationRepository
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
       .where('location.id = :id', { id })
-      .getOne();
+      .getOne()
   }
 
   public async getBoardsByLocationId(id: number) {
@@ -89,7 +88,7 @@ class LocationService {
       .leftJoinAndSelect('location.advertisingBoards', 'boards')
       .leftJoinAndSelect('boards.reports', 'reports')
       .where('location.id = :id', { id })
-      .getOne();
+      .getOne()
   }
 
   public async getLocationById(id: number) {
@@ -97,7 +96,7 @@ class LocationService {
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
       .where('location.id = :id', { id })
-      .getOne();
+      .getOne()
   }
 
   public async getLocationManageWard(wardId: number) {
@@ -120,7 +119,7 @@ class LocationService {
     // console.log("🚀 ~ file: locations.services.ts:157 ~ LocationService ~ getLocationManageByUserId ~ result", result);
     //     await addReportsToLocations(result[0].advertisingLocations);
 
-   const locations = await this.locationRepository
+    const locations = await this.locationRepository
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.ward', 'ward')
       .leftJoinAndSelect('location.reports', 'reports')
@@ -128,7 +127,7 @@ class LocationService {
       .leftJoinAndSelect('boards.reports', 'boardReports')
       .where('ward.id = :wardId', { wardId })
       // .where('reports.deviceId = :deviceId', { deviceId })
-      .getMany();
+      .getMany()
 
     // } else if (userType === UserType.DISTRICT_OFFICER) {
     //   const result = await this.districtRepository.createQueryBuilder('district')
@@ -146,7 +145,24 @@ class LocationService {
     //   }
     // }
 
-    return locations;
+    return locations
+  }
+
+  public async getLocationByWardIdAndLocationId(wardId: number, locationId) {
+    return await this.locationRepository
+      .createQueryBuilder('location')
+      .leftJoinAndSelect('location.ward', 'ward')
+      .where('ward.id = :wardId', { wardId })
+      .andWhere('location.id = :locationId', { locationId })
+      .getMany()
+  }
+
+  public async getLocationByWardId(wardId: number) {
+    return await this.locationRepository
+      .createQueryBuilder('location')
+      .leftJoinAndSelect('location.ward', 'ward')
+      .where('ward.id = :wardId', { wardId })
+      .getMany()
   }
 }
-export default new LocationService();
+export default new LocationService()

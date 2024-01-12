@@ -1,7 +1,7 @@
-import { config } from 'dotenv';
-config();
+import { config } from 'dotenv'
+config()
 
-console.log("======", process.env.DB_HOST);
+console.log('======', process.env.DB_HOST)
 export const envConfig = {
   dbHost: process.env.DB_HOST as string,
   dbName: process.env.DB_NAME as string,
@@ -31,5 +31,5 @@ export const envConfig = {
   cloudinarySecret: process.env.CLOUDINARY_SECRET as string,
   emailUser: process.env.EMAIL_USER as string,
   emailPassword: process.env.EMAIL_PASSWORD as string,
-  emailFrom: process.env.EMAIL_FROM as string,
+  emailFrom: process.env.EMAIL_FROM as string
 }
