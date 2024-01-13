@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express'
-import { ApiResponse } from '../models/responses/base.response'
+import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { ApiResponse } from '../models/responses/base.response';
 
 // export const wrapRequestHandler = <P>(func: RequestHandler<P, ApiResponse<any>, any, any>) => {
 //   return async (req: Request<P>, res: Response<ApiResponse<any>>, next: NextFunction) => {
@@ -19,12 +19,12 @@ import { ApiResponse } from '../models/responses/base.response'
 export const wrapRequestHandler = <P>(func: RequestHandler<P, any, any, any>) => {
   return async (req: Request<P>, res: Response, next: NextFunction) => {
     try {
-      await func(req, res, next)
+      await func(req, res, next);
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
-}
+  };
+};
 
 // export const wrapRequestHandler = <P>(func: RequestHandler<P, ApiResponse<any>, any, any>) => {
 //   return async (req: Request<P>, res: Response<ApiResponse<any>>, next: NextFunction) => {

@@ -1,7 +1,7 @@
-import { DataSource } from 'typeorm'
-import { envConfig } from '../constants/config'
+import { DataSource } from 'typeorm';
+import { envConfig } from '../constants/config';
 class Database {
-  private static instance: DataSource
+  private static instance: DataSource;
 
   private constructor() {}
 
@@ -16,13 +16,13 @@ class Database {
         database: envConfig.dbName,
         entities: ['src/orm/entities/*{.ts,.js}'],
         migrations: ['src/migrations/*.ts', 'dist/migrations/*{.ts,.js}'],
-        synchronize: false
-      })
-      console.log('entity', envConfig.dbHost)
+        synchronize: false,
+      });
+      console.log('entity', envConfig.dbHost);
 
-      return Database.instance
+      return Database.instance;
     }
   }
 }
 
-export const myDataSource = Database.getInstance()
+export const myDataSource = Database.getInstance();

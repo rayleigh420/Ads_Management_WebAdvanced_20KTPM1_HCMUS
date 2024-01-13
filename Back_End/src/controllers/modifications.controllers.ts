@@ -47,8 +47,8 @@ export const createModificationRequestcontroller = async (req: any, res: Respons
       const ward = await myDataSource.getRepository(Ward).findOne({
         where: {
           district: { id: district.id },
-          name: Like(`%${wardName}%`)
-        }
+          name: Like(`%${wardName}%`),
+        },
       });
 
       if (!ward || ward.id != wardId) {
@@ -59,7 +59,7 @@ export const createModificationRequestcontroller = async (req: any, res: Respons
         lat: modificationRequest.location.lat,
         long: modificationRequest.location.long,
         address: modificationRequest.location.address,
-        wardId: ward.id
+        wardId: ward.id,
       });
 
       const savedLocation = await myDataSource.getRepository(AdvertisingLocation).save(newLocation);

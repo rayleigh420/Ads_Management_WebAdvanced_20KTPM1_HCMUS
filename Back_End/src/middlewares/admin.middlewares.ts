@@ -1,14 +1,14 @@
-import { checkSchema } from 'express-validator'
-import { validate } from '../utils/validator'
-import { FindDistrictOption, FindWardOption, WardReqBody } from '../models/requets/admin.requests'
-import wardsServices from '../services/wards.services'
-import districtsServices from '../services/districts.services'
-import { verifyAccessToken } from '../utils/common.util'
-import { DataSource } from 'typeorm'
-import { myDataSource } from '../orm/connectDb'
-import { User } from '../orm/entities/User'
-import { District } from '../orm/entities/District'
-import { Ward } from '../orm/entities/Ward'
+import { checkSchema } from 'express-validator';
+import { validate } from '../utils/validator';
+import { FindDistrictOption, FindWardOption, WardReqBody } from '../models/requets/admin.requests';
+import wardsServices from '../services/wards.services';
+import districtsServices from '../services/districts.services';
+import { verifyAccessToken } from '../utils/common.util';
+import { DataSource } from 'typeorm';
+import { myDataSource } from '../orm/connectDb';
+import { User } from '../orm/entities/User';
+import { District } from '../orm/entities/District';
+import { Ward } from '../orm/entities/Ward';
 
 export const authorizationAdminValidator = validate(
   checkSchema(
@@ -16,15 +16,15 @@ export const authorizationAdminValidator = validate(
       Authorization: {
         custom: {
           options: async (value: string, { req }) => {
-            const accessToken = (value || '').split(' ')[1]
-            return await verifyAccessToken(accessToken, req, 0)
-          }
-        }
-      }
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req, 0);
+          },
+        },
+      },
     },
-    ['headers']
-  )
-)
+    ['headers'],
+  ),
+);
 
 export const authorizationOfficerValidator = validate(
   checkSchema(
@@ -32,15 +32,15 @@ export const authorizationOfficerValidator = validate(
       Authorization: {
         custom: {
           options: async (value: string, { req }) => {
-            const accessToken = (value || '').split(' ')[1]
-            return await verifyAccessToken(accessToken, req)
-          }
-        }
-      }
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req);
+          },
+        },
+      },
     },
-    ['headers']
-  )
-)
+    ['headers'],
+  ),
+);
 
 export const authorizationWardOfficerValidator = validate(
   checkSchema(
@@ -48,15 +48,15 @@ export const authorizationWardOfficerValidator = validate(
       Authorization: {
         custom: {
           options: async (value: string, { req }) => {
-            const accessToken = (value || '').split(' ')[1]
-            return await verifyAccessToken(accessToken, req, 2)
-          }
-        }
-      }
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req, 2);
+          },
+        },
+      },
     },
-    ['headers']
-  )
-)
+    ['headers'],
+  ),
+);
 
 export const authorizationDistrictOfficerValidator = validate(
   checkSchema(
@@ -64,40 +64,40 @@ export const authorizationDistrictOfficerValidator = validate(
       Authorization: {
         custom: {
           options: async (value: string, { req }) => {
-            const accessToken = (value || '').split(' ')[1]
-            return await verifyAccessToken(accessToken, req, 1)
-          }
-        }
-      }
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req, 1);
+          },
+        },
+      },
     },
-    ['headers']
-  )
-)
+    ['headers'],
+  ),
+);
 
 export const createWardValidator = validate(
   checkSchema({
     name: {
       notEmpty: true,
       isString: true,
-      errorMessage: 'Invalid name'
+      errorMessage: 'Invalid name',
     },
     districtId: {
       notEmpty: true,
       isNumeric: true,
       custom: {
         options: async (value, { req }) => {
-          const { name } = req.body
-          const findOptions: FindWardOption = { name }
-          const isWardExist = await wardsServices.findWardByOption(findOptions)
+          const { name } = req.body;
+          const findOptions: FindWardOption = { name };
+          const isWardExist = await wardsServices.findWardByOption(findOptions);
           if (isWardExist) {
-            throw new Error('Ward is already in system')
+            throw new Error('Ward is already in system');
           }
-          return true
-        }
-      }
-    }
-  })
-)
+          return true;
+        },
+      },
+    },
+  }),
+);
 
 export const updateWardValidator = validate(
   checkSchema({
@@ -107,33 +107,33 @@ export const updateWardValidator = validate(
       errorMessage: 'Invalid name',
       custom: {
         options: async (value, { req }) => {
-          const id = req.params.id
-          const findOptions: FindWardOption = { id }
-          const isWardExist = await wardsServices.findWardByOption(findOptions)
+          const id = req.params.id;
+          const findOptions: FindWardOption = { id };
+          const isWardExist = await wardsServices.findWardByOption(findOptions);
           if (!isWardExist) {
-            throw new Error('Ward does not exist in system')
+            throw new Error('Ward does not exist in system');
           }
-          return true
-        }
-      }
+          return true;
+        },
+      },
     },
     districtId: {
       notEmpty: true,
       isNumeric: true,
       custom: {
         options: async (value, { req }) => {
-          const { name, districtId } = req.body
-          const findOptions: FindWardOption = { name, districtId }
-          const isWardExist = await wardsServices.findWardByOption(findOptions)
+          const { name, districtId } = req.body;
+          const findOptions: FindWardOption = { name, districtId };
+          const isWardExist = await wardsServices.findWardByOption(findOptions);
           if (isWardExist) {
-            throw new Error('Ward is already in system')
+            throw new Error('Ward is already in system');
           }
-          return true
-        }
-      }
-    }
-  })
-)
+          return true;
+        },
+      },
+    },
+  }),
+);
 
 export const createDistrictValidator = validate(
   checkSchema({
@@ -143,18 +143,18 @@ export const createDistrictValidator = validate(
       errorMessage: 'Invalid name',
       custom: {
         options: async (value, { req }) => {
-          const { name } = req.body
-          const findOptions: FindDistrictOption = { name }
-          const isDistrictExist = await districtsServices.findDistrictByOption(findOptions)
+          const { name } = req.body;
+          const findOptions: FindDistrictOption = { name };
+          const isDistrictExist = await districtsServices.findDistrictByOption(findOptions);
           if (isDistrictExist) {
-            throw new Error('District is already in system')
+            throw new Error('District is already in system');
           }
-          return true
-        }
-      }
-    }
-  })
-)
+          return true;
+        },
+      },
+    },
+  }),
+);
 
 export const udpateDistrictValidator = validate(
   checkSchema({
@@ -164,62 +164,62 @@ export const udpateDistrictValidator = validate(
       errorMessage: 'Invalid name',
       custom: {
         options: async (value, { req }) => {
-          const id = req.params.id
-          const findOptionsId: FindDistrictOption = { id }
-          const isDistrictIdExist = await districtsServices.findDistrictByOption(findOptionsId)
+          const id = req.params.id;
+          const findOptionsId: FindDistrictOption = { id };
+          const isDistrictIdExist = await districtsServices.findDistrictByOption(findOptionsId);
           if (!isDistrictIdExist) {
-            throw new Error('District does not exist in system')
+            throw new Error('District does not exist in system');
           }
 
-          const { name } = req.body
-          const findOptionsName: FindDistrictOption = { name }
-          const isDistrictNameExist = await districtsServices.findDistrictByOption(findOptionsName)
+          const { name } = req.body;
+          const findOptionsName: FindDistrictOption = { name };
+          const isDistrictNameExist = await districtsServices.findDistrictByOption(findOptionsName);
           if (isDistrictNameExist) {
-            throw new Error('District name is already in system')
+            throw new Error('District name is already in system');
           }
-          return true
-        }
-      }
-    }
-  })
-)
+          return true;
+        },
+      },
+    },
+  }),
+);
 
 export const BoardReqValidator = validate(
   checkSchema({
     locationId: {
       isNumeric: true,
       notEmpty: true,
-      errorMessage: 'Invalid location id'
+      errorMessage: 'Invalid location id',
     },
     boardType: {
       isNumeric: true,
       notEmpty: true,
-      errorMessage: 'Invalid board type'
+      errorMessage: 'Invalid board type',
     },
     quantity: {
       isNumeric: true,
       notEmpty: true,
-      errorMessage: 'Invalid quantity'
+      errorMessage: 'Invalid quantity',
     },
     image1: {
       isString: true,
-      errorMessage: 'Invalid image'
+      errorMessage: 'Invalid image',
     },
     expireDate: {
       notEmpty: true,
       isISO8601: true,
-      errorMessage: 'Invalid date'
+      errorMessage: 'Invalid date',
     },
     width: {
       isFloat: true,
-      errorMessage: 'Invalid width'
+      errorMessage: 'Invalid width',
     },
     heigh: {
       isFloat: true,
-      errorMessage: 'Invalid height'
-    }
-  })
-)
+      errorMessage: 'Invalid height',
+    },
+  }),
+);
 
 export const OfficerToDistrictValidator = validate(
   checkSchema({
@@ -229,13 +229,13 @@ export const OfficerToDistrictValidator = validate(
       errorMessage: 'Invalid name',
       custom: {
         options: async (value, { req }) => {
-          const user = await myDataSource.getRepository(User).findOneBy({ id: req.body.userId })
+          const user = await myDataSource.getRepository(User).findOneBy({ id: req.body.userId });
           if (user == null || user.userType != 1) {
-            throw new Error('User does not exist in system or User is not district officer')
+            throw new Error('User does not exist in system or User is not district officer');
           }
-          return true
-        }
-      }
+          return true;
+        },
+      },
     },
     districtId: {
       notEmpty: true,
@@ -247,16 +247,16 @@ export const OfficerToDistrictValidator = validate(
             .getRepository(District)
             .createQueryBuilder('district')
             .where('district.id = :id', { id: req.body.districtId })
-            .getOne()
+            .getOne();
           if (district == null) {
-            throw new Error('District does not exist in system')
+            throw new Error('District does not exist in system');
           }
-          return true
-        }
-      }
-    }
-  })
-)
+          return true;
+        },
+      },
+    },
+  }),
+);
 
 export const OfficerToWardValidator = validate(
   checkSchema({
@@ -266,13 +266,13 @@ export const OfficerToWardValidator = validate(
       errorMessage: 'Invalid name',
       custom: {
         options: async (value, { req }) => {
-          const user = await myDataSource.getRepository(User).findOneBy({ id: req.body.userId })
+          const user = await myDataSource.getRepository(User).findOneBy({ id: req.body.userId });
           if (user == null || user.userType != 2) {
-            throw new Error('User does not exist in system or User is not district officer')
+            throw new Error('User does not exist in system or User is not district officer');
           }
-          return true
-        }
-      }
+          return true;
+        },
+      },
     },
     wardId: {
       notEmpty: true,
@@ -284,13 +284,13 @@ export const OfficerToWardValidator = validate(
             .getRepository(Ward)
             .createQueryBuilder('ward')
             .where('ward.id = :id', { id: req.body.wardId })
-            .getOne()
+            .getOne();
           if (ward == null) {
-            throw new Error('Ward does not exist in system')
+            throw new Error('Ward does not exist in system');
           }
-          return true
-        }
-      }
-    }
-  })
-)
+          return true;
+        },
+      },
+    },
+  }),
+);

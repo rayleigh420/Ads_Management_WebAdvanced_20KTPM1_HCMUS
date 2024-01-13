@@ -65,8 +65,8 @@ export const USER_MESSAGES = {
   REFRESH_TOKEN_SUCCESS: 'Refresh token success',
   GET_VIDEO_STATUS_SUCCESS: 'Get video status success',
   FORGOT_PASSWORD_SENT_SUCCESSED: 'New password was sent',
-  NOT_ACCESS_PERMISSION: 'Not have access permission'
-} as const
+  NOT_ACCESS_PERMISSION: 'Not have access permission',
+} as const;
 
 export const TWEETS_MESSAGES = {
   INVALID_TYPE: 'Invalid type',
@@ -80,15 +80,15 @@ export const TWEETS_MESSAGES = {
   MEDIAS_MUST_BE_AN_ARRAY_OF_MEDIA_OBJECT: 'Medias must be an array of media object',
   INVALID_TWEET_ID: 'Invalid tweet id',
   TWEET_NOT_FOUND: 'Tweet not found',
-  TWEET_IS_NOT_PUBLIC: 'Tweet is not public'
-} as const
+  TWEET_IS_NOT_PUBLIC: 'Tweet is not public',
+} as const;
 
 export const BOOKMARK_MESSAGES = {
   BOOKMARK_SUCCESSFULLY: 'Bookmark successfully',
-  UNBOOKMARK_SUCCESSFULLY: 'Unbookmark successfully'
-}
+  UNBOOKMARK_SUCCESSFULLY: 'Unbookmark successfully',
+};
 
 export const LIKE_MESSAGES = {
   LIKE_SUCCESSFULLY: 'Like successfully',
-  UNLIKE_SUCCESSFULLY: 'Unlike successfully'
-}
+  UNLIKE_SUCCESSFULLY: 'Unlike successfully',
+};

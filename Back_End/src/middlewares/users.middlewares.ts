@@ -1,14 +1,14 @@
-import { Request, Response, NextFunction } from 'express'
-import { check, checkSchema } from 'express-validator'
-import { ErrorWithStatus } from '../models/error'
-import { validate } from '../utils/validator'
-import usersServices from '../services/users.services'
-import { hashPassword } from '../utils/crypto'
-import { verifyToken } from '../utils/jwt.utils'
-import { JsonWebTokenError } from 'jsonwebtoken'
-import { FindOptions } from 'typeorm'
-import { FindUserOptions } from '../models/requets/user.requests'
-import { verifyAccessToken } from '../utils/common.util'
+import { Request, Response, NextFunction } from 'express';
+import { check, checkSchema } from 'express-validator';
+import { ErrorWithStatus } from '../models/error';
+import { validate } from '../utils/validator';
+import usersServices from '../services/users.services';
+import { hashPassword } from '../utils/crypto';
+import { verifyToken } from '../utils/jwt.utils';
+import { JsonWebTokenError } from 'jsonwebtoken';
+import { FindOptions } from 'typeorm';
+import { FindUserOptions } from '../models/requets/user.requests';
+import { verifyAccessToken } from '../utils/common.util';
 
 // export const validateLogin = (req: Request, res: Response, next: NextFunction) => {
 //   const { username, password } = req.body;
@@ -27,25 +27,25 @@ export const loginValidator = validate(
       errorMessage: 'Invalid email address',
       custom: {
         options: async (value, { req }) => {
-          const { email, password } = req.body
-          const hashedPassword = hashPassword(password)
-          const findOptions: FindUserOptions = { email, password: hashedPassword }
-          const user = await usersServices.findUserByOptions(findOptions)
+          const { email, password } = req.body;
+          const hashedPassword = hashPassword(password);
+          const findOptions: FindUserOptions = { email, password: hashedPassword };
+          const user = await usersServices.findUserByOptions(findOptions);
           if (!user) {
-            throw new ErrorWithStatus({ message: 'email or password is incorrect', status: 401 })
+            throw new ErrorWithStatus({ message: 'email or password is incorrect', status: 401 });
           }
-          req.user = user
-          return true
-        }
-      }
+          req.user = user;
+          return true;
+        },
+      },
     },
     password: {
       notEmpty: true,
       isString: true,
-      errorMessage: 'Invalid password'
-    }
-  })
-)
+      errorMessage: 'Invalid password',
+    },
+  }),
+);
 
 export const registerValidator = validate(
   checkSchema({
@@ -56,18 +56,18 @@ export const registerValidator = validate(
       errorMessage: 'Invalid email address',
       custom: {
         options: async (value, { req }) => {
-          const { email } = req.body
-          const findOptions: FindUserOptions = { email }
-          const isEmailExist = await usersServices.findUserByOptions(findOptions)
+          const { email } = req.body;
+          const findOptions: FindUserOptions = { email };
+          const isEmailExist = await usersServices.findUserByOptions(findOptions);
           if (isEmailExist) {
-            throw new Error('Email address already in use')
+            throw new Error('Email address already in use');
           }
-          return true
-        }
-      }
-    }
-  })
-)
+          return true;
+        },
+      },
+    },
+  }),
+);
 
 export const accessTokenValidator = validate(
   checkSchema(
@@ -75,15 +75,15 @@ export const accessTokenValidator = validate(
       Authorization: {
         custom: {
           options: async (value: string, { req }) => {
-            const accessToken = (value || '').split(' ')[1]
-            return await verifyAccessToken(accessToken, req)
-          }
-        }
-      }
+            const accessToken = (value || '').split(' ')[1];
+            return await verifyAccessToken(accessToken, req);
+          },
+        },
+      },
     },
-    ['headers']
-  )
-)
+    ['headers'],
+  ),
+);
 
 export const forgotPasswordValidator = validate(
   checkSchema({
@@ -94,18 +94,18 @@ export const forgotPasswordValidator = validate(
       errorMessage: 'Invalid email address',
       custom: {
         options: async (value, { req }) => {
-          const { email } = req.body
-          const findOptions: FindUserOptions = { email }
-          const isEmailExist = await usersServices.findUserByOptions(findOptions)
+          const { email } = req.body;
+          const findOptions: FindUserOptions = { email };
+          const isEmailExist = await usersServices.findUserByOptions(findOptions);
           if (!isEmailExist) {
-            throw new Error('Email address does not exist in system')
+            throw new Error('Email address does not exist in system');
           }
-          return true
-        }
-      }
-    }
-  })
-)
+          return true;
+        },
+      },
+    },
+  }),
+);
 
 // export const refreshTokenValidator = validate(
 //   checkSchema(

@@ -1,60 +1,60 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { AdvertisingLocation } from './AdvertisingLocation'
-import { LicenseRequest } from './LicenseRequest'
-import { ModificationRequest } from './ModificationRequest'
-import { Report } from './Report'
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { AdvertisingLocation } from './AdvertisingLocation';
+import { LicenseRequest } from './LicenseRequest';
+import { ModificationRequest } from './ModificationRequest';
+import { Report } from './Report';
 
 @Index('advertising_board_location_id_foreign', ['locationId'], {})
 @Index('advertising_board_FK_1', ['licenseId'], {})
 @Entity('advertising_board', { schema: 'ads_management' })
 export class AdvertisingBoard {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
-  id: number
+  id: number;
 
   @Column('int', { name: 'location_id', unsigned: true })
-  locationId: number
+  locationId: number;
 
   @Column('int', { name: 'board_type' })
-  boardType: number
+  boardType: number;
 
   @Column('text', { name: 'image1', nullable: true })
-  image1: string | null
+  image1: string | null;
 
   @Column('date', { name: 'expireDate' })
-  expireDate: string
+  expireDate: string;
 
   @Column('float', { name: 'width', nullable: true, precision: 12 })
-  width: number | null
+  width: number | null;
 
   @Column('float', { name: 'height', nullable: true, precision: 12 })
-  height: number | null
+  height: number | null;
 
   @Column('text', { name: 'image2', nullable: true })
-  image2: string | null
+  image2: string | null;
 
   @Column('int', { name: 'quantity', nullable: true, default: () => "'1'" })
-  quantity: number | null
+  quantity: number | null;
 
   @Column('int', { name: 'license_id', nullable: true, unsigned: true })
-  licenseId: number | null
+  licenseId: number | null;
 
   @ManyToOne(() => AdvertisingLocation, (advertisingLocation) => advertisingLocation.advertisingBoards, {
     onDelete: 'NO ACTION',
-    onUpdate: 'NO ACTION'
+    onUpdate: 'NO ACTION',
   })
   @JoinColumn([{ name: 'location_id', referencedColumnName: 'id' }])
-  location: AdvertisingLocation
+  location: AdvertisingLocation;
 
   @ManyToOne(() => LicenseRequest, (licenseRequest) => licenseRequest.advertisingBoards, {
     onDelete: 'NO ACTION',
-    onUpdate: 'NO ACTION'
+    onUpdate: 'NO ACTION',
   })
   @JoinColumn([{ name: 'license_id', referencedColumnName: 'id' }])
-  license: LicenseRequest
+  license: LicenseRequest;
 
   @OneToMany(() => ModificationRequest, (modificationRequest) => modificationRequest.board)
-  modificationRequests: ModificationRequest[]
+  modificationRequests: ModificationRequest[];
 
   @OneToMany(() => Report, (report) => report.board)
-  reports: Report[]
+  reports: Report[];
 }

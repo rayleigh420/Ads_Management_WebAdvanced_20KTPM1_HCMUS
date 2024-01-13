@@ -52,4 +52,4 @@ export const emailTemplate = `<!doctype html>
       </tr>
     </table>
   </body>
-</html>`
+</html>`;
