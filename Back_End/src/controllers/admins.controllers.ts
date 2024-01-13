@@ -4,6 +4,7 @@ import adminServices from '../services/admin.services';
 import { OfficerToDistrict, OfficerToWard } from '../models/requets/admin.requests';
 import licenseServices from '../services/license.services';
 import reportsServices from '../services/reports.services';
+import { getPagingData } from '../utils/paging.utils';
 
 export const addOfficerToDistrict = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -88,8 +89,20 @@ export const getListModificationRequest = async (req: Request, res: Response, ne
 
 export const getListAdsBoardType = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await adminServices.getListAdsBoardType();
-    res.json(ApiResponse.success(result));
+    const limit = parseInt(req.query.limit as string);
+    const skip = parseInt(req.query.skip as string);
+
+    const results = await adminServices.getListAdsBoardType();
+
+    const count = results.length;
+    let data: any;
+    if (limit === 0 && skip === 0) {
+      data = results;
+    } else {
+      data = results.splice(skip - 1, limit);
+    }
+    const dataPaging = getPagingData({ data, count, limit, skip });
+    return res.json(ApiResponse.success(dataPaging, 'success'));
   } catch (error) {
     next(error);
   }
@@ -102,7 +115,7 @@ export const getAdsBoardTypeById = async (req: Request, res: Response, next: Nex
   } catch (error) {
     next(error);
   }
-}
+};
 export const updateAdsBoardType = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const updateAdsBoardTypeBody = req.body as { name: string };
@@ -111,7 +124,7 @@ export const updateAdsBoardType = async (req: Request, res: Response, next: Next
   } catch (error) {
     next(error);
   }
-}
+};
 
 export const deleteAdsBoardType = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -130,4 +143,4 @@ export const createAdsBoardType = async (req: Request, res: Response, next: Next
   } catch (error) {
     next(error);
   }
-}
+};
