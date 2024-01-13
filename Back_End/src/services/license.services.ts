@@ -5,7 +5,9 @@ class LicenseService {
   private licenseRepository = myDataSource.getRepository(LicenseRequest);
 
   public async getListLicense() {
-    return await this.licenseRepository.find();
+    return await this.licenseRepository.find({
+      relations: ['advertisingBoards'],
+    });
   }
 
   public async createLicenseRequest(licenseRequest) {
