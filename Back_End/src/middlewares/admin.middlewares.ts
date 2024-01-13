@@ -196,25 +196,13 @@ export const BoardReqValidator = validate(
       notEmpty: true,
       errorMessage: 'Invalid board type',
     },
-    quantity: {
-      isNumeric: true,
-      notEmpty: true,
-      errorMessage: 'Invalid quantity',
-    },
-    image1: {
-      isString: true,
-      errorMessage: 'Invalid image',
-    },
-    expireDate: {
-      notEmpty: true,
-      isISO8601: true,
-      errorMessage: 'Invalid date',
-    },
     width: {
+      optional: true,
       isFloat: true,
       errorMessage: 'Invalid width',
     },
     heigh: {
+      optional: true,
       isFloat: true,
       errorMessage: 'Invalid height',
     },

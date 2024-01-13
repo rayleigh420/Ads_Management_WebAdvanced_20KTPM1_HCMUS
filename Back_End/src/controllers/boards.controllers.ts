@@ -69,7 +69,10 @@ export const getListBoardsByIdLocation = async (req: Request, res: Response, nex
 
 export const createBoard = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await boardsService.createBoard(req.body as BoardReqBody);
+    const newBoard = req.body as BoardReqBody;
+    // const image1 = req.file as Express.Multer.File;
+    const images = req.files as Express.Multer.File[];
+    const result = await boardsService.createBoard(newBoard, images);
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);
@@ -78,7 +81,8 @@ export const createBoard = async (req: Request, res: Response, next: NextFunctio
 
 export const updateBoard = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await boardsService.updateBoard(parseInt(req.params.id), req.body as BoardReqBody);
+    const images = req.files as Express.Multer.File[];
+    const result = await boardsService.updateBoard(parseInt(req.params.id), req.body as BoardReqBody, images);
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);

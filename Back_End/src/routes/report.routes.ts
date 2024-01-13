@@ -23,10 +23,10 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 10 * 1024 * 1024, // 2 MB
-    files: 1,
+    files: 2,
   },
 });
-reportsRouter.post('/anonymous', upload.single('file'), createReportValidate, wrapRequestHandler(createReport));
+reportsRouter.post('/anonymous', upload.array('file', 2), createReportValidate, wrapRequestHandler(createReport));
 
 //officer
 reportsRouter.get('/officer', accessTokenValidator, wrapRequestHandler(getReportByConditionController));

@@ -42,6 +42,15 @@ import {
   updateReportForm,
 } from '../controllers/admins.controllers';
 import { getLocationList } from '../controllers/locations.controller';
+import multer from 'multer';
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 2 MB
+    files: 2,
+  },
+});
 
 const adminRouter = Router();
 adminRouter.use(authorizationAdminValidator);
@@ -62,9 +71,9 @@ adminRouter.delete('/districts/:id', wrapRequestHandler(deleteDistrict));
 
 // Board-management
 adminRouter.get('/boards/:id', wrapRequestHandler(getListBoardsByIdLocation));
-adminRouter.post('/boards', BoardReqValidator, wrapRequestHandler(createBoard));
-adminRouter.put('/borad/:id', BoardReqValidator, wrapRequestHandler(updateBoard));
-adminRouter.delete('/board/:id', wrapRequestHandler(deleteBoard));
+adminRouter.post('/boards', upload.array('file', 2), BoardReqValidator, wrapRequestHandler(createBoard));
+adminRouter.patch('/boards/:id', upload.array('file', 2), BoardReqValidator, wrapRequestHandler(updateBoard));
+adminRouter.delete('/boards/:id', wrapRequestHandler(deleteBoard));
 
 // location-management
 adminRouter.get('/locations', wrapRequestHandler(getLocationList));

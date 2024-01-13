@@ -16,7 +16,8 @@ export const createReport = async (req: Request, res: Response, next: NextFuncti
   try {
     console.log('report', req.body.reportType);
     const deviceId = req.headers.device_id as string;
-    const result = await reportsServices.createReport(req.body as ReportReqBody, req.file, deviceId);
+    const images = req.files as Express.Multer.File[];
+    const result = await reportsServices.createReport(req.body as ReportReqBody, images, deviceId);
     console.log('🚀 ~ createReport ~ result:', result);
     if (result) {
       if (result.locationId) {
