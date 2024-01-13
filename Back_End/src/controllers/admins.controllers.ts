@@ -80,8 +80,20 @@ export const getListReportInDistrictOfBoard = async (req: Request, res: Response
 
 export const getListModificationRequest = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await adminServices.getListModificationRequest();
-    res.json(ApiResponse.success(result));
+    const limit = parseInt(req.query.limit as string);
+    const skip = parseInt(req.query.skip as string);
+
+    const results = await adminServices.getListModificationRequest();
+
+    const count = results.length;
+    let data: any;
+    if (limit === 0 && skip === 0) {
+      data = results;
+    } else {
+      data = results.splice(skip - 1, limit);
+    }
+    const dataPaging = getPagingData({ data, count, limit, skip });
+    return res.json(ApiResponse.success(dataPaging, 'success'));
   } catch (error) {
     next(error);
   }
