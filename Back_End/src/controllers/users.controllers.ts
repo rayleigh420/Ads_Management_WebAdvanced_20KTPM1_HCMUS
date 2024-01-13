@@ -9,9 +9,12 @@ import { ApiResponse } from '../models/responses/base.response';
 // import User from '../models/user.model';
 import { USER_MESSAGES } from '../constants/message';
 import { User } from '../orm/entities/User';
+import { logger } from '../utils/logging.util';
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const { user }: any = req;
+  logger.log("info", "login");
+
   const userId = user.id;
   const userType = user.userType;
   const fcmToken = user.fcmToken;
@@ -23,8 +26,10 @@ export const createAccountController = async (req: Request, res: Response, next:
   try {
     const result = await usersService.createAccount(req.body as CreateUserBody);
     delete result.password;
+    logger.log('info', ` User ${result.id} created `);
     res.json(ApiResponse.success(result, USER_MESSAGES.CREATE_ACCOUNT_SUCCESS));
   } catch (error) {
+    logger.log("error", error);
     next(error);
   }
 };

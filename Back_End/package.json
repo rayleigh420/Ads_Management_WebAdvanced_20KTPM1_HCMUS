@@ -38,6 +38,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/lodash": "^4.14.202",
     "@types/nodemailer": "^6.4.14",
+    "@types/winston": "^2.4.4",
     "cloudinary": "^1.41.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -54,6 +55,8 @@
     "reflect-metadata": "^0.2.1",
     "streamifier": "^0.1.1",
     "typeorm": "^0.3.17",
-    "typeorm-model-generator": "^0.4.6"
+    "typeorm-model-generator": "^0.4.6",
+    "winston": "^3.11.0",
+    "winston-mongodb": "^5.1.1"
   }
 }

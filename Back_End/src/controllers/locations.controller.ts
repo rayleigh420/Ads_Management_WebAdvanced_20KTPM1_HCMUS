@@ -7,6 +7,7 @@ import usersService from '../services/users.services';
 import { UserType } from '../models/requets/user.requests';
 import boardsServices from '../services/boards.services';
 import { LocationReqBody } from '../models/requets/location.request';
+import { logger } from '../utils/logging.util';
 
 // export const getLocationsByWardIdController = async (
 //   req: any,
@@ -64,6 +65,7 @@ export const getLocationByIdController = async (
   next: NextFunction,
 ) => {
   try {
+    logger.info('get location by id');
     const id = req.params.id;
     const results = await locationsService.getLocationById(parseInt(id, 10));
     console.log('🚀 ~ file: boards.controllers.ts:16 ~ results:', results);
@@ -79,6 +81,7 @@ export const getLocationsAnonymousController = async (
   next: NextFunction,
 ) => {
   try {
+    logger.info('get locations anonymous');
     const deviceId = req.headers.device_id as string;
     const results = await locationsService.getLocationsAnonymous(deviceId);
     console.log('🚀 ~ file: boards.controllers.ts:16 ~ results:', results);
@@ -94,6 +97,7 @@ export const getBoardsByLocationIdController = async (
   next: NextFunction,
 ) => {
   try {
+    logger.info('get boards by location id');
     const id = req.query.locationId as string;
     const results = await locationsService.getBoardsByLocationId(parseInt(id, 10));
     console.log('🚀 ~ file: boards.controllers.ts:16 ~ results:', results);
@@ -108,6 +112,7 @@ export const getLocationsAnonymousByIdController = async (
   res: Response,
   next: NextFunction,
 ) => {
+  logger.info('get location anonymous by id');
   try {
     const id = req.params.id;
     const results = await locationsService.getLocationsAnonymousById(parseInt(id, 10));
@@ -120,6 +125,7 @@ export const getLocationsAnonymousByIdController = async (
 
 export const getLocationManageByUserIdController = async (req: any, res: Response, next: NextFunction) => {
   try {
+    logger.info('get list location manage by user id');
     const userId = req.decodedAuthorization.userId;
     const userType = req.decodedAuthorization.userType;
     const limit = parseInt(req.query.limit as string);
@@ -156,6 +162,7 @@ export const getLocationManageByUserIdController = async (req: any, res: Respons
 
 export const getLocationList = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    logger.info('get list location');
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
@@ -188,6 +195,7 @@ export const createLocation = async (req: Request, res: Response, next: NextFunc
 
 export const updateLocation = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    logger.info('update location');
     const images = req.files as Express.Multer.File[];
     const result = await locationsService.updateLocation(parseInt(req.params.id), req.body as LocationReqBody, images);
     res.json(ApiResponse.success(result));
@@ -198,6 +206,7 @@ export const updateLocation = async (req: Request, res: Response, next: NextFunc
 
 export const deleteLocation = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    logger.info('delete location');
     const result = await locationsService.deleteLocation(parseInt(req.params.id));
     res.json(ApiResponse.success(result));
   } catch (error) {

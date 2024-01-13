@@ -9,6 +9,7 @@ import { JsonWebTokenError } from 'jsonwebtoken';
 import { FindOptions } from 'typeorm';
 import { FindUserOptions } from '../models/requets/user.requests';
 import { verifyAccessToken } from '../utils/common.util';
+import { logger } from '../utils/logging.util';
 
 // export const validateLogin = (req: Request, res: Response, next: NextFunction) => {
 //   const { username, password } = req.body;
@@ -62,6 +63,7 @@ export const registerValidator = validate(
           const findOptions: FindUserOptions = { email };
           const isEmailExist = await usersServices.findUserByOptions(findOptions);
           if (isEmailExist) {
+            logger.error('Email address already in use');
             throw new Error('Email address already in use');
           }
           return true;

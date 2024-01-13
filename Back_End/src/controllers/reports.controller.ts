@@ -11,10 +11,10 @@ import { sendEmail } from '../utils/mailing.util';
 import { ReportStatus } from '../constants/enum';
 import boardsServices from '../services/boards.services';
 import { sendMessageFirebase } from '../utils/firebase.util';
+import { logger } from '../utils/logging.util';
 
 export const createReport = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('report', req.body.reportType);
     const deviceId = req.headers.device_id as string;
     const images = req.files as Express.Multer.File[];
     const result = await reportsServices.createReport(req.body as ReportReqBody, images, deviceId);
@@ -31,6 +31,7 @@ export const createReport = async (req: Request, res: Response, next: NextFuncti
         sendMessageFirebase(fcmToken, title, body);
       }
     }
+    logger.info(`created report`);
     res.json(ApiResponse.success(result, 'success'));
   } catch (error) {
     console.log(error);
