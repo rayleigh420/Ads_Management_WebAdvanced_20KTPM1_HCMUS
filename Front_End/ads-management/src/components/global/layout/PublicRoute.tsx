@@ -16,5 +16,9 @@ export default function PublicRoute() {
     }
   }, [auth]);
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+    </>
+  );
 }

@@ -1,5 +1,5 @@
+export { default as AdminRequiredEditPage } from './admin/ads-require-edit/AdminRequiredEditPage';
 export { default as WardBoardListPage } from './admin/ward/ward-board-list/WardBoardListPage';
-export { default as AdsRequiredEditPage } from './ads-require-edit/AdsRequiredEditPage';
 export { default as AdDetailForm } from './form/AdDetailForm';
 export { default as CompanyDetailForm } from './form/CompanyDetailForm';
 export { default as ReportFormModal } from './form/ReportForm';

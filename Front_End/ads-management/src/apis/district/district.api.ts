@@ -1,7 +1,8 @@
 import { api } from '@/utils/config/http';
+import { PagingREQ } from '../report/report.api';
 
-export const getDistrictApi = async () => {
-  return api.get<any>('/admins/districts');
+export const getDistrictApi = async (params: PagingREQ) => {
+  return api.get<any>('/admins/districts', { params });
 };
 
 export const createDistrictApi = async (body: { name: string }) => {

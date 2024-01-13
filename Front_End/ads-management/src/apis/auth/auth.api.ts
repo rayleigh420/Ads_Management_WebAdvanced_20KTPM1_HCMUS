@@ -11,3 +11,11 @@ type LoginRESP = {
 export const loginApi = async (data: LoginFormData) => {
   return api.post<BaseResponse<LoginRESP>>('/users/login', data);
 };
+
+export const forgotPasswordApi = async (data: LoginFormData) => {
+  return api.post<any>('/users/forgot', data);
+};
+
+export const changePasswordApi = async (data: { newPassword: string }) => {
+  return api.post<any>('/users/change-password', data);
+};

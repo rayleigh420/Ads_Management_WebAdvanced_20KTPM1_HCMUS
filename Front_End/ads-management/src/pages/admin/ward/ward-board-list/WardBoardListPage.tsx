@@ -76,7 +76,7 @@ export default function WardBoardListPage() {
     placeholderData: keepPreviousData,
   });
 
-  const handleLicense = (data: String) => {
+  const handleLicense = (data: string) => {
     setIdBoard(data);
     setModal1Open(true);
   };
@@ -89,7 +89,7 @@ export default function WardBoardListPage() {
 
       <CustomTableCore<AdsManagementPageColumns>
         columns={columnsAdsLocationPage(handleLicense, handleEdit)}
-        data={adminAds.data?.items!}
+        data={adminAds.data?.items as any}
         paging={adminAds.data?.pageInfo}
         onPageNumberChange={handlePageChange}
       />

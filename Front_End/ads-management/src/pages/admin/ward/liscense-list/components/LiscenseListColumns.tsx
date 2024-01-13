@@ -5,7 +5,7 @@ import { DeleteColumnOutlined } from '@ant-design/icons';
 import { Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 
-export const columnsLicensePage: ColumnsType<{ status: String } & LicenseREQ> = [
+export const columnsLicensePage = (onDelete: any): ColumnsType<{ status: string } & LicenseREQ> => [
   { title: 'Id bảng quảng cáo', dataIndex: 'advertisingBoardId' },
   {
     title: 'Email công ty',
@@ -15,7 +15,7 @@ export const columnsLicensePage: ColumnsType<{ status: String } & LicenseREQ> = 
     title: 'Số điện thoại công ty',
     dataIndex: 'phoneNumberOfCompany',
   },
-  { title: 'Địa chỉ công ty', dataIndex: 'addressOfCompany', width: '20%' },
+  { title: 'Địa chỉ công ty', dataIndex: 'addressOfCompany', width: '15%' },
   {
     title: 'Ngày bắt đầu',
     dataIndex: 'startDate',
@@ -50,7 +50,7 @@ export const columnsLicensePage: ColumnsType<{ status: String } & LicenseREQ> = 
     render: (text, record) => (
       <div className='flex flex-col items-center gap-3 justify-center'>
         {text == 0 && (
-          <div className='flex items-center gap-2 cursor-pointer hover:text-blue-500'>
+          <div className='flex items-center gap-2 cursor-pointer hover:text-blue-500 text-red-600'>
             <DeleteColumnOutlined /> Hủy cấp phép
           </div>
         )}

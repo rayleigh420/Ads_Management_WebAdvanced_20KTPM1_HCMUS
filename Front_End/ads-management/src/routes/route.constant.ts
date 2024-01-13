@@ -6,6 +6,11 @@ export const MY_ROUTE = {
   LOGIN: '/login',
   DISTRICT: 'district',
   DISTRICT_EDIT: 'district/:id',
+  ADVERTISING_TYPE: {
+    self: 'advertising-type',
+    detail: (id: string) => `advertising-type/${id}`,
+  },
+  REQUIRE_EDIT: 'require-list',
   ADS: {
     self: 'ads',
     detail: (id: string) => `ads/${id}`,

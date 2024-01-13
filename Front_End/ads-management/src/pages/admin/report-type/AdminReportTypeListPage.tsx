@@ -1,4 +1,4 @@
-import { deleteDistrictApi, getDistrictApi } from '@/apis/district/district.api';
+import { deleteReportTypeApi, getReportTypeApi } from '@/apis/board/board.api';
 import { ButtonPrimary, CustomTableCore } from '@/components/ui';
 import ModalConfirm from '@/components/ui/button-primary/ModalConfirm';
 import { handleError } from '@/core/helpers/noti-error.helper';
@@ -11,11 +11,11 @@ import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { columnsDistrictManagement } from './components/DistrictManagementColumns';
-import EditDistrictModal from './components/EditDistrictModal';
-export const adminDistrictListKeys = initKeys('admin-district');
+import { columnsReportManagement } from './components/AdvertisingManagementColumns';
+import EditReportModal from './components/EditReportModal';
+export const adminReportTypeListKeys = initKeys('admin-report-type');
 
-export default function AdminDistrictManagementPage() {
+export default function AdminReportTypeListPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
   const [value, setValue] = useState<any>({});
@@ -35,8 +35,8 @@ export default function AdminDistrictManagementPage() {
   });
 
   const { data: dataWards, refetch } = useQuery({
-    queryKey: adminDistrictListKeys.list(filter),
-    queryFn: () => getDistrictApi(filter),
+    queryKey: adminReportTypeListKeys.list(filter),
+    queryFn: () => getReportTypeApi(filter),
     select: (resp) => {
       const items: any = resp.data.data.items || [];
 
@@ -52,12 +52,12 @@ export default function AdminDistrictManagementPage() {
     placeholderData: keepPreviousData,
   });
 
-  const { mutate: muteDeleteDistrict } = useMutation({
-    mutationFn: (id: string) => deleteDistrictApi(id),
+  const { mutate: muteDeleteReport } = useMutation({
+    mutationFn: (id: string) => deleteReportTypeApi(id),
     onSuccess: () => {
       refetch();
       setIsOpenConfirm(false);
-      toast.success('Xóa quận thành công');
+      toast.success('Xóa hình thức quảng cáo thành công');
     },
     onError: handleError,
   });
@@ -89,31 +89,31 @@ export default function AdminDistrictManagementPage() {
   return (
     <div className='w-[960px] mx-auto '>
       <div className='flex justify-between items-center'>
-        <h1 className={`font-bold text-2xl my-0 `}>Quản lý quận</h1>
+        <h1 className={`font-bold text-2xl my-0 `}>Quản lý Loại hình thức quảng cáo</h1>
         <div className='flex justify-end my-3'>
           <ButtonPrimary
             icon={<PlusOutlined />}
-            title='Thêm Quận'
+            title='Thêm hình thức quảng cáo'
             onClick={() => setIsOpen(true)}
           />
         </div>
       </div>
-      <EditDistrictModal isOpen={isOpen} setIsOpen={setIsOpen} initialValue={value} />
+      <EditReportModal isOpen={isOpen} setIsOpen={setIsOpen} initialValue={value} />
 
       <CustomTableCore
-        columns={columnsDistrictManagement(handleDelete, handleEdit, handleNavigate)}
+        columns={columnsReportManagement(handleDelete, handleEdit, handleNavigate)}
         data={dataWards?.items.slice().reverse()}
         paging={dataWards?.pageInfo}
         onPageNumberChange={handlePageChange}
       />
 
       <ModalConfirm
-        message='Bạn có chắc chắn muốn xóa quận này?'
+        message='Bạn có chắc chắn muốn xóa hình thức quảng cáo này không?'
         isOpen={isOpenConfirm}
         setIsOpen={setIsOpenConfirm}
         className='mt-5'
         onConfirm={() => {
-          muteDeleteDistrict(idRef.current!);
+          muteDeleteReport(idRef.current!);
         }}
       />
     </div>

@@ -27,7 +27,7 @@ export type ReportInput = {
   email: string;
   phoneNumber: string;
   select: string;
-  content: Object;
+  content: string;
   file: File;
   reportForm: string;
   locationId?: string;

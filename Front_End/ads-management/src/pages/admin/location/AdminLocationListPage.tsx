@@ -38,14 +38,14 @@ export default function AdminLocationListPage() {
     queryFn: () => getLocationByAdminApi(filter),
     select: (resp) => {
       const items: LocationPageColumns[] = [];
-      for (let i = 0; i < resp.data.data?.items.length; i++) {
+      for (const item of resp.data.data.items) {
         items.push({
-          id: +resp.data.data?.items[i].id!,
-          locationType: +resp.data.data?.items[i].locationType!,
-          advertisingType: resp.data.data?.items[i].advertisingType!,
-          address: resp.data.data?.items[i].address!,
-          isPlanned: resp.data.data?.items[i].isPlanned!,
-          image1: resp.data.data?.items[i].image1!,
+          id: +item.id!,
+          locationType: +item.locationType!,
+          advertisingType: item.advertisingType!,
+          address: item.address!,
+          isPlanned: item.isPlanned!,
+          image1: item.image1!,
         });
       }
       console.log(resp.data.data?.pageNumber);
@@ -82,7 +82,7 @@ export default function AdminLocationListPage() {
 
       <CustomTableCore<LocationPageColumns>
         columns={columnsAdminLocationPage(handleEdit, handleDelete)}
-        data={adminLocationsQuery.data?.items!}
+        data={adminLocationsQuery.data?.items as any}
         paging={adminLocationsQuery.data?.pageInfo}
         onPageNumberChange={handlePageChange}
       />
