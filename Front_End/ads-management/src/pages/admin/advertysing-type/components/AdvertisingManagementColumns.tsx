@@ -6,13 +6,14 @@ export type DistrictManagementColumns = {
   name: number;
 };
 
-export const columnsWardManagement = (
+export const columnsDistrictManagement = (
   onDelete: any,
   onEdit: (data: any) => void,
+  onNavigate: any,
 ): ColumnsType<DistrictManagementColumns> => {
   return [
     { title: 'No.', dataIndex: 'id' },
-    { title: 'Danh sách phường', dataIndex: 'name' },
+    { title: 'Danh sách quận', dataIndex: 'name' },
     {
       title: 'Action',
       dataIndex: 'operation',

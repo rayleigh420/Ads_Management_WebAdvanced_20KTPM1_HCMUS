@@ -4,7 +4,7 @@ import PrivateRoute from '@/components/global/layout/PrivateRoute';
 import PublicRoute from '@/components/global/layout/PublicRoute';
 import { UserType } from '@/core/enums/user-type.enum';
 import {
-  AdsRequiredEditPage,
+  AdminRequiredEditPage,
   CompanyDetailForm,
   HomeOfficerPage,
   HomeResidentPage,
@@ -15,6 +15,7 @@ import {
   RequireLicenseForm,
   WardBoardListPage,
 } from '@/pages';
+import AdminAdvertisingTypeListPage from '@/pages/admin/advertysing-type/AdminAdvertysingTypeListPage';
 import AdminBoardLocationPage from '@/pages/admin/board/AdminBoardLocationPage';
 import AdminDistrictManagementPage from '@/pages/admin/district/AdminDistrictManagementPage';
 import AdminLocationListPage from '@/pages/admin/location/AdminLocationListPage';
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
               // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
-              { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
+              { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdminRequiredEditPage /> },
               { path: MY_ROUTE.ADS.LOCATION, element: <WardBoardListPage /> },
             ],
           },
@@ -65,7 +66,7 @@ const router = createBrowserRouter([
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
               { path: MY_ROUTE.WARD.LICENSE, element: <LicensesListPage /> },
               // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
-              { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
+              { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdminRequiredEditPage /> },
               { path: `${MY_ROUTE.WARD.BOARD}/:id`, element: <WardBoardListPage /> },
               { path: MY_ROUTE.ADS.LOCATION, element: <WardLocationListPage /> },
             ],
@@ -86,7 +87,7 @@ const router = createBrowserRouter([
               { path: MY_ROUTE.REQUIRE_EDIT, element: <RequireEditForm /> },
               { path: MY_ROUTE.COMPANY_DETAIL, element: <CompanyDetailForm /> },
               // { path: MY_ROUTE.DISTRICT, element: <DistrictManagementPage /> },
-              { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdsRequiredEditPage /> },
+              { path: MY_ROUTE.ADS.REQUIRE_EDIT, element: <AdminRequiredEditPage /> },
               { path: MY_ROUTE.ADS.LOCATION, element: <WardBoardListPage /> },
             ],
           },
@@ -103,6 +104,8 @@ const router = createBrowserRouter([
               { path: MY_ROUTE.ADS.LOCATION, element: <AdminLocationListPage /> },
               { path: `${MY_ROUTE.ADS.BOARD}/:id`, element: <AdminBoardLocationPage /> },
               { path: MY_ROUTE.DISTRICT, element: <AdminDistrictManagementPage /> },
+              { path: MY_ROUTE.ADVERTISING_TYPE.self, element: <AdminAdvertisingTypeListPage /> },
+              { path: MY_ROUTE.REQUIRE_EDIT, element: <AdminRequiredEditPage /> },
               {
                 path: `${MY_ROUTE.DISTRICT}/${MY_ROUTE.WARD.self}/:id`,
                 element: <AdminWardPage />,

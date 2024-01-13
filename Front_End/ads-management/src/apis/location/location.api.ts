@@ -50,7 +50,7 @@ export const getLocationByAdminApi = async (params?: ReportOfficerREQ) => {
   return api.get<PagingResponse<LocationRESP>>('/admins/locations', { params });
 };
 
-export const getBoardByIdLocationApi = async (locationId: String) => {
+export const getBoardByIdLocationApi = async (locationId: string) => {
   return api.get<BaseResponse<LocationBoardsRESP>>('/locations/anonymous/boards', {
     params: { locationId },
   });

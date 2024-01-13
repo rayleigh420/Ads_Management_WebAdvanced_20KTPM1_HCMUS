@@ -51,3 +51,9 @@ export const handleReportOfficerApi = async (body: {
 }) => {
   return await api.patch<any>('/reports/officer', body);
 };
+
+export const getReportTypeApi = async (params: ReportREQ & PagingREQ) => {
+  return await api.get<any>('/reports/officer', {
+    params,
+  });
+};

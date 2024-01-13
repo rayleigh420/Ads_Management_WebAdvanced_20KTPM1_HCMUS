@@ -21,6 +21,7 @@ export default function AdminWardPage() {
   const idRef = useRef<string | null>(null);
   const [value, setValue] = useState<any>({});
   const [searchParams] = useSearchParams();
+  const [nameDistrict, setNameDistrict] = useState<string>('');
 
   const { id } = useParams();
   const location = useLocation();
@@ -37,21 +38,32 @@ export default function AdminWardPage() {
     initialPaging,
   });
 
-  const nameDistrict = useMemo(() => location.state?.name || 'Không có dữ liệu', [location]);
+  useEffect(() => {
+    console.log('location', location.state?.name);
+
+    if (location.state?.name) {
+      console.log('location333', location.state?.name);
+
+      setNameDistrict(location.state?.name);
+    }
+  }, [location]);
+  // const nameDistrict = useMemo(() => location.state?.name, [location]);
 
   const { data: dataWards, refetch } = useQuery({
     queryKey: adminWardListKeys.list(filter),
-    queryFn: () => getWardApi(filter),
+    queryFn: () => getWardApi(filter, id as string),
     select: (resp) => {
-      const items = any;
-      for (let i = 0; i < resp.data.data?.items.length; i++) {
-        if (resp.data.data?.items[i].districtId == id) items.push(resp.data.data?.items[i]);
+      const items: any = [];
+      const totalPage = resp.data.data?.totalPages || 1;
+      for (const item of resp.data.data.items) {
+        items.push(item);
       }
+
       const pageInfo: PagingState = resp.data.data
         ? {
             limit: resp.data.data?.pageSize,
             skip: resp.data.data?.pageNumber,
-            total: resp.data.data?.totalRecords,
+            total: items.length !== 0 ? totalPage : 1,
           }
         : {};
       return { items, pageInfo };
@@ -59,6 +71,7 @@ export default function AdminWardPage() {
     placeholderData: keepPreviousData,
   });
 
+  console.log('dataWards', dataWards?.items);
   const { mutate: muteDeleteWard } = useMutation({
     mutationFn: (id: string) => deleteWardApi(id),
     onSuccess: () => {

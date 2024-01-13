@@ -49,9 +49,9 @@ export default function RequireEditForm() {
   }, [location.state]);
 
   const { mutate: muteData } = useMutation({
-    mutationFn: (id: string) => modififyApi(id),
+    mutationFn: (data: any) => modififyApi(data),
     onSuccess: () => {
-      toast.success('Xóa quận thành công');
+      toast.success('Gửi yêu cầu chỉnh sửa thành công');
       navigate(-1);
     },
     onError: handleError,
@@ -59,6 +59,7 @@ export default function RequireEditForm() {
 
   const handleSubmit = async (data: any) => {
     console.log('data', data);
+    data.advertisingBoardId = id;
     muteData(data);
   };
 
@@ -66,7 +67,7 @@ export default function RequireEditForm() {
     <div className='w-full flex justify-center items-center p-6'>
       <div className='w-[800px] m-auto'>
         <h1 className='text-3xl font-bold text-center mb-11'>
-          Yêu cầu chỉnh sửa điểm đặt hoặc bảng quảng cáo
+          Yêu cầu chỉnh sửa điểm đặt và bảng quảng cáo
         </h1>
         <Form
           name='report-form'

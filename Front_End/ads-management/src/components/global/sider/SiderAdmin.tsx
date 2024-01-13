@@ -22,7 +22,12 @@ const routes: {
   children?: { key: string; label: string }[];
 }[] = [
   { key: 'district', label: 'Quản lý quận', icons: 'district' },
-  { key: 'ward', label: 'Quản lý ', icons: 'ward' },
+  { key: MY_ROUTE.ADVERTISING_TYPE.self, label: 'Quản lý hình thức quảng cáo ', icons: 'ward' },
+  {
+    key: MY_ROUTE.REQUIRE_EDIT,
+    label: 'Danh sách chỉnh sửa điểm đặt và bảng quảng cáo ',
+    icons: 'ward',
+  },
   {
     key: MY_ROUTE.ADS.LOCATION,
     label: 'Quản lý điểm đặt quảng cáo',

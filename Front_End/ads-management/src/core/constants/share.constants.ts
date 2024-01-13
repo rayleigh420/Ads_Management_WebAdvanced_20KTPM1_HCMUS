@@ -11,3 +11,13 @@ export const STORAGE = {
 };
 
 export const USER_TYPE_ARRAY = ['admin', 'district', 'ward'];
+
+export const firebaseConfig = {
+  apiKey: 'AIzaSyB146SkpmuXnqOo7FSygytBABS30An7Iss',
+  authDomain: 'web2-289e9.firebaseapp.com',
+  projectId: 'web2-289e9',
+  storageBucket: 'web2-289e9.appspot.com',
+  messagingSenderId: '723598823366',
+  appId: '1:723598823366:web:3cabac208eaca8cdce6cc7',
+  measurementId: 'G-V9Z4RG3BX4',
+};

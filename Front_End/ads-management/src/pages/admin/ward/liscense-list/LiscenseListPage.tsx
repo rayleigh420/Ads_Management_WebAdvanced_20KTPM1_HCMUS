@@ -1,14 +1,16 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
-import { LicenseREQ, getLicenseListApi } from '@/apis/board/board.api';
+import { LicenseREQ, deleteLicenseListApi, getLicenseListApi } from '@/apis/board/board.api';
 import { ButtonPrimary } from '@/components/ui';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
+import { handleError } from '@/core/helpers/noti-error.helper';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
 import { PlusOutlined } from '@ant-design/icons';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { columnsLicensePage } from './components/LiscenseListColumns';
 
 export const adminAdsKey = initKeys('admin-ads');
@@ -32,16 +34,16 @@ export default function LicensesListPage() {
     queryKey: adminAdsKey.list(filter),
     queryFn: () => getLicenseListApi(filter),
     select: (resp) => {
-      const items: ({ status: String } & LicenseREQ)[] = [];
-      for (let i = 0; i < resp.data.data?.items.length; i++) {
+      const items: ({ status: string } & LicenseREQ)[] = [];
+      for (const item of resp.data.data.items) {
         items.push({
-          advertisingBoardId: resp.data.data?.items[i].advertisingBoardId,
-          emailOfCompany: resp.data.data?.items[i].emailOfCompany,
-          phoneNumberOfCompany: resp.data.data?.items[i].phoneNumberOfCompany,
-          addressOfCompany: resp.data.data?.items[i].addressOfCompany,
-          startDate: resp.data.data?.items[i].startDate,
-          endDate: resp.data.data?.items[i].endDate,
-          status: resp.data.data?.items[i].status,
+          advertisingBoardId: item[0]?.advertisingBoardId || 1,
+          emailOfCompany: item.emailOfCompany,
+          phoneNumberOfCompany: item.phoneNumberOfCompany,
+          addressOfCompany: item.addressOfCompany,
+          startDate: item.startDate,
+          endDate: item.endDate,
+          status: item.status,
         });
       }
       const pageInfo: PagingState = resp.data.data
@@ -56,6 +58,19 @@ export default function LicensesListPage() {
     placeholderData: keepPreviousData,
   });
 
+  const { mutate: muteDelete } = useMutation({
+    mutationFn: (id: string) => deleteLicenseListApi(id),
+    onSuccess: () => {
+      adminAds.refetch();
+      toast.success('Hủy cấp phép thành công');
+    },
+    onError: handleError,
+  });
+
+  const handleDelete = (data: any) => {
+    muteDelete(data.advertisingBoardId);
+  };
+
   return (
     <div className='w-[1200px] mx-auto '>
       <div className='flex justify-between items-center'>
@@ -66,8 +81,8 @@ export default function LicensesListPage() {
       </div>
 
       <CustomTableCore
-        columns={columnsLicensePage}
-        data={adminAds.data?.items!}
+        columns={columnsLicensePage(handleDelete)}
+        data={adminAds.data?.items as any}
         paging={adminAds.data?.pageInfo}
         onPageNumberChange={handlePageChange}
       />
