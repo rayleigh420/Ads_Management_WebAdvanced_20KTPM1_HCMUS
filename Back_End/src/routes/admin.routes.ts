@@ -25,15 +25,20 @@ import {
   approveLicense,
   cancelLicense,
   createAdsBoardType,
+  createReportForm,
   deleteAdsBoardType,
+  deleteReportForm,
   getAdsBoardTypeById,
   getListAdsBoardType,
   getListModificationRequest,
+  getListReportForm,
   getListReportInDistrictOfBoard,
   getListReportInDistrictofLocation,
   getListReportInWardOfBoard,
   getListReportInWardofLocation,
+  getReportFormById,
   updateAdsBoardType,
+  updateReportForm,
 } from '../controllers/admins.controllers';
 import { getLocationList } from '../controllers/locations.controller';
 
@@ -86,4 +91,11 @@ adminRouter.get('/advertising-type/:id', wrapRequestHandler(getAdsBoardTypeById)
 adminRouter.post('/advertising-type', wrapRequestHandler(createAdsBoardType));
 adminRouter.put('/advertising-type/:id', wrapRequestHandler(updateAdsBoardType));
 adminRouter.delete('/advertising-type/:id', wrapRequestHandler(deleteAdsBoardType));
+
+//CRUD report form
+adminRouter.get('/report-form', wrapRequestHandler(getListReportForm));
+adminRouter.get('/report-form/:id', wrapRequestHandler(getReportFormById));
+adminRouter.post('/report-form', wrapRequestHandler(createReportForm));
+adminRouter.put('/report-form/:id', wrapRequestHandler(updateReportForm));
+adminRouter.delete('/report-form/:id', wrapRequestHandler(deleteReportForm));
 export default adminRouter;

@@ -4,6 +4,7 @@ import { AdvertisingType } from '../orm/entities/AdvertisingType';
 import { District } from '../orm/entities/District';
 import { DistrictOfficier } from '../orm/entities/DistrictOfficier';
 import { ModificationRequest } from '../orm/entities/ModificationRequest';
+import { ReportForm } from '../orm/entities/ReportForm';
 import { User } from '../orm/entities/User';
 import { Ward } from '../orm/entities/Ward';
 import { WardOfficier } from '../orm/entities/WardOfficier';
@@ -17,6 +18,7 @@ class AdminService {
   private districtRepository = myDataSource.getRepository(District);
   private wardRepository = myDataSource.getRepository(Ward);
   private advertisingTypeRepository = myDataSource.getRepository(AdvertisingType);
+  private reportFormRepository = myDataSource.getRepository(ReportForm);
 
   public async addOfficerToDistrict({ userId, districtId }: OfficerToDistrict) {
     const user = this.userRepsitory.findOneBy({ id: userId });
@@ -82,6 +84,33 @@ class AdminService {
   }
 
   public async deleteAdsBoardType(id: number) {
+    return await this.advertisingTypeRepository.delete({ id });
+  }
+
+  public async getListReportForm() {
+    const listAdsBoardType = this.reportFormRepository.find();
+    return listAdsBoardType;
+  }
+
+  public async getReportFormById(id: number) {
+    const adsBoardType = await this.reportFormRepository.findOneBy({ id });
+    return adsBoardType;
+  }
+
+  public async createReportForm(name: string) {
+    const adsBoardType = new AdvertisingType();
+    adsBoardType.name = name;
+    return await this.reportFormRepository.save(adsBoardType);
+  }
+
+  public async updateReportForm(id: number, name: string) {
+    console.log(id, name);
+    const adsBoardType = await this.reportFormRepository.findOneBy({ id });
+    adsBoardType.name = name;
+    return await this.reportFormRepository.save(adsBoardType);
+  }
+
+  public async deleteReportForm(id: number) {
     return await this.advertisingTypeRepository.delete({ id });
   }
 }

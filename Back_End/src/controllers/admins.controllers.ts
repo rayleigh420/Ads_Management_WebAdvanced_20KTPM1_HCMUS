@@ -144,3 +144,61 @@ export const createAdsBoardType = async (req: Request, res: Response, next: Next
     next(error);
   }
 };
+
+export const getListReportForm = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const limit = parseInt(req.query.limit as string);
+    const skip = parseInt(req.query.skip as string);
+
+    const results = await adminServices.getListReportForm();
+
+    const count = results.length;
+    let data: any;
+    if (limit === 0 && skip === 0) {
+      data = results;
+    } else {
+      data = results.splice(skip - 1, limit);
+    }
+    const dataPaging = getPagingData({ data, count, limit, skip });
+    return res.json(ApiResponse.success(dataPaging, 'success'));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getReportFormById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await adminServices.getReportFormById(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+export const updateReportForm = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const updateAdsBoardTypeBody = req.body as { name: string };
+    const result = await adminServices.updateReportForm(parseInt(req.params.id), updateAdsBoardTypeBody.name);
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteReportForm = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await adminServices.deleteReportForm(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createReportForm = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const createAdsBoardTypeBody = req.body as { name: string };
+    const result = await adminServices.createReportForm(createAdsBoardTypeBody.name);
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
