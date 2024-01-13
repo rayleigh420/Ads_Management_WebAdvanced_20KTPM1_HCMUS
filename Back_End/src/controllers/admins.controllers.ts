@@ -5,6 +5,8 @@ import { OfficerToDistrict, OfficerToWard } from '../models/requets/admin.reques
 import licenseServices from '../services/license.services';
 import reportsServices from '../services/reports.services';
 import { getPagingData } from '../utils/paging.utils';
+import { MonthlyStat, ReportStatResponse } from '../models/responses/admin.response'; // adjust the path to match the location of the admin.response file
+import { Report } from '../orm/entities/Report';
 
 export const addOfficerToDistrict = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -201,4 +203,78 @@ export const createReportForm = async (req: Request, res: Response, next: NextFu
   } catch (error) {
     next(error);
   }
+};
+
+//statistic
+export const getReportStat = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const getReportStatRequestBody = req.body as { year: number; wardId: number };
+    const wardId = req.params.id ? parseInt(req.params.id) : undefined;
+    const reportList = await reportsServices.getReportForOfficer(undefined, undefined, wardId);
+    const availableYears = [...new Set(reportList.map((r) => r.createdAt!.getFullYear()))] as number[];
+    let targetYear = 0;
+
+    if (getReportStatRequestBody && getReportStatRequestBody.year == null) {
+      targetYear = new Date().getFullYear();
+    }
+
+    const reportStatResponse: ReportStatResponse = {
+      currentYear: targetYear,
+      availableYears: availableYears,
+      monthlyStats:
+        targetYear === 0
+          ? getAggregatedYearlyStats(reportList, availableYears)
+          : getMonthlyStats(reportList, targetYear)
+    };
+
+    res.json(ApiResponse.success(reportStatResponse));
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getMonthlyStats = (listReport: Report[], year: number): MonthlyStat[] => {
+  const monthlyStats: MonthlyStat[] = [];
+  const reportCurrentYear = listReport.filter((r) => r.createdAt!.getFullYear() === year);
+
+  if (!listReport.length) {
+    return monthlyStats;
+  }
+
+  const maxMonth = 12;
+
+  for (let i = 1; i <= maxMonth; i++) {
+    const month = new Date(year, i - 1, 1).toLocaleString('default', { month: 'long' });
+    const numberOfReport = reportCurrentYear.filter((p) => p.createdAt!.getMonth() + 1 === i).length;
+
+    monthlyStats.push({
+      month: month,
+      numberOfReport: numberOfReport,
+    });
+  }
+
+  return monthlyStats;
+};
+
+const getAggregatedYearlyStats = (listReport: Report[], availableYears: number[]): MonthlyStat[] => {
+  const aggregatedYearlyStats: MonthlyStat[] = [];
+
+  for (const year of availableYears) {
+    const monthlyStatsForYear = getMonthlyStats(listReport, year);
+
+    for (const monthlyStat of monthlyStatsForYear) {
+      const existingStat = aggregatedYearlyStats.find((stat) => stat.month === monthlyStat.month);
+
+      if (existingStat) {
+        existingStat.numberOfReport += monthlyStat.numberOfReport;
+      } else {
+        aggregatedYearlyStats.push({
+          month: monthlyStat.month,
+          numberOfReport: monthlyStat.numberOfReport,
+        });
+      }
+    }
+  }
+
+  return aggregatedYearlyStats;
 };

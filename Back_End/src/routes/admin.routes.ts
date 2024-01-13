@@ -37,6 +37,7 @@ import {
   getListReportInWardOfBoard,
   getListReportInWardofLocation,
   getReportFormById,
+  getReportStat,
   updateAdsBoardType,
   updateReportForm,
 } from '../controllers/admins.controllers';
@@ -98,4 +99,8 @@ adminRouter.get('/report-form/:id', wrapRequestHandler(getReportFormById));
 adminRouter.post('/report-form', wrapRequestHandler(createReportForm));
 adminRouter.put('/report-form/:id', wrapRequestHandler(updateReportForm));
 adminRouter.delete('/report-form/:id', wrapRequestHandler(deleteReportForm));
+
+//statistics
+adminRouter.get('/statistic/report/ward/:id', wrapRequestHandler(getReportStat));
+
 export default adminRouter;

@@ -153,6 +153,7 @@ class ReportService {
       return result;
     } else {
       //find all location in ward
+      console.log("all location in ward");
       const locations = await this.advertisingLocationRepository
         .createQueryBuilder('location')
         .leftJoinAndSelect('location.ward', 'ward')
@@ -203,6 +204,17 @@ class ReportService {
       .leftJoinAndSelect('wardOfficer.user', 'user')
       .where('location.id = :locationId', { locationId })
       .getOne();
+
+    console.log('🚀 ~ file: reports.services.ts:84 ~ ReportService ~ getReportAnonymousByDeviceId ~ result:', result);
+    return result;
+  }
+
+  public async getReportByWardId(wardId: number) {
+    const result = await this.reportRepository.createQueryBuilder('report')
+      .leftJoinAndSelect('report.location', 'location')
+      .leftJoinAndSelect('location.ward', 'ward')
+      .where('ward.id = :wardId', { wardId })
+      .getMany();
 
     console.log('🚀 ~ file: reports.services.ts:84 ~ ReportService ~ getReportAnonymousByDeviceId ~ result:', result);
     return result;
