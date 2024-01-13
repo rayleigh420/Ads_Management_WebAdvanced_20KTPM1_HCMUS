@@ -13,7 +13,7 @@ const Header = () => {
       }}
     >
       <Link to='/' className='flex items-center'>
-        <img src={IMAGES.LOGO} alt='kiwi-logo' />
+        <img src={IMAGES.LOGO} alt='lotus-logo' />
       </Link>
 
       <UserMenu />

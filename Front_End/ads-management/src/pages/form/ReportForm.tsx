@@ -64,7 +64,7 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
   const { id } = useParams();
 
   const { mutate: mutateReport } = useMutation({
-    mutationFn: (data: ReportInput) => createReportApi(data),
+    mutationFn: (data: ReportInput) => createReportApi(data, auth.fcmToken),
     onSuccess: (resp) => {
       // save local storage
       getOrSetDeviceId();

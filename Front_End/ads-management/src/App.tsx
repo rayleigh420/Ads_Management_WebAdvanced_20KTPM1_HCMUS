@@ -30,10 +30,10 @@ function App() {
       dispatch(loginSuccess({ type: userType, userToken: Cookies.get(STORAGE.ACCESS_TOKEN) }));
     } else {
       const deviceId = getOrSetDeviceId();
-      console.log('deviceId', deviceId);
-      BaseHTTP.getInstance().config({
-        device_id: deviceId,
-      });
+      if (deviceId)
+        BaseHTTP.getInstance().config({
+          device_id: deviceId,
+        });
     }
   }, []);
 

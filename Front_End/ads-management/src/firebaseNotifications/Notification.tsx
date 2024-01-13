@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
 import { onMessageListener, requestForToken } from './firebase';
 
 const Notification = () => {
   const [notification, setNotification] = useState({ title: '', body: '' });
+  const dispatch = useDispatch();
   const notify = () => toast(<ToastDisplay />);
   function ToastDisplay() {
     return (
@@ -22,7 +24,7 @@ const Notification = () => {
     }
   }, [notification]);
 
-  requestForToken();
+  requestForToken(dispatch);
 
   onMessageListener()
     .then((payload: any) => {

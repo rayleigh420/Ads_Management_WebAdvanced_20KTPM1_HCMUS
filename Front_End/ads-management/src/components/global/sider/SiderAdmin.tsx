@@ -33,6 +33,16 @@ const routes: {
     label: 'Quản lý điểm đặt quảng cáo',
     icons: 'ads',
   },
+  {
+    key: MY_ROUTE.LICENSES,
+    label: 'Danh sách chờ cấp phép',
+    icons: 'ward',
+  },
+  {
+    key: MY_ROUTE.REPORT_CHART,
+    label: 'Báo cáo thống kê',
+    icons: 'ads',
+  },
 ];
 
 export default function SiderMenuAdmin({ collapsed, setCollapsed }: SiderMenuProps) {

@@ -17,12 +17,19 @@ import {
 } from '@/pages';
 import AdminAdvertisingTypeListPage from '@/pages/admin/advertysing-type/AdminAdvertysingTypeListPage';
 import AdminBoardLocationPage from '@/pages/admin/board/AdminBoardLocationPage';
+import AdminReportChart from '@/pages/admin/chart-report/AdminReportChart';
 import AdminDistrictManagementPage from '@/pages/admin/district/AdminDistrictManagementPage';
+import AdminLicensesListPage from '@/pages/admin/liscense-list/AdminLiscenseListPage';
 import AdminLocationListPage from '@/pages/admin/location/AdminLocationListPage';
 import AdminWardPage from '@/pages/admin/ward/AdminWardPage';
 import LicensesListPage from '@/pages/admin/ward/liscense-list/LiscenseListPage';
 import WardLocationListPage from '@/pages/admin/ward/ward-location-list/WardLocationListPage';
 import ReportListPage from '@/pages/wards/ReportListPage';
+// import CityDistrictManagementPage from '@/pages/city/district';
+// import EditDistrict from '@/pages/city/district/[slug]';
+// import CityWardManagementPage from '@/pages/city/ward';
+import CreateAccountDistrict from '@/pages/admin/createAccount/CreateAccountDistrict';
+import CreateAccountWard from '@/pages/admin/createAccount/CreateAccountWard';
 import { createBrowserRouter } from 'react-router-dom';
 import { MY_ROUTE } from './route.constant';
 
@@ -110,6 +117,10 @@ const router = createBrowserRouter([
                 path: `${MY_ROUTE.DISTRICT}/${MY_ROUTE.WARD.self}/:id`,
                 element: <AdminWardPage />,
               },
+              { path: MY_ROUTE.REPORT_CHART, element: <AdminReportChart /> },
+              { path: MY_ROUTE.LICENSES, element: <AdminLicensesListPage /> },
+              { path: MY_ROUTE.ACCOUNT.DISTRICT, element: <CreateAccountDistrict /> },
+              { path: MY_ROUTE.ACCOUNT.WARD, element: <CreateAccountWard /> },
             ],
           },
         ],

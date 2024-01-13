@@ -1,4 +1,6 @@
+import { BoardInput } from '@/pages/form/BoardForm';
 import { api } from '@/utils/config/http';
+import { BaseResponse } from '@/utils/types/response.type';
 import { PagingREQ } from '../report/report.api';
 export type LicenseREQ = {
   advertisingBoardId: string;
@@ -60,4 +62,20 @@ export const deleteReportTypeApi = async (id: string) => {
 //modify
 export const getModifyApi = async (params: PagingREQ) => {
   return api.get<any>('/admins/modification-requests', { params });
+};
+
+export const deleteAdminLicenseListApi = async (id: string) => {
+  return api.get<any>(`admins/cancel-license/${id}`);
+};
+
+export const updateAdminLicenseListApi = async (id: string) => {
+  return api.get<any>(`admins/approve-license/${id}`);
+};
+
+export const createBoardApi = async (body: BoardInput) => {
+  return await api.post<BaseResponse<any>>('//boards', body, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
