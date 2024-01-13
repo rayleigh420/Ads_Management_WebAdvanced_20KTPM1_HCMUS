@@ -32,6 +32,10 @@ export const MY_ROUTE = {
     BOARD_DETAIL: (id: string) => `ward/ads/boards/${id}`,
     LICENSE: 'ward/license',
   },
+  ACCOUNT: {
+    DISTRICT: 'account/district',
+    WARD: 'account/ward',
+  },
 };
 
 export const DEFAULT_ROUTE = MY_ROUTE.HOME;

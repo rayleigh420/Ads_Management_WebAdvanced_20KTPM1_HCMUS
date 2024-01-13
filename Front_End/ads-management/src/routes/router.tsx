@@ -25,6 +25,11 @@ import AdminWardPage from '@/pages/admin/ward/AdminWardPage';
 import LicensesListPage from '@/pages/admin/ward/liscense-list/LiscenseListPage';
 import WardLocationListPage from '@/pages/admin/ward/ward-location-list/WardLocationListPage';
 import ReportListPage from '@/pages/wards/ReportListPage';
+// import CityDistrictManagementPage from '@/pages/city/district';
+// import EditDistrict from '@/pages/city/district/[slug]';
+// import CityWardManagementPage from '@/pages/city/ward';
+import CreateAccountDistrict from '@/pages/admin/createAccount/CreateAccountDistrict';
+import CreateAccountWard from '@/pages/admin/createAccount/CreateAccountWard';
 import { createBrowserRouter } from 'react-router-dom';
 import { MY_ROUTE } from './route.constant';
 
@@ -114,6 +119,8 @@ const router = createBrowserRouter([
               },
               { path: MY_ROUTE.REPORT_CHART, element: <AdminReportChart /> },
               { path: MY_ROUTE.LICENSES, element: <AdminLicensesListPage /> },
+              { path: MY_ROUTE.ACCOUNT.DISTRICT, element: <CreateAccountDistrict /> },
+              { path: MY_ROUTE.ACCOUNT.WARD, element: <CreateAccountWard /> },
             ],
           },
         ],
