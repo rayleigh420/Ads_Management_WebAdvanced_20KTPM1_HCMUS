@@ -6,6 +6,7 @@ import locationsService from '../services/locations.services';
 import usersService from '../services/users.services';
 import { UserType } from '../models/requets/user.requests';
 import boardsServices from '../services/boards.services';
+import { LocationReqBody } from '../models/requets/location.request';
 
 // export const getLocationsByWardIdController = async (
 //   req: any,
@@ -168,6 +169,37 @@ export const getLocationList = async (req: Request, res: Response, next: NextFun
     }
     const dataPaging = getPagingData({ data, count, limit, skip });
     return res.json(ApiResponse.success(dataPaging, 'success'));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createLocation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const newLocation = req.body as LocationReqBody;
+    // const image1 = req.file as Express.Multer.File;
+    const images = req.files as Express.Multer.File[];
+    const result = await locationsService.createLocation(newLocation, images);
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateLocation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const images = req.files as Express.Multer.File[];
+    const result = await locationsService.updateLocation(parseInt(req.params.id), req.body as LocationReqBody, images);
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteLocation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await locationsService.deleteLocation(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);
   }

@@ -43,7 +43,7 @@ class BoardService {
     const imageUrls = await Promise.all(images.map(image => uploadToCloudinary(image)));
 
     // Assuming board has properties image1 and image2 to store the image URLs
-    board.image1 = imageUrls[0].url;
+    board.image1 = imageUrls[0]?.url;
     board.image2 = imageUrls[1]?.url; // Use optional chaining in case there's only one image
 
     return this.boardRepository.save(board);
@@ -65,7 +65,7 @@ class BoardService {
     _board.expireDate = board.expireDate;
     _board.width = board?.width;
     _board.height = board?.height;
-    
+
     return this.boardRepository.save(_board);
   }
 

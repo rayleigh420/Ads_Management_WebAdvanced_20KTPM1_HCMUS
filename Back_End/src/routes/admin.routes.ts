@@ -41,7 +41,7 @@ import {
   updateAdsBoardType,
   updateReportForm,
 } from '../controllers/admins.controllers';
-import { getLocationList } from '../controllers/locations.controller';
+import { createLocation, deleteLocation, getLocationList, updateLocation } from '../controllers/locations.controller';
 import multer from 'multer';
 
 const upload = multer({
@@ -77,6 +77,9 @@ adminRouter.delete('/boards/:id', wrapRequestHandler(deleteBoard));
 
 // location-management
 adminRouter.get('/locations', wrapRequestHandler(getLocationList));
+adminRouter.post('/locations', upload.array('file', 2), wrapRequestHandler(createLocation));
+adminRouter.patch('/locations/:id', upload.array('file', 2), wrapRequestHandler(updateLocation));
+adminRouter.delete('/locations/:id', wrapRequestHandler(deleteLocation));
 
 // Report-management
 adminRouter.get('/location-reports/ward/:id', wrapRequestHandler(getListReportInWardofLocation));
