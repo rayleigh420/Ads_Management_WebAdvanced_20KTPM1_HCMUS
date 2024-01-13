@@ -222,16 +222,16 @@ export const getReportStat = async (req: Request, res: Response, next: NextFunct
   try {
     const getReportStatRequestBody = req.body as { year: number; wardId: number };
     const year = req.query.year ? parseInt(req.query.year as string) : null;
-    console.log("🚀 ~ getReportStat ~ year:", year)
+    console.log('🚀 ~ getReportStat ~ year:', year);
     const wardId = req.params.id ? parseInt(req.params.id) : undefined;
     const reportList = await reportsServices.getReportForOfficer(undefined, undefined, wardId);
+    console.log('🚀 ~ getReportStat ~ reportList:', reportList);
     const availableYears = [...new Set(reportList.map((r) => r.createdAt!.getFullYear()))] as number[];
     let targetYear = 0;
 
-    if (year && year == null) {
+    if (!year) {
       targetYear = new Date().getFullYear();
-    }
-    else{
+    } else {
       targetYear = year;
     }
 
