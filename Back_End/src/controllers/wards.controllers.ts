@@ -9,7 +9,7 @@ export const getListWards = async (req: Request, res: Response, next: NextFuncti
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
-    const results = await wardsServices.getListWards();
+    const results = await wardsServices.findWardByDistrictId(parseInt(req.params.id));
 
     const count = results.length;
     let data: any;

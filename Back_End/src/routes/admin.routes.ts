@@ -36,7 +36,7 @@ const adminRouter = Router();
 adminRouter.use(authorizationAdminValidator);
 
 // Ward-management
-adminRouter.get('/wards', wrapRequestHandler(getListWards));
+adminRouter.get('/wards/:id', wrapRequestHandler(getListWards));
 // adminRouter.get('/wards/:id', wrapRequestHandler(createWard));
 adminRouter.post('/wards', createWardValidator, wrapRequestHandler(createWard));
 adminRouter.put('/wards/:id', updateWardValidator, wrapRequestHandler(updateWard));
