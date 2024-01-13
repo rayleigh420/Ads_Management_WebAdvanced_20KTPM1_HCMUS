@@ -10,12 +10,26 @@ import locationsServices from '../services/locations.services';
 import { sendEmail } from '../utils/mailing.util';
 import { ReportStatus } from '../constants/enum';
 import boardsServices from '../services/boards.services';
+import { sendMessageFirebase } from '../utils/firebase.util';
 
 export const createReport = async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log('report', req.body.reportType);
     const deviceId = req.headers.device_id as string;
     const result = await reportsServices.createReport(req.body as ReportReqBody, req.file, deviceId);
+    console.log('🚀 ~ createReport ~ result:', result);
+    if (result) {
+      if (result.locationId) {
+        console.log('locationIds', result.locationId);
+        const user = await reportsServices.findUserManageByLocationId(+result.locationId);
+        console.log('🚀 ~ createReport ~ user:', user.ward.wardOfficiers[0].user.fcmToken);
+        // const fcmToken = user.ward.wardOfficiers[0].user.fcmToken;
+        const fcmToken = 'cvJx4fmvNmXOUIUGGX_inf:APA91bEIEvEg72bK257VNf1PUEcIpweofp_QWavQtiYQG194H1x4lERxEzNBiFg8KRmwAXC49VsvCvtDz6_38SzECidDIUfPMWZ0ull79SrbYn_dbnGUNq_aLG1TA8mqSSxyK1nfgH1_';
+        const title = 'Báo cáo vi phạm';
+        const body = 'Có báo cáo vi phạm mới';
+        sendMessageFirebase(fcmToken, title, body);
+      }
+    }
     res.json(ApiResponse.success(result, 'success'));
   } catch (error) {
     console.log(error);
@@ -90,6 +104,7 @@ export const updateReportController = async (req: Request, res: Response, next: 
     console.log('🚀 ~ updateReportController ~ result:', result);
     if (result.status === ReportStatus.DONE && result.emailOfReporter) {
       console.log('send mail');
+      sendMessageFirebase(result.deviceId, 'Báo cáo vi phạm', 'Báo cáo của bạn đã được xử lý');
       await sendMailToResidentUpdateReport(result);
     }
     res.json(ApiResponse.success(result, 'success'));

@@ -31,6 +31,8 @@ export const loginValidator = validate(
           const hashedPassword = hashPassword(password);
           const findOptions: FindUserOptions = { email, password: hashedPassword };
           const user = await usersServices.findUserByOptions(findOptions);
+          user.fcmToken = req.body.fcmToken;
+          usersServices.updateUser(user);
           if (!user) {
             throw new ErrorWithStatus({ message: 'email or password is incorrect', status: 401 });
           }

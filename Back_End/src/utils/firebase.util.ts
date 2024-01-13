@@ -1,7 +1,12 @@
 // import admin from "firebase-admin";
 // import { initiallizeApp, applicationDefault } from 'firebase-admin/app'
-
+import * as admin from 'firebase-admin';
 import { getMessaging } from 'firebase-admin/messaging';
+
+// admin.initializeApp({
+//   credential: admin.credential.applicationDefault(),
+//   projectId: 'web2-289e9o'
+// });
 
 export const sendMessageFirebase = (receivedToken: string, title: string, body: string) => {
   const message = {

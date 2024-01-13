@@ -6,7 +6,7 @@ import {
   FindUserOptions,
   LoginReqBody,
   RegisterReqBody,
-  UserType,
+  UserType
 } from '../models/requets/user.requests';
 import { myDataSource } from '../orm/connectDb';
 import { DistrictOfficier } from '../orm/entities/DistrictOfficier';
@@ -59,10 +59,11 @@ class UserService {
     return savedUser;
   }
 
-  async login({ userId, userType }: { userId: number; userType: UserType }) {
+  async login({ userId, userType, fcmToken }: { userId: number; userType: UserType; fcmToken: string }) {
     const [newAccessToken, newRefreshToken] = await this.signAccessAndRefreshToken({
       userId,
       userType,
+      fcmToken
     });
     const { iat, exp } = await this.decodeRefreshToken(newRefreshToken as string);
     const refreshToken = new RefreshToken();
@@ -71,7 +72,7 @@ class UserService {
       userId,
       token: newRefreshToken,
       iat: new Date(iat * 1000),
-      exp: new Date(iat * 1000),
+      exp: new Date(iat * 1000)
     });
 
     await this.refreshTokenRepository.save(refreshToken);
@@ -79,20 +80,20 @@ class UserService {
     return {
       userType,
       newAccessToken,
-      newRefreshToken,
+      newRefreshToken
     };
   }
 
   async logout(refreshToken: string) {
     const result = await this.refreshTokenRepository.delete({ token: refreshToken });
     return {
-      message: USER_MESSAGES.LOGOUT_SUCCESS,
+      message: USER_MESSAGES.LOGOUT_SUCCESS
     };
   }
 
   findUserByEmail = async ({ email }: { email: string }) => {
     return await this.userRepository.findOneBy({
-      email,
+      email
     });
   };
 
@@ -101,21 +102,30 @@ class UserService {
     return await this.userRepository.findOne({ where: [options] });
   };
 
-  signAccessAndRefreshToken = ({ userId, userType }: { userId: number; userType: UserType }) => {
-    return Promise.all([this.signAccessToken({ userId, userType }), this.signRefreshToken({ userId })]);
+  signAccessAndRefreshToken = ({
+    userId,
+    userType,
+    fcmToken
+  }: {
+    userId: number;
+    userType: UserType;
+    fcmToken: string;
+  }) => {
+    return Promise.all([this.signAccessToken({ userId, userType, fcmToken }), this.signRefreshToken({ userId })]);
   };
 
-  private signAccessToken({ userId, userType }: { userId: number; userType: UserType }) {
+  private signAccessToken({ userId, userType, fcmToken }: { userId: number; userType: UserType; fcmToken: string }) {
     return signToken({
       payload: {
         userId,
         userType,
-        token_type: TokenType.AccessToken,
+        fcmToken,
+        token_type: TokenType.AccessToken
       },
       privateKey: envConfig.jwtSecretAccessToken,
       options: {
-        expiresIn: envConfig.accessTokenExpiresIn,
-      },
+        expiresIn: envConfig.accessTokenExpiresIn
+      }
     });
   }
   private signRefreshToken({ userId, exp }: { userId: number; exp?: number }) {
@@ -124,20 +134,20 @@ class UserService {
         payload: {
           userId,
           token_type: TokenType.RefreshToken,
-          exp,
+          exp
         },
-        privateKey: envConfig.jwtSecretRefreshToken,
+        privateKey: envConfig.jwtSecretRefreshToken
       });
     }
     return signToken({
       payload: {
         userId,
-        token_type: TokenType.RefreshToken,
+        token_type: TokenType.RefreshToken
       },
       privateKey: envConfig.jwtSecretRefreshToken,
       options: {
-        expiresIn: envConfig.refreshTokenExpiresIn,
-      },
+        expiresIn: envConfig.refreshTokenExpiresIn
+      }
     });
   }
   private decodeRefreshToken(refreshToken: string) {
@@ -146,13 +156,13 @@ class UserService {
 
   async getWardOfficerByUserId(userId: number) {
     return await this.wardOfficerRepository.findOneBy({
-      userId,
+      userId
     });
   }
 
   async getDistrictOfficerByUserId(userId: number) {
     return await this.districtOfficerRepository.findOneBy({
-      userId,
+      userId
     });
   }
 
@@ -186,6 +196,10 @@ class UserService {
 
       return userSaved;
     }
+  }
+
+  async updateUser(user: User) {
+    return await this.userRepository.save(user);
   }
 }
 

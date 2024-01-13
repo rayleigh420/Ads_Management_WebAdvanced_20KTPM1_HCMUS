@@ -14,33 +14,9 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
   const { user }: any = req;
   const userId = user.id;
   const userType = user.userType;
-  const result = await usersService.login({ userId, userType });
+  const fcmToken = user.fcmToken;
+  const result = await usersService.login({ userId, userType, fcmToken });
   res.json(ApiResponse.success(result, USER_MESSAGES.LOGIN_SUCCESS));
-
-  // return res.status(200).json({
-  //   message: 'Login successfully',
-  //   result
-  // });
-  // res.json({ username: email, password: password });
-  // try {
-  //   const user = await databaseService.users.findOne({ email });
-  //   return Boolean(user);
-  //   if (!user) {
-  //     return res.status(404).json({ message: 'User not found' });
-  //   }
-
-  //   const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-  //   if (!isPasswordCorrect) {
-  //     return res.status(400).json({ message: 'Invalid credentials' });
-  //   }
-
-  //   const token = jwt.sign({ email: user.email, id: user._id }, 'secret', { expiresIn: '1h' });
-
-  //   res.status(200).json({ result: user, token });
-  // } catch (error) {
-  //   res.status(500).json({ message: 'Something went wrong' });
-  // }
 };
 
 export const createAccountController = async (req: Request, res: Response, next: NextFunction) => {

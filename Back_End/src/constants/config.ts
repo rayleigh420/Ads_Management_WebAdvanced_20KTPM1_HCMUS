@@ -32,4 +32,5 @@ export const envConfig = {
   emailUser: process.env.EMAIL_USER as string,
   emailPassword: process.env.EMAIL_PASSWORD as string,
   emailFrom: process.env.EMAIL_FROM as string,
+  googleAppCredential: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 };

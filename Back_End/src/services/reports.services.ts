@@ -112,6 +112,7 @@ class ReportService {
 
       const newLocation = this.advertisingLocationRepository.create({ address, lat, long, wardId: ward.id });
       location = await this.advertisingLocationRepository.save(newLocation);
+      const locationId = location.id;
     }
 
     const report = this.reportRepository.create({
@@ -191,6 +192,20 @@ class ReportService {
 
   public async getReportById(id: number) {
     return await this.reportRepository.findOne({ where: { id } });
+  }
+
+  public async findUserManageByLocationId(locationId: number) {
+    console.log('=====check');
+    const result = await this.advertisingLocationRepository
+      .createQueryBuilder('location')
+      .leftJoinAndSelect('location.ward', 'ward')
+      .leftJoinAndSelect('ward.wardOfficiers', 'wardOfficer')
+      .leftJoinAndSelect('wardOfficer.user', 'user')
+      .where('location.id = :locationId', { locationId })
+      .getOne();
+
+    console.log('🚀 ~ file: reports.services.ts:84 ~ ReportService ~ getReportAnonymousByDeviceId ~ result:', result);
+    return result;
   }
 }
 
