@@ -27,6 +27,9 @@ export class User {
   @Column('int', { name: 'user_type', nullable: true })
   userType: number | null;
 
+  @Column('text', { name: 'fcm_token', nullable: true })
+  fcmToken: string | null;
+
   @OneToMany(() => DepartmentOfficier, (departmentOfficier) => departmentOfficier.user)
   departmentOfficiers: DepartmentOfficier[];
 
