@@ -81,3 +81,14 @@ export const forgotPasword = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
+
+export const changePassword = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.decodedAuthorization?.userId as number;
+    const changePasswordBody = req.body as { newPassword: string };
+    const result = await usersService.changePassword(changePasswordBody.newPassword, userId);
+    res.json(ApiResponse.success(result, USER_MESSAGES.CHANGE_PASSWORD_SUCCESS));
+  } catch (error) {
+    next(error);
+  }
+};

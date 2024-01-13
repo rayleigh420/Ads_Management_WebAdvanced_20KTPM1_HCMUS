@@ -107,74 +107,15 @@ export const forgotPasswordValidator = validate(
   }),
 );
 
-// export const refreshTokenValidator = validate(
-//   checkSchema(
-//     {
-//       refreshToken: {
-//         notEmpty: {
-//           errorMessage: 'Refresh token is required'
-//         },
-//         custom: {
-//           options: async (value: string, { req }) => {
-//             try {
-//               const [decodedRefreshToken, refreshToken] = await Promise.all([
-//                 verifyToken(value),
-//                 databaseService.refreshTokens.findOne({ token: value })
-//               ]);
-//               if (!refreshToken) {
-//                 throw new ErrorWithStatus({ message: 'Refresh token is invalid or not exist', status: 401 });
-//               }
-//               req.decodedRefreshToken = decodedRefreshToken;
-
-//               console.log('🚀 ~ file: users.middlewares.ts:139 ~ options: ~ decodedRefreshToken:', decodedRefreshToken);
-//               return true;
-//             } catch (error) {
-//               if (error instanceof JsonWebTokenError) {
-//                 throw new ErrorWithStatus({ message: 'Refresh token is invalid', status: 401 });
-//               }
-//               throw error;
-//               // throw new ErrorWithStatus({ message: 'Refresh token is invalid', status: 401 });
-//             }
-//           }
-//         }
-//       }
-//     },
-//     ['body']
-//   )
-// );
-
-// export const emailVerifyTokenValidator = validate(
-//   checkSchema(
-//     {
-//       refreshToken: {
-//         notEmpty: {
-//           errorMessage: 'Refresh token is required'
-//         },
-//         custom: {
-//           options: async (value: string, { req }) => {
-//             try {
-//               const [decodedRefreshToken, refreshToken] = await Promise.all([
-//                 verifyToken(value),
-//                 databaseService.refreshTokens.findOne({ token: value })
-//               ]);
-//               if (!refreshToken) {
-//                 throw new ErrorWithStatus({ message: 'Refresh token is invalid or not exist', status: 401 });
-//               }
-//               req.decodedRefreshToken = decodedRefreshToken;
-
-//               console.log('🚀 ~ file: users.middlewares.ts:139 ~ options: ~ decodedRefreshToken:', decodedRefreshToken);
-//               return true;
-//             } catch (error) {
-//               if (error instanceof JsonWebTokenError) {
-//                 throw new ErrorWithStatus({ message: 'Refresh token is invalid', status: 401 });
-//               }
-//               throw error;
-//               // throw new ErrorWithStatus({ message: 'Refresh token is invalid', status: 401 });
-//             }
-//           }
-//         }
-//       }
-//     },
-//     ['body']
-//   )
-// );
+export const changePasswordValidator = validate(
+  checkSchema(
+    {
+      newPassword: {
+        notEmpty: true,
+        isString: true,
+        errorMessage: 'Invalid password',
+      },
+    },
+    ['body'],
+  ),
+);

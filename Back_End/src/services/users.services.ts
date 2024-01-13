@@ -173,6 +173,20 @@ class UserService {
       return userSaved;
     }
   }
+
+  async changePassword(newPassword: string, userId: number) {
+    const user = await this.userRepository.findOneBy({ id: userId });
+
+    if (user) {
+      // Hash new password
+      const hashedPassword = hashPassword(newPassword);
+      // Update password in database
+      user.password = hashedPassword;
+      const userSaved = this.userRepository.save(user);
+
+      return userSaved;
+    }
+  }
 }
 
 export default new UserService();
