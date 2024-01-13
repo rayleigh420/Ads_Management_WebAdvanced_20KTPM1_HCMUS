@@ -18,6 +18,14 @@ class ModificationService {
     // modification_request = { ...modificationRequest, status: 0 };
     return await this.modificationRepository.save(newModification);
   }
+
+  public async approveModificationRequest(id: number, status: number) {
+    const modificationRequest = await this.modificationRepository.findOneBy({ id });
+    if (modificationRequest) {
+      modificationRequest.status = status;
+      this.modificationRepository.save(modificationRequest);
+    }
+  }
 }
 
 export default new ModificationService();

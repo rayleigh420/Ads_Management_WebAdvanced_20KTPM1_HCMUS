@@ -7,6 +7,8 @@ import reportsServices from '../services/reports.services';
 import { getPagingData } from '../utils/paging.utils';
 import { MonthlyStat, ReportStatResponse } from '../models/responses/admin.response'; // adjust the path to match the location of the admin.response file
 import { Report } from '../orm/entities/Report';
+import modificationsServices from '../services/modifications.services';
+import { ModificationRequestStatus } from '../constants/enum';
 
 export const addOfficerToDistrict = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -294,4 +296,22 @@ const getAggregatedYearlyStats = (listReport: Report[], availableYears: number[]
   }
 
   return aggregatedYearlyStats;
+};
+
+export const approveModificationRequest = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await modificationsServices.approveModificationRequest(parseInt(req.params.id), ModificationRequestStatus.APPROVED);
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelModificationRequest = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await modificationsServices.approveModificationRequest(parseInt(req.params.id), ModificationRequestStatus.REJECTED);
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
 };

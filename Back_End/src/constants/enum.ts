@@ -61,3 +61,9 @@ export enum ReportStatus {
   IN_PROCESS = 0,
   DONE = 1,
 }
+
+export enum ModificationRequestStatus {
+  PENDING = 0,
+  APPROVED = 1,
+  REJECTED = 2,
+}

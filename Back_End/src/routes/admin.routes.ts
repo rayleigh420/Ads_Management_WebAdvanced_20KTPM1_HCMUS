@@ -23,7 +23,9 @@ import {
   addOfficerToDistrict,
   addOfficerToWard,
   approveLicense,
+  approveModificationRequest,
   cancelLicense,
+  cancelModificationRequest,
   createAdsBoardType,
   createReportForm,
   deleteAdsBoardType,
@@ -97,6 +99,8 @@ adminRouter.delete('/cancel-license/:id', wrapRequestHandler(cancelLicense));
 
 // Modification-management
 adminRouter.get('/modification-requests', wrapRequestHandler(getListModificationRequest));
+adminRouter.get('/approve-modification-requests/:id', wrapRequestHandler(approveModificationRequest));
+adminRouter.get('/cancel-modification-requests/:id', wrapRequestHandler(cancelModificationRequest));
 
 //crud advertising type
 adminRouter.get('/advertising-type', wrapRequestHandler(getListAdsBoardType));
