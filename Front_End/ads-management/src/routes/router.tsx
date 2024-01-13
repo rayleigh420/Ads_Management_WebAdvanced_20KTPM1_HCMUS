@@ -17,7 +17,9 @@ import {
 } from '@/pages';
 import AdminAdvertisingTypeListPage from '@/pages/admin/advertysing-type/AdminAdvertysingTypeListPage';
 import AdminBoardLocationPage from '@/pages/admin/board/AdminBoardLocationPage';
+import AdminReportChart from '@/pages/admin/chart-report/AdminReportChart';
 import AdminDistrictManagementPage from '@/pages/admin/district/AdminDistrictManagementPage';
+import AdminLicensesListPage from '@/pages/admin/liscense-list/AdminLiscenseListPage';
 import AdminLocationListPage from '@/pages/admin/location/AdminLocationListPage';
 import AdminWardPage from '@/pages/admin/ward/AdminWardPage';
 import LicensesListPage from '@/pages/admin/ward/liscense-list/LiscenseListPage';
@@ -110,6 +112,8 @@ const router = createBrowserRouter([
                 path: `${MY_ROUTE.DISTRICT}/${MY_ROUTE.WARD.self}/:id`,
                 element: <AdminWardPage />,
               },
+              { path: MY_ROUTE.REPORT_CHART, element: <AdminReportChart /> },
+              { path: MY_ROUTE.LICENSES, element: <AdminLicensesListPage /> },
             ],
           },
         ],

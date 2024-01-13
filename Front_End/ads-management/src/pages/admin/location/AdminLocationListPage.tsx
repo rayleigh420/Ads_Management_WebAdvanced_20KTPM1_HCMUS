@@ -76,7 +76,7 @@ export default function AdminLocationListPage() {
       <div className='flex justify-between items-center'>
         <h1 className={`font-bold text-2xl my-0 `}>Quản lý các điểm đặt quảng cáo</h1>
         <div className='flex justify-end my-3'>
-          <ButtonPrimary icon={<PlusOutlined />} title='Thêm quảng cáo' />
+          <ButtonPrimary icon={<PlusOutlined />} title='Thêm điểm đặt quảng cáo' />
         </div>
       </div>
 

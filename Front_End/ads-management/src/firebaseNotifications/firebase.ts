@@ -1,6 +1,8 @@
 // Firebase Cloud Messaging Configuration File.
 // Read more at https://firebase.google.com/docs/cloud-messaging/js/client && https://firebase.google.com/docs/cloud-messaging/js/receive
 
+import { updateFcmToken } from '@/store/auth/auth.slice';
+import { getOrSetDeviceId } from '@/utils/config/diviceId';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 export const firebaseConfig = {
@@ -19,14 +21,16 @@ initializeApp(firebaseConfig);
 
 const messaging = getMessaging();
 
-export const requestForToken = () => {
+export const requestForToken = (dispatch: any) => {
   return getToken(messaging, {
     vapidKey:
       'BDygqSlE9hkRG09R2oUTVLUfUFqUoP9r2utgrhJG87DFiWNRuwiQTf_MoP9HZXgJiI0WbmWvpJGTB9DwPV-P9MA',
   })
     .then((currentToken) => {
       if (currentToken) {
+        dispatch(updateFcmToken({ fcmToken: currentToken }));
         console.log('current token for client: ', currentToken);
+        getOrSetDeviceId(currentToken);
         // Perform any other neccessary action with the token
       } else {
         // Show permission request UI

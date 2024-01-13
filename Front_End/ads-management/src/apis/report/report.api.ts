@@ -14,8 +14,8 @@ export type PagingREQ = {
   skip?: number;
 };
 
-export const createReportApi = async (body: ReportInput) => {
-  const id = getOrSetDeviceId();
+export const createReportApi = async (body: ReportInput, id?: string) => {
+  if (!id) id = getOrSetDeviceId();
   return await api.post<BaseResponse<ReportRESP>>('/reports/anonymous', body, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -56,4 +56,8 @@ export const getReportTypeApi = async (params: ReportREQ & PagingREQ) => {
   return await api.get<any>('/reports/officer', {
     params,
   });
+};
+
+export const getAllReportApi = async (body: any) => {
+  return api.get<any>(`/admins/statistic/report/ward/${body.id}`, { params: { year: body.year } });
 };

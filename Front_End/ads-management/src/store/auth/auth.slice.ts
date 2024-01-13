@@ -7,6 +7,7 @@ type AuthState = {
   userToken: string | null;
   isLogin?: boolean;
   type: UserType;
+  fcmToken?: string;
 };
 
 // type LoginSuccessPayload = {
@@ -23,6 +24,9 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    updateFcmToken: (state, action) => {
+      state.fcmToken = action.payload.fcmToken;
+    },
     loginSuccess: (state, action) => {
       state.userToken = action.payload.userToken;
       state.isLogin = true;
@@ -38,6 +42,6 @@ const authSlice = createSlice({
     },
   },
 });
-export const { loginSuccess, logoutSuccess } = authSlice.actions;
+export const { loginSuccess, logoutSuccess, updateFcmToken } = authSlice.actions;
 
 export default authSlice.reducer;

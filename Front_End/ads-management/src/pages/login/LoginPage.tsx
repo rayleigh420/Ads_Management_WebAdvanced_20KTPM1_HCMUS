@@ -3,13 +3,14 @@ import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
 import { STORAGE, USER_TYPE_ARRAY } from '@/core/constants/share.constants';
 import { UserType } from '@/core/enums/user-type.enum';
 import { getEnum } from '@/core/parser/enum.parser';
+import { RootState } from '@/store';
 import { loginSuccess } from '@/store/auth/auth.slice';
 import { BaseHTTP } from '@/utils/config/http';
 import Icon from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Form } from 'antd';
 import Cookie from 'js-cookie';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export type LoginFormData = {
@@ -21,41 +22,45 @@ export default function LoginPage() {
   const [form] = Form.useForm<LoginFormData>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const auth = useSelector((state: RootState) => state.auth);
 
   const { mutate: mutateLogin } = useMutation({
-    mutationFn: (data: LoginFormData) => loginApi(data),
+    mutationFn: (data: any) => loginApi(data),
     onSuccess: (resp) => {
-      Cookie.set(STORAGE.ACCESS_TOKEN, resp.data.data?.newAccessToken!, {
-        path: '/',
-      });
-      Cookie.set(STORAGE.ACCESS_TOKEN, resp.data.data?.newAccessToken!, {
-        path: '/',
-      });
-      Cookie.set(
-        STORAGE.USER_TYPE,
-        getEnum<UserType>(USER_TYPE_ARRAY[resp.data.data?.userType!], UserType) ||
-          UserType.resident,
-        {
+      if (resp.data.data) {
+        Cookie.set(STORAGE.ACCESS_TOKEN, resp.data.data.newAccessToken!, {
           path: '/',
-        },
-      );
-      BaseHTTP.getInstance().config({
-        accessToken: resp.data.data?.newAccessToken!,
-      });
-
-      dispatch(
-        loginSuccess({
-          userToken: resp.data.data?.newAccessToken!,
-          type:
-            getEnum<UserType>(USER_TYPE_ARRAY[resp.data.data?.userType!], UserType) ||
+        });
+        Cookie.set(STORAGE.REFRESH_TOKEN, resp.data.data.newRefreshToken!, {
+          path: '/',
+        });
+        Cookie.set(
+          STORAGE.USER_TYPE,
+          getEnum<UserType>(USER_TYPE_ARRAY[resp.data.data.userType!], UserType) ||
             UserType.resident,
-        }),
-      );
-      navigate('/');
+          {
+            path: '/',
+          },
+        );
+        BaseHTTP.getInstance().config({
+          accessToken: resp.data.data.newAccessToken!,
+        });
+
+        dispatch(
+          loginSuccess({
+            userToken: resp.data.data.newAccessToken!,
+            type:
+              getEnum<UserType>(USER_TYPE_ARRAY[resp.data.data.userType!], UserType) ||
+              UserType.resident,
+          }),
+        );
+        navigate('/');
+      }
     },
   });
 
-  const handleSubmit = (e: LoginFormData) => {
+  const handleSubmit = (e: any) => {
+    e.fcmToken = auth.fcmToken;
     mutateLogin(e);
   };
 

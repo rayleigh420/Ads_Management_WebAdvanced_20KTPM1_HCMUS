@@ -1,10 +1,13 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
 import { getBoardByAdminApi } from '@/apis/location/location.api';
+import { ButtonPrimary } from '@/components/ui';
 import ModalConfirm from '@/components/ui/button-primary/ModalConfirm';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
+import BoardFormModal from '@/pages/form/BoardForm';
+import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -88,11 +91,16 @@ export default function AdminBoardLocationPage() {
         <h1 className={`font-bold text-2xl my-0 `}>
           Quản lý các bảng quảng cáo của location id: {id}
         </h1>
+        <ButtonPrimary
+          icon={<PlusOutlined />}
+          title='Thêm quảng cáo'
+          onClick={() => setModal1Open(true)}
+        />
       </div>
 
       <CustomTableCore<AdminBoardLocationColumns>
         columns={columnsAdminLocationPage(handleEdit, handleDelete)}
-        data={adminAds.data?.items!}
+        data={adminAds.data?.items || []}
         paging={adminAds.data?.pageInfo}
         onPageNumberChange={handlePageChange}
       />
@@ -105,6 +113,7 @@ export default function AdminBoardLocationPage() {
           // muteDeleteWard(idRef.current!);
         }}
       />
+      <BoardFormModal isOpen={modal1Open} setIsOpen={setModal1Open} locationId={id as string} />
     </div>
   );
 }

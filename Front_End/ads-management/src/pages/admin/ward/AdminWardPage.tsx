@@ -42,8 +42,6 @@ export default function AdminWardPage() {
     console.log('location', location.state?.name);
 
     if (location.state?.name) {
-      console.log('location333', location.state?.name);
-
       setNameDistrict(location.state?.name);
     }
   }, [location]);
