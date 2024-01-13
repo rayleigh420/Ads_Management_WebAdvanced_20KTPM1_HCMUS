@@ -15,7 +15,7 @@ import { getBoardByIdController } from '../controllers/boards.controllers'
 const reportsRouter = Router()
 
 // anonymous
-reportsRouter.get('/:id', wrapRequestHandler(getReportByIdController))
+// reportsRouter.get('/:id', wrapRequestHandler(getReportByIdController))
 reportsRouter.get('/anonymous', wrapRequestHandler(getReportAnonymousByConditionController))
 
 const upload = multer({
