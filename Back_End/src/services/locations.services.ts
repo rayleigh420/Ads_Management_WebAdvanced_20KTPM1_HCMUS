@@ -72,12 +72,12 @@ class LocationService {
       .leftJoinAndSelect('location.advertisingBoards', 'boards')
       .getMany();
 
-    const result = locations.filter((location) => {
-      const hasReportWithDeviceId = location.reports.some((report) => report.deviceId === deviceId);
-      return hasReportWithDeviceId || location.advertisingBoards.length > 0;
-    });
+    // const result = locations.filter((location) => {
+    //   const hasReportWithDeviceId = location.reports.some((report) => report.deviceId === deviceId);
+    //   return hasReportWithDeviceId || location.advertisingBoards.length > 0;
+    // });
 
-    return result;
+    return locations;
   }
 
   public async getLocationsAnonymousById(id: number) {
