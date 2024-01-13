@@ -221,13 +221,18 @@ export const createReportForm = async (req: Request, res: Response, next: NextFu
 export const getReportStat = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const getReportStatRequestBody = req.body as { year: number; wardId: number };
+    const year = req.query.year ? parseInt(req.query.year as string) : null;
+    console.log("🚀 ~ getReportStat ~ year:", year)
     const wardId = req.params.id ? parseInt(req.params.id) : undefined;
     const reportList = await reportsServices.getReportForOfficer(undefined, undefined, wardId);
     const availableYears = [...new Set(reportList.map((r) => r.createdAt!.getFullYear()))] as number[];
     let targetYear = 0;
 
-    if (getReportStatRequestBody && getReportStatRequestBody.year == null) {
+    if (year && year == null) {
       targetYear = new Date().getFullYear();
+    }
+    else{
+      targetYear = year;
     }
 
     const reportStatResponse: ReportStatResponse = {
@@ -236,7 +241,7 @@ export const getReportStat = async (req: Request, res: Response, next: NextFunct
       monthlyStats:
         targetYear === 0
           ? getAggregatedYearlyStats(reportList, availableYears)
-          : getMonthlyStats(reportList, targetYear)
+          : getMonthlyStats(reportList, targetYear),
     };
 
     res.json(ApiResponse.success(reportStatResponse));
