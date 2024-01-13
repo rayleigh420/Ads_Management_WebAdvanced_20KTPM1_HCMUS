@@ -1,5 +1,6 @@
 import { OfficerToDistrict, OfficerToWard } from '../models/requets/admin.requests';
 import { myDataSource } from '../orm/connectDb';
+import { AdvertisingType } from '../orm/entities/AdvertisingType';
 import { District } from '../orm/entities/District';
 import { DistrictOfficier } from '../orm/entities/DistrictOfficier';
 import { ModificationRequest } from '../orm/entities/ModificationRequest';
@@ -15,6 +16,7 @@ class AdminService {
   private userRepsitory = myDataSource.getRepository(User);
   private districtRepository = myDataSource.getRepository(District);
   private wardRepository = myDataSource.getRepository(Ward);
+  private advertisingTypeRepository = myDataSource.getRepository(AdvertisingType);
 
   public async addOfficerToDistrict({ userId, districtId }: OfficerToDistrict) {
     const user = this.userRepsitory.findOneBy({ id: userId });
@@ -46,6 +48,41 @@ class AdminService {
       .leftJoinAndSelect('modificationRequest.board', 'board')
       .leftJoinAndSelect('modificationRequest.newLocation', 'newLocation')
       .getMany();
+  }
+
+  public async approveModificationRequest(id: number) {
+    const modificationRequest = await this.modificationRequestRepository.findOneBy({ id });
+    if (modificationRequest) {
+      modificationRequest.status = 1;
+      this.modificationRequestRepository.save(modificationRequest);
+    }
+  }
+
+  public async getListAdsBoardType() {
+    const listAdsBoardType = this.advertisingTypeRepository.find();
+    return listAdsBoardType;
+  }
+
+  public async getAdsBoardTypeById(id: number) {
+    const adsBoardType = await this.advertisingTypeRepository.findOneBy({ id });
+    return adsBoardType;
+  }
+
+  public async createAdsBoardType(name: string) {
+    const adsBoardType = new AdvertisingType();
+    adsBoardType.name = name;
+    return await this.advertisingTypeRepository.save(adsBoardType);
+  }
+
+  public async updateAdsBoardType(id: number, name: string) {
+    console.log(id, name);
+    const adsBoardType = await this.advertisingTypeRepository.findOneBy({ id });
+    adsBoardType.name = name;
+    return await this.advertisingTypeRepository.save(adsBoardType);
+  }
+
+  public async deleteAdsBoardType(id: number) {
+    return await this.advertisingTypeRepository.delete({ id });
   }
 }
 

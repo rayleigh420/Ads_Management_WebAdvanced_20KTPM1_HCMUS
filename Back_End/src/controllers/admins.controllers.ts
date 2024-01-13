@@ -85,3 +85,49 @@ export const getListModificationRequest = async (req: Request, res: Response, ne
     next(error);
   }
 };
+
+export const getListAdsBoardType = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await adminServices.getListAdsBoardType();
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAdsBoardTypeById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await adminServices.getAdsBoardTypeById(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+}
+export const updateAdsBoardType = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const updateAdsBoardTypeBody = req.body as { name: string };
+    const result = await adminServices.updateAdsBoardType(parseInt(req.params.id), updateAdsBoardTypeBody.name);
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const deleteAdsBoardType = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await adminServices.deleteAdsBoardType(parseInt(req.params.id));
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createAdsBoardType = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const createAdsBoardTypeBody = req.body as { name: string };
+    const result = await adminServices.createAdsBoardType(createAdsBoardTypeBody.name);
+    res.json(ApiResponse.success(result));
+  } catch (error) {
+    next(error);
+  }
+}

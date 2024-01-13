@@ -24,11 +24,16 @@ import {
   addOfficerToWard,
   approveLicense,
   cancelLicense,
+  createAdsBoardType,
+  deleteAdsBoardType,
+  getAdsBoardTypeById,
+  getListAdsBoardType,
   getListModificationRequest,
   getListReportInDistrictOfBoard,
   getListReportInDistrictofLocation,
   getListReportInWardOfBoard,
   getListReportInWardofLocation,
+  updateAdsBoardType,
 } from '../controllers/admins.controllers';
 import { getLocationList } from '../controllers/locations.controller';
 
@@ -75,4 +80,10 @@ adminRouter.delete('/cancel-license/:id', wrapRequestHandler(cancelLicense));
 // Modification-management
 adminRouter.get('/modification-requests', wrapRequestHandler(getListModificationRequest));
 
+//crud advertising type
+adminRouter.get('/advertising-type', wrapRequestHandler(getListAdsBoardType));
+adminRouter.get('/advertising-type/:id', wrapRequestHandler(getAdsBoardTypeById));
+adminRouter.post('/advertising-type', wrapRequestHandler(createAdsBoardType));
+adminRouter.put('/advertising-type/:id', wrapRequestHandler(updateAdsBoardType));
+adminRouter.delete('/advertising-type/:id', wrapRequestHandler(deleteAdsBoardType));
 export default adminRouter;
