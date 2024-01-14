@@ -1,4 +1,4 @@
-import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined } from '@ant-design/icons';
+import { EyeTwoTone, LockOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
 import React, { useState } from 'react';
 import './CustomPasswordInput.scss';
@@ -43,7 +43,7 @@ const CustomPasswordInput: React.FC<CustomPasswordInputProps> = ({
           visible ? (
             <EyeTwoTone onClick={togglePasswordVisibility} />
           ) : (
-            <EyeInvisibleOutlined onClick={togglePasswordVisibility} />
+            <EyeTwoTone onClick={togglePasswordVisibility} />
           )
         }
         suffix={<LockOutlined className='site-form-item-icon' />}
