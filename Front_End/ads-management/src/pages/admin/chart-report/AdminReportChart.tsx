@@ -16,13 +16,13 @@ import { useEffect, useState } from 'react';
 export const adminAdsKey = initKeys('admin-ads');
 
 export default function AdminReportChart() {
-  const [idDistrict, setIdDistrict] = useState<any>(null);
-  const [listWard, setListWard] = useState<any[]>([]);
   const [listYear, setListYear] = useState<any[]>([]);
-  const [idWard, setIdWard] = useState<any>(null);
   const [year, setYear] = useState<string | null>('2024');
   const [listReport, setListReport] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
+  const [idDistrict, setIdDistrict] = useState<any>(null);
+  const [idWard, setIdWard] = useState<any>(null);
+  const [listWard, setListWard] = useState<any[]>([]);
   const { data: dataDistrict, refetch } = useQuery({
     queryKey: ['district'],
     queryFn: () =>
@@ -69,8 +69,8 @@ export default function AdminReportChart() {
     onError: handleError,
   });
   useEffect(() => {
-    if (dataDistrict?.items) setIdDistrict(dataDistrict?.items[0].id);
-    muteWard(dataDistrict?.items[0].id);
+    if (dataDistrict?.items) setIdDistrict(dataDistrict?.items[17].id);
+    muteWard(dataDistrict?.items[17].id);
   }, [dataDistrict]);
   useEffect(() => {
     if (idDistrict) muteWard(+idDistrict);

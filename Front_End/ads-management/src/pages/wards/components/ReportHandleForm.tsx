@@ -22,7 +22,7 @@ export default function ReportHandleForm({
     onSuccess: () => {
       //   refetch();
       setIsConfirm(false);
-      toast.success('đã xử lý');
+      toast.success('Đã xử lý');
     },
     onError: handleError,
   });

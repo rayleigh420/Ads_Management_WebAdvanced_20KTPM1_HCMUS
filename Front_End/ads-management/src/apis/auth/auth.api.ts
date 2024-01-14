@@ -19,3 +19,21 @@ export const forgotPasswordApi = async (data: LoginFormData) => {
 export const changePasswordApi = async (data: { newPassword: string }) => {
   return api.post<any>('/users/change-password', data);
 };
+
+export const createAccountWardApi = async (data: {
+  userType: string;
+  email: string;
+  password: string;
+  wardId: number;
+}) => {
+  return api.post<any>('/users/account', data);
+};
+
+export const createAccountDistrictApi = async (data: {
+  userType: string;
+  email: string;
+  password: string;
+  districtId: number;
+}) => {
+  return api.post<any>('/users/account', data);
+};

@@ -25,7 +25,7 @@ const routes: {
   { key: MY_ROUTE.ADVERTISING_TYPE.self, label: 'Quản lý hình thức quảng cáo ', icons: 'ward' },
   {
     key: MY_ROUTE.REQUIRE_EDIT,
-    label: 'Danh sách chỉnh sửa điểm đặt và bảng quảng cáo ',
+    label: 'Yêu cầu chỉnh sửa vị trí',
     icons: 'ward',
   },
   {
@@ -42,6 +42,18 @@ const routes: {
     key: MY_ROUTE.REPORT_CHART,
     label: 'Báo cáo thống kê',
     icons: 'ads',
+  },
+  {
+    key: MY_ROUTE.REPORT_CHART,
+    label: 'Tài khoản',
+    icons: 'ads',
+    children: [
+      { key: MY_ROUTE.ACCOUNT.DISTRICT, label: 'Tạo tài khoản quận' },
+      {
+        key: MY_ROUTE.ACCOUNT.WARD,
+        label: 'Tạo tài khoản phường',
+      },
+    ],
   },
 ];
 

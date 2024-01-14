@@ -43,7 +43,7 @@ export default function LoginPage() {
           },
         );
         BaseHTTP.getInstance().config({
-          accessToken: resp.data.data.newAccessToken!,
+          accessToken: resp.data.data.newAccessToken,
         });
 
         dispatch(
@@ -79,7 +79,7 @@ export default function LoginPage() {
         >
           <CustomTextInput
             name='email'
-            placeholder='Email'
+            placeholder='email'
             rules={[{ required: true, message: 'Please input your username!' }]}
             prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
           />

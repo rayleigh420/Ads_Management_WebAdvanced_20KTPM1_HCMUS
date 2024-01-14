@@ -1,18 +1,77 @@
+import { createAccountWardApi } from '@/apis/auth/auth.api';
+import { getDistrictApi } from '@/apis/district/district.api';
+import { getWardApi } from '@/apis/ward/ward.api';
+import CustomSelectInput from '@/components/ui/form/CustomSelectInput';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
-import { Button, Divider, Form, Input, Select, Space } from 'antd';
-export type Input = {
-  id?: string;
+import { handleError } from '@/core/helpers/noti-error.helper';
+import { PagingState } from '@/core/models/paging.type';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { Button, Divider, Form, Input } from 'antd';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+export type WardInput = {
   email: string;
-  password: string[];
-  districtName?: string;
-  wardName?: string;
-  area: { districtName: any; wardName: any };
+  password: string;
+  wardId?: string;
+  districtId: string;
 };
 
 export default function CreateAccountWard() {
-  const { Option } = Select;
-  const handleSubmit = (values: Input) => {
-    console.log(values);
+  const [form] = Form.useForm<WardInput>();
+
+  const [idDistrict, setIdDistrict] = useState<any>(null);
+  const [listWard, setListWard] = useState<any[]>([]);
+  const { data: dataDistrict, refetch } = useQuery({
+    queryKey: ['district'],
+    queryFn: () =>
+      getDistrictApi({
+        limit: 0,
+        skip: 0,
+      }),
+    select: (resp) => {
+      const items: any = resp.data.data.items || [];
+      const pageInfo: PagingState = resp.data.data
+        ? {
+            limit: resp.data.data?.pageSize,
+            skip: resp.data.data?.pageNumber,
+            total: resp.data.data?.totalRecords,
+          }
+        : {};
+      return { items, pageInfo };
+    },
+    placeholderData: keepPreviousData,
+  });
+
+  const { mutate: muteWard } = useMutation({
+    mutationFn: (id: any) => getWardApi({ skip: 0, limit: 0 }, id),
+    onSuccess: (resp) => {
+      const items: any = [];
+
+      setListWard(resp.data.data.items || []);
+    },
+    onError: handleError,
+  });
+
+  useEffect(() => {
+    if (idDistrict) muteWard(+idDistrict);
+  }, [idDistrict]);
+
+  const { mutate: muteCreate } = useMutation({
+    mutationFn: (data: any) => createAccountWardApi(data),
+    onSuccess: (resp) => {
+      toast.success('Tạo tài khoản thành công');
+      form.resetFields();
+    },
+    onError: handleError,
+  });
+
+  const handleSubmit = (values: WardInput) => {
+    muteCreate({
+      userType: 2,
+      email: values.email,
+      password: values.password,
+      wardId: values.wardId,
+    });
   };
   return (
     <div className='w-full '>
@@ -23,12 +82,13 @@ export default function CreateAccountWard() {
         <Form
           name='report-form'
           onFinish={handleSubmit}
+          form={form}
           autoComplete='off'
           colon={false}
           labelAlign='left'
           className='mt-11 flex justify-center flex-col gap-5'
         >
-          <CustomTextInput<Input>
+          <CustomTextInput<WardInput>
             name='email'
             label='Email'
             rules={[{ required: true, message: 'Please input email!' }, { type: 'email' }]}
@@ -44,34 +104,31 @@ export default function CreateAccountWard() {
             <Input type='password' placeholder='Password' className='h-[39px]' />
           </Form.Item>
 
-          <Form.Item labelCol={{ span: 24 }} label='Management area' wrapperCol={{ span: 24 }}>
-            <Space.Compact>
-              <Form.Item
-                name={['area', 'district']}
-                rules={[{ required: true, message: 'District is required' }]}
-                noStyle
-              >
-                <Select
-                  placeholder='Select district'
-                  className='h-[39px]'
-                  style={{ width: '500px' }}
-                >
-                  <Option value='Quận 1'>Quận 1</Option>
-                  <Option value='Quận 2'>Quận 2</Option>
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name={['area', 'ward']}
-                noStyle
-                rules={[{ required: true, message: 'Ward is required' }]}
-              >
-                <Select placeholder='Select ward' className='h-[39px]' style={{ width: '300px' }}>
-                  <Option value='Phường 1'>Phường 1</Option>
-                  <Option value='Phường 2'>Phường 2</Option>
-                </Select>
-              </Form.Item>
-            </Space.Compact>
-          </Form.Item>
+          <div className='flex justify-between gap-5'>
+            <CustomSelectInput<WardInput>
+              name='districtId'
+              label='Chọn quận'
+              classNameForm='w-full'
+              onChange={(e) => {
+                setIdDistrict(e);
+              }}
+              rules={[{ required: true, message: 'Please select your report type!' }]}
+              options={dataDistrict?.items?.map((item: any) => ({
+                value: item.id,
+                label: item.name,
+              }))}
+            />
+            <CustomSelectInput<WardInput>
+              name='wardId'
+              label='Chọn phường'
+              classNameForm='w-full'
+              rules={[{ required: true, message: 'Please select your report type!' }]}
+              options={listWard?.map((item: any) => ({
+                value: item.id,
+                label: item.name,
+              }))}
+            />
+          </div>
           <Form.Item>
             <Button type='primary' htmlType='submit'>
               Submit

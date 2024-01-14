@@ -19,6 +19,7 @@ export type AdvertisingBoard = {
   boardType: number;
   image1: string;
   expireDate: string;
+  reports?: any[];
   width: number;
   height: number;
   image2: string;
