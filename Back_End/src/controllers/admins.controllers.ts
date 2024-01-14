@@ -10,6 +10,7 @@ import { Report } from '../orm/entities/Report';
 import modificationsServices from '../services/modifications.services';
 import { ModificationRequestStatus } from '../constants/enum';
 import { logger } from '../utils/logging.util';
+import { sendMessageFirebase } from '../utils/firebase.util';
 
 export const addOfficerToDistrict = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -312,6 +313,9 @@ export const approveModificationRequest = async (req: Request, res: Response, ne
       parseInt(req.params.id),
       ModificationRequestStatus.APPROVED,
     );
+    if (result) {
+      sendMessageFirebase('cvJx4fmvNmXOUIUGGX_inf:APA91bEIEvEg72bK257VNf1PUEcIpweofp_QWavQtiYQG194H1x4lERxEzNBiFg8KRmwAXC49VsvCvtDz6_38SzECidDIUfPMWZ0ull79SrbYn_dbnGUNq_aLG1TA8mqSSxyK1nfgH1_', 'Yêu cầu chỉnh sửa', 'Yêu cầu chỉnh sửa đã được chấp nhận');
+    }
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);
