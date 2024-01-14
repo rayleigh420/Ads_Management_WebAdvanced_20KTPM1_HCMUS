@@ -91,14 +91,14 @@ export const getListModificationRequest = async (req: Request, res: Response, ne
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
-    const results = await adminServices.getListModificationRequest();
-
+    let results = await adminServices.getListModificationRequest();
+    results = results.slice().reverse();
     const count = results.length;
     let data: any;
     if (limit === 0 && skip === 0) {
       data = results;
     } else {
-      data = results.splice(skip - 1, limit);
+      data = results.splice((skip - 1) * limit, limit);
     }
     const dataPaging = getPagingData({ data, count, limit, skip });
     return res.json(ApiResponse.success(dataPaging, 'success'));
@@ -114,14 +114,15 @@ export const getListAdsBoardType = async (req: Request, res: Response, next: Nex
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
-    const results = await adminServices.getListAdsBoardType();
+    let results = await adminServices.getListAdsBoardType();
+    results = results.slice().reverse();
 
     const count = results.length;
     let data: any;
     if (limit === 0 && skip === 0) {
       data = results;
     } else {
-      data = results.splice(skip - 1, limit);
+      data = results.splice((skip - 1) * limit, limit);
     }
     const dataPaging = getPagingData({ data, count, limit, skip });
     return res.json(ApiResponse.success(dataPaging, 'success'));
@@ -172,14 +173,15 @@ export const getListReportForm = async (req: Request, res: Response, next: NextF
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
-    const results = await adminServices.getListReportForm();
+    let results = await adminServices.getListReportForm();
+    results = results.slice().reverse();
 
     const count = results.length;
     let data: any;
     if (limit === 0 && skip === 0) {
       data = results;
     } else {
-      data = results.splice(skip - 1, limit);
+      data = results.splice((skip - 1) * limit, limit);
     }
     const dataPaging = getPagingData({ data, count, limit, skip });
     return res.json(ApiResponse.success(dataPaging, 'success'));
@@ -306,7 +308,10 @@ const getAggregatedYearlyStats = (listReport: Report[], availableYears: number[]
 
 export const approveModificationRequest = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await modificationsServices.approveModificationRequest(parseInt(req.params.id), ModificationRequestStatus.APPROVED);
+    const result = await modificationsServices.approveModificationRequest(
+      parseInt(req.params.id),
+      ModificationRequestStatus.APPROVED,
+    );
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);
@@ -315,7 +320,10 @@ export const approveModificationRequest = async (req: Request, res: Response, ne
 
 export const cancelModificationRequest = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await modificationsServices.approveModificationRequest(parseInt(req.params.id), ModificationRequestStatus.REJECTED);
+    const result = await modificationsServices.approveModificationRequest(
+      parseInt(req.params.id),
+      ModificationRequestStatus.REJECTED,
+    );
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);

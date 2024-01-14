@@ -142,6 +142,7 @@ export const getLocationManageByUserIdController = async (req: any, res: Respons
       const wardId = wardOfficer.manageWardId;
       console.log('🚀 ~ wardId:', wardId);
       results = await locationsService.getLocationManageWard(wardId);
+      results = results.slice().reverse();
     } else {
       throw new Error('can not access this route');
     }
@@ -150,7 +151,7 @@ export const getLocationManageByUserIdController = async (req: any, res: Respons
     if (limit === 0 && skip === 0) {
       data = results;
     } else {
-      data = results.splice(skip - 1, limit);
+      data = results.splice((skip - 1) * limit, limit);
     }
 
     const dataPaging = getPagingData({ data, count, limit, skip });
@@ -166,13 +167,16 @@ export const getLocationList = async (req: Request, res: Response, next: NextFun
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
-    const results = await locationsService.getListLocation();
+    const result = await locationsService.getListLocation();
+    let results = result.slice().reverse();
+    results = results.slice().reverse();
+
     const count = results.length;
     let data: any;
     if (limit === 0 && skip === 0) {
       data = results;
     } else {
-      data = results.splice(skip - 1, limit);
+      data = results.splice((skip - 1) * limit, limit);
     }
     const dataPaging = getPagingData({ data, count, limit, skip });
     return res.json(ApiResponse.success(dataPaging, 'success'));
