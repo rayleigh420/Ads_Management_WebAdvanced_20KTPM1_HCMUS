@@ -24,9 +24,9 @@ export const createReport = async (req: Request, res: Response, next: NextFuncti
         console.log('locationIds', result.locationId);
         const user = await reportsServices.findUserManageByLocationId(+result.locationId);
         console.log('🚀 ~ createReport ~ user:', user.ward.wardOfficiers[0].user.fcmToken);
-        // const fcmToken = user.ward.wardOfficiers[0].user.fcmToken;
-        const fcmToken =
-          'cvJx4fmvNmXOUIUGGX_inf:APA91bEIEvEg72bK257VNf1PUEcIpweofp_QWavQtiYQG194H1x4lERxEzNBiFg8KRmwAXC49VsvCvtDz6_38SzECidDIUfPMWZ0ull79SrbYn_dbnGUNq_aLG1TA8mqSSxyK1nfgH1_';
+        const fcmToken = user.ward.wardOfficiers[0].user.fcmToken;
+        // const fcmToken =
+        //   'cvJx4fmvNmXOUIUGGX_inf:APA91bEIEvEg72bK257VNf1PUEcIpweofp_QWavQtiYQG194H1x4lERxEzNBiFg8KRmwAXC49VsvCvtDz6_38SzECidDIUfPMWZ0ull79SrbYn_dbnGUNq_aLG1TA8mqSSxyK1nfgH1_';
         const title = 'Báo cáo vi phạm';
         const body = 'Có báo cáo vi phạm mới';
         sendMessageFirebase(fcmToken, title, body);
