@@ -23,8 +23,8 @@ class ModificationService {
     const modificationRequest = await this.modificationRepository.findOneBy({ id });
     if (modificationRequest) {
       modificationRequest.status = status;
-      this.modificationRepository.save(modificationRequest);
     }
+   return this.modificationRepository.save(modificationRequest);
   }
 }
 
