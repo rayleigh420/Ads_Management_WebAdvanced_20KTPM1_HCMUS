@@ -51,14 +51,15 @@ export const getListBoardsByIdLocation = async (req: Request, res: Response, nex
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
-    const results = await boardsService.getListBoard(id);
-    console.log('🚀 ~ file: boards.controllers.ts:16 ~ results:', results);
+    let results = await boardsService.getListBoard(id);
+    results = results.slice().reverse();
+
     const count = results.length;
     let data: any;
     if (limit === 0 && skip === 0) {
       data = results;
     } else {
-      data = results.splice(skip - 1, limit);
+      data = results.splice((skip - 1) * limit, limit);
     }
     const dataPaging = getPagingData({ data, count, limit, skip });
     return res.json(ApiResponse.success(dataPaging, 'success'));
