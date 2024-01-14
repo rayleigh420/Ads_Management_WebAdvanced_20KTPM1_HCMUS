@@ -134,7 +134,7 @@ export default function LocationFormModal({ isOpen, setIsOpen: setOpen }: Locati
       )}
       <div className='w-full '>
         <div className='w-[800px] m-auto'>
-          <h1 className='text-3xl font-bold text-center mb-5'>Thêm bảng quảng cáo</h1>
+          <h1 className='text-3xl font-bold text-center mb-5'>Thêm điểm đặt quảng cáo</h1>
           <Form
             name='report-form'
             onFinish={handleSubmit}

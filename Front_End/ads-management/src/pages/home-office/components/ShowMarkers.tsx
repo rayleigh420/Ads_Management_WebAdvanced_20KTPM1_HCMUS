@@ -2,7 +2,7 @@ import {
   LocationRESP,
   convertLocationBoardsRESPToAdvertiseInfo,
   getBoardByIdLocationApi,
-  getLocationByOfficerApi,
+  getLocationByOfficerLisApi,
 } from '@/apis/location/location.api';
 import { AdvertiseInfoType } from '@/core/models/adversise.model';
 import { ICONS } from '@/utils/theme';
@@ -39,7 +39,7 @@ function ShowMarkers({
 }: ShowMarkersProps) {
   const { data: dataLocation } = useQuery({
     queryKey: ['location-officer'],
-    queryFn: () => getLocationByOfficerApi(),
+    queryFn: () => getLocationByOfficerLisApi(),
     select: (resp) => resp.data.data?.items,
     placeholderData: keepPreviousData,
   });
@@ -56,6 +56,8 @@ function ShowMarkers({
 
   const handleClickMarker = (location: LocationRESP) => {
     isRefClick.current = true;
+    console.log('location.advertisingBoards', location.advertisingBoards);
+    // if (location.advertisingBoards && location.advertisingBoards[0].licenseId)
     location.id && mutateBoard(location.id);
     setSelectedMarker(location);
   };
@@ -162,32 +164,34 @@ function ShowMarkers({
           </Marker>
         );
       })}
-      {selectedMarker?.id && boardAds?.[pageBoard - 1]?.name && (
-        <Popup
-          longitude={selectedMarker.long}
-          latitude={selectedMarker.lat}
-          anchor='bottom'
-          onClose={() => setSelectedMarker(undefined)}
-          closeOnClick={false}
-          focusAfterOpen
-        >
-          <LocationPopup
-            title={boardAds?.[pageBoard - 1]?.name}
-            description={boardAds?.[pageBoard - 1]?.locationType}
-            location={boardAds?.[pageBoard - 1]?.address}
-            status={boardAds?.[pageBoard - 1]?.isPlanned ? 'Đã quy hoạch' : 'Chưa quy hoạch'}
-          />
-          <Pagination
-            simple
-            defaultCurrent={1}
-            defaultPageSize={1}
-            total={boardAds?.length}
-            onChange={(page: number, pageSize: number) => {
-              setPageBoard(page);
-            }}
-          />
-        </Popup>
-      )}
+      {selectedMarker?.id &&
+        boardAds?.[pageBoard - 1]?.name &&
+        selectedMarker.advertisingBoards && (
+          <Popup
+            longitude={selectedMarker.long}
+            latitude={selectedMarker.lat}
+            anchor='bottom'
+            onClose={() => setSelectedMarker(undefined)}
+            closeOnClick={false}
+            focusAfterOpen
+          >
+            <LocationPopup
+              title={boardAds?.[pageBoard - 1]?.name}
+              description={boardAds?.[pageBoard - 1]?.locationType}
+              location={boardAds?.[pageBoard - 1]?.address}
+              status={boardAds?.[pageBoard - 1]?.isPlanned ? 'Đã quy hoạch' : 'Chưa quy hoạch'}
+            />
+            <Pagination
+              simple
+              defaultCurrent={1}
+              defaultPageSize={1}
+              total={boardAds?.length}
+              onChange={(page: number, pageSize: number) => {
+                setPageBoard(page);
+              }}
+            />
+          </Popup>
+        )}
     </div>
   );
 }

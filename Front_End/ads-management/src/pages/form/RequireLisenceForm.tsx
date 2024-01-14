@@ -1,8 +1,8 @@
 import { LicenseREQ, createLicenseApi } from '@/apis/board/board.api';
 import { CustomDateInput } from '@/components/ui/form/CustomDateInput';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
-import { handleError } from '@/core/helpers/noti-error.helper';
 import { initKeys } from '@/core/models/query-key.util';
+import { parseDate } from '@/utils/parser/datetime.parser';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Divider, Form } from 'antd';
 import { useState } from 'react';
@@ -22,11 +22,14 @@ export default function RequireLicenseForm({ id, setIsOpen }: { id?: string; set
       setIsOpen(false);
       toast.success('Yêu cầu cấp phép thành công');
     },
-    onError: handleError,
   });
   const handleSubmit = async (data: any) => {
+    data.startDate = parseDate(data.startDate);
+    data.endDate = parseDate(data.endDate);
     if (id) data.advertisingBoardId = id;
     muteRequest(data);
+    toast.success('Yêu cầu cấp phép thành công');
+    setIsOpen(false);
   };
 
   return (

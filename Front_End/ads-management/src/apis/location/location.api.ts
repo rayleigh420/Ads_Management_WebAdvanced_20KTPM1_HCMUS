@@ -40,6 +40,16 @@ export const getLocationByOfficerApi = async (params?: ReportOfficerREQ) => {
   return api.get<PagingResponse<LocationRESP>>('/locations/officer', { params });
 };
 
+export const getLocationByOfficerLisApi = async (params?: ReportOfficerREQ) => {
+  if (!params) {
+    params = {
+      limit: 0,
+      skip: 0,
+    };
+  }
+  return api.get<PagingResponse<LocationRESP>>('/locations/officer/license', { params });
+};
+
 export const getLocationByAdminApi = async (params?: ReportOfficerREQ) => {
   if (!params) {
     params = {

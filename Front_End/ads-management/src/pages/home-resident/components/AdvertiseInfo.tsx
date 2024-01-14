@@ -97,6 +97,8 @@ function AdvertiseInfoComponent({
             onCancel={() => setModal1Open(false)}
             width={1000}
             className='my-3'
+            // prevent click outside
+            maskClosable={false}
             // style={{ top: 20 }}
           >
             <ReportFormModal
