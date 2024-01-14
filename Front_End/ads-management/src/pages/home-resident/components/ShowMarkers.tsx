@@ -67,8 +67,41 @@ function ShowMarkers({
       dataAll = dataLocation;
       if (isPlanned !== 3) dataAll = dataLocation.filter((data) => data.isPlanned === isPlanned);
       if (!isReport) {
-        dataAll = dataLocation.filter((data) => data.reports?.length === 0);
+        dataAll = dataLocation.filter((data) => {
+          let check = false;
+
+          if (data.advertisingBoards)
+            for (let i = 0; i < data.advertisingBoards?.length; i++) {
+              if (data.advertisingBoards[i]?.reports.length !== 0) {
+                check = true;
+                break;
+              }
+            }
+          if (data.reports?.length !== 0) check = true;
+
+          console.log('check ne', check);
+
+          return !check;
+        });
+      } else {
+        dataAll = dataLocation.filter((data) => {
+          let check = false;
+
+          if (data.advertisingBoards)
+            for (let i = 0; i < data.advertisingBoards?.length; i++) {
+              if (data.advertisingBoards[i]?.reports.length !== 0) {
+                check = true;
+                break;
+              }
+            }
+          if (data.reports?.length !== 0) check = true;
+
+          console.log('check ne', check);
+
+          return check;
+        });
       }
+      console.log('dataAll', dataAll);
       return dataAll.map((data, index) => {
         console.log('dataAll', data.reports);
 
@@ -81,6 +114,7 @@ function ShowMarkers({
           },
           id: data.id,
           isPlanned: data.isPlanned,
+          data: data,
           reports: data.reports,
           advertisingBoards: data.advertisingBoards,
           geometry: {
@@ -91,7 +125,7 @@ function ShowMarkers({
       });
     }
     return [];
-  }, [dataLocation, isPlanned]);
+  }, [dataLocation, isPlanned, isReport]);
 
   const bounds: any = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
 
@@ -137,6 +171,13 @@ function ShowMarkers({
             </Marker>
           );
         }
+        let check = false;
+        for (let i = 0; i < cluster?.advertisingBoards?.length; i++) {
+          if (cluster?.advertisingBoards[i]?.reports.length !== 0) {
+            check = true;
+          }
+        }
+        console.log('cluster', check);
         return (
           <Marker
             key={longitude}
@@ -148,6 +189,7 @@ function ShowMarkers({
                 lat: latitude,
                 long: longitude,
                 reports: cluster.reports,
+                advertisingBoards: cluster.advertisingBoards,
               })
             }
             draggable
@@ -155,12 +197,21 @@ function ShowMarkers({
             <img
               src={
                 cluster.advertisingBoards.length !== 0
-                  ? cluster.isPlanned === 1
-                    ? ICONS.MARKER_ADS_RED
-                    : ICONS.MARKER_ADS_VIOLET
+                  ? check == false
+                    ? cluster.isPlanned === 1
+                      ? ICONS.MARKER_ADS_RED
+                      : ICONS.MARKER_ADS_VIOLET
+                    : ICONS.BOARD_REPORT
                   : cluster.reports.length !== 0
                   ? ICONS.REPORT_ICON
                   : ICONS.LOCATION_ICON
+                // cluster.advertisingBoards.length !== 0
+                //   ? cluster.isPlanned === 1
+                //     ? ICONS.MARKER_ADS_RED
+                //     : ICONS.MARKER_ADS_VIOLET
+                //   : cluster.reports.length !== 0
+                //   ? ICONS.REPORT_ICON
+                //   : ICONS.LOCATION_ICON
               }
               alt=''
             />

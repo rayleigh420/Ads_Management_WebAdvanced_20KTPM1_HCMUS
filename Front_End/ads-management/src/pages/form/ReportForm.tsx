@@ -16,7 +16,18 @@ import { getOrSetDeviceId } from '@/utils/config/diviceId';
 import { UploadOutlined } from '@ant-design/icons';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Divider, Form, Image, Modal, Pagination, Space, Tag, Upload } from 'antd';
+import {
+  Button,
+  Divider,
+  Form,
+  Image,
+  Modal,
+  Pagination,
+  Space,
+  Tag,
+  Upload,
+  UploadFile,
+} from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -30,7 +41,7 @@ export type ReportInput = {
   phoneNumber: string;
   select: string;
   content: string;
-  file: File;
+  file: UploadFile[];
   reportForm: string;
   locationId?: string;
   boardId?: string;
@@ -46,6 +57,7 @@ type ReportFormProps = {
   initialValues?: any;
   setOpen?: (value: boolean) => void;
   checked?: boolean;
+  isOpenModal?: boolean;
 };
 
 function isVietnamesePhoneNumber(number: string) {
@@ -55,6 +67,7 @@ function isVietnamesePhoneNumber(number: string) {
 export default function ReportFormModal({
   initialValues,
   setOpen,
+  isOpenModal,
   checked = true,
 }: ReportFormProps) {
   const [form] = Form.useForm<ReportInput>();
@@ -62,6 +75,7 @@ export default function ReportFormModal({
   const ref = useRef<any>(null);
   const [isCreate, setIsCreate] = useState<boolean>(true);
   const [image, setImage] = useState<string>('');
+  const [image1, setImage1] = useState<string>('');
   const [content, setContent] = useState();
   const [handleMethod, setHandleMethod] = useState<string>('');
   const auth = useSelector((state: RootState) => state.auth);
@@ -80,6 +94,18 @@ export default function ReportFormModal({
       form.resetFields();
     }
   }, [checked]);
+  useEffect(() => {
+    if (isOpenModal === false) {
+      setIsCreate(true);
+      form.resetFields();
+      // init all state back to default
+      setStatus(undefined);
+      setImage('');
+      setContent(undefined);
+      setHandleMethod('');
+      setIdReport('');
+    }
+  }, [isOpenModal]);
 
   const { mutate: mutateReport } = useMutation({
     mutationFn: (data: ReportInput) => createReportApi(data, auth.fcmToken),
@@ -115,6 +141,7 @@ export default function ReportFormModal({
       setHandleMethod(resp.data.data[0].handleMethod);
       setStatus(+resp.data.data[0].status);
       setImage(resp.data.data[0].image1);
+      setImage1(resp.data.data[0].image2);
       setContent(resp.data.data[0].content);
       setIsCreate(false);
     }
@@ -144,6 +171,7 @@ export default function ReportFormModal({
         console.log('image status 2');
         setStatus(+resp.data.data.status);
         setImage(resp.data.data.image1);
+        setImage1(resp.data.data.image2);
         setContent(resp.data.data.content);
         setIsCreate(false);
       }
@@ -172,6 +200,7 @@ export default function ReportFormModal({
         console.log('image status 3');
         setStatus(resp.data.data.items[0].status);
         setImage(resp.data.data[0].image1);
+        setImage1(resp.data.data[0].image2);
         setContent(resp.data.data[0].content);
       }
     },
@@ -193,6 +222,7 @@ export default function ReportFormModal({
       console.log('image status 4');
       setStatus(+data[pageBoard - 1].status);
       setImage(data[pageBoard - 1].image1);
+      setImage1(data[pageBoard - 1].image2);
       setContent(data[pageBoard - 1].content);
       setIsCreate(false);
     }
@@ -223,12 +253,25 @@ export default function ReportFormModal({
     }
 
     const formData: ReportInput = { ...values, ...initialValues };
+    // help me convert to formdata nay
+    const data = new FormData();
 
-    mutateReport(formData);
+    for (let i = 0; i < values.file.length; i++) {
+      data.append(`file`, values.file[i].originFileObj as Blob);
+    }
+
+    // auto add append to formData with key and value
+    for (const [key, value] of Object.entries(formData)) {
+      data.append(key, value);
+    }
+    for (const [key, value] of Object.entries(initialValues)) {
+      data.append(key, value);
+    }
+
+    mutateReport(data);
   };
 
   console.log('status', status, isCreate);
-
   return (
     <div className='w-full '>
       <div className='w-[800px] m-auto'>
@@ -245,10 +288,10 @@ export default function ReportFormModal({
           className='mt-11 flex justify-center flex-col gap-5'
         >
           {/* status = 0 is đang xử lý =1 đã xử lý */}
-          {isCreate == false && status && (
+          {isCreate == false && status !== undefined && (
             <>
               <Space wrap>
-                <Tag color={status == 0 ? 'red' : 'cyan'} className='text-lg px-3 rounded-lg'>
+                <Tag color={status === 0 ? 'red' : 'cyan'} className='text-lg px-3 rounded-lg'>
                   {STATUS_REPORT[status]}
                 </Tag>
               </Space>
@@ -258,9 +301,12 @@ export default function ReportFormModal({
                   <div className='ml-2' dangerouslySetInnerHTML={{ __html: handleMethod! }} />
                 </>
               ) : (
-                <Button type='primary' onClick={() => setIsOpen(true)}>
-                  Xử lý
-                </Button>
+                auth.type !== UserType.resident &&
+                status == 0 && (
+                  <Button type='primary' onClick={() => setIsOpen(true)}>
+                    Xử lý
+                  </Button>
+                )
               )}
             </>
           )}
@@ -339,11 +385,12 @@ export default function ReportFormModal({
               <Upload
                 listType='picture'
                 defaultFileList={[...fileList]}
-                maxCount={1}
+                maxCount={2}
+                multiple
                 className='upload-container upload-list-inline'
                 accept='.jpg, .txt, .pdf, .bmp, .png, .ppt, .pptx, .doc, .docx, .xls, .xlsx, .pdf, .hwp, .svg'
                 onChange={(info) => {
-                  form.setFieldValue('file', info.file);
+                  form.setFieldValue('file', info.fileList);
                   form.validateFields(['file']);
                 }}
                 beforeUpload={() => false}
@@ -351,7 +398,10 @@ export default function ReportFormModal({
                 <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
             ) : (
-              <Image width={200} src={image} />
+              <div className='flex gap-5'>
+                <Image width={200} src={image} />
+                <Image width={200} src={image1} />
+              </div>
             )}
             <br />
           </Form.Item>
