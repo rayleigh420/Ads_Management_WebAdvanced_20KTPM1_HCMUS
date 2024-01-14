@@ -61,7 +61,7 @@ export default function AdminWardPage() {
         ? {
             limit: resp.data.data?.pageSize,
             skip: resp.data.data?.pageNumber,
-            total: items.length !== 0 ? totalPage : 1,
+            total: resp.data.data?.totalRecords,
           }
         : {};
       return { items, pageInfo };
@@ -69,7 +69,6 @@ export default function AdminWardPage() {
     placeholderData: keepPreviousData,
   });
 
-  console.log('dataWards', dataWards?.items);
   const { mutate: muteDeleteWard } = useMutation({
     mutationFn: (id: string) => deleteWardApi(id),
     onSuccess: () => {
@@ -97,7 +96,7 @@ export default function AdminWardPage() {
     }
   }, [isOpen]);
 
-  // console.log('dataWards', dataWards?.reverse());
+  console.log('dataWards', dataWards?.pageInfo);
 
   return (
     <div className='w-[960px] mx-auto '>
@@ -119,7 +118,7 @@ export default function AdminWardPage() {
       />
       <CustomTableCore
         columns={columnsWardManagement(handleDelete, handleEdit)}
-        data={dataWards?.items?.slice().reverse()}
+        data={dataWards?.items}
         paging={dataWards?.pageInfo}
         onPageNumberChange={handlePageChange}
       />

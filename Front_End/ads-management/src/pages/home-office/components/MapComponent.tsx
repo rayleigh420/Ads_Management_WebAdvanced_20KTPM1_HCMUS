@@ -79,10 +79,11 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMapClick, children, mapRe
         accessToken: import.meta.env.VITE_MAP_BOX_PUBLIC_TOKEN,
         localGeocoder: coordinatesGeocoder,
         zoom: 14,
-        placeholder: 'Search the location',
+
         mapboxgl: mapboxgl,
         reverseGeocode: true,
         countries: 'VN',
+        placeholder: 'Tìm kiếm địa điểm',
         language: 'vi',
         marker: true,
       }),

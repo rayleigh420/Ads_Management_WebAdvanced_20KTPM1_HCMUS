@@ -61,17 +61,24 @@ export class BaseHTTP {
 
   public config(config: { accessToken?: string; device_id?: string }) {
     const { accessToken, device_id } = config;
-    BaseHTTP.getInstance().axios.interceptors.request.use(
-      (request) => {
-        console.log('request', device_id);
-        if (accessToken) request.headers.Authorization = `Bearer ${accessToken}`;
-        if (device_id) request.headers.device_id = device_id;
-        return request;
-      },
-      (error) => {
-        Promise.reject(error);
-      },
-    );
+    console.log('config', accessToken);
+
+    if (accessToken)
+      BaseHTTP.getInstance().axios.defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${accessToken}`;
+    if (device_id) BaseHTTP.getInstance().axios.defaults.headers.common['device_id'] = device_id;
+    // BaseHTTP.getInstance().axios.interceptors.request.use(
+    //   (request) => {
+    //     console.log('request', device_id);
+    //     if (accessToken) request.headers.Authorization = `Bearer ${accessToken}`;
+    //     if (device_id) request.headers.device_id = device_id;
+    //     return request;
+    //   },
+    //   (error) => {
+    //     Promise.reject(error);
+    //   },
+    // );
   }
 
   public setBaseUrlMap() {

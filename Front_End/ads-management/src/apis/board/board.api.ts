@@ -72,10 +72,14 @@ export const updateAdminLicenseListApi = async (id: string) => {
   return api.get<any>(`admins/approve-license/${id}`);
 };
 
+export const deleteAdminEditListApi = async (id: string) => {
+  return api.get<any>(`admins/cancel-modification-requests/${id}`);
+};
+
+export const updateAdminEditListApi = async (id: string) => {
+  return api.get<any>(`admins/approve-modification-requests/${id}`);
+};
+
 export const createBoardApi = async (body: BoardInput) => {
-  return await api.post<BaseResponse<any>>('//boards', body, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  return await api.post<BaseResponse<any>>('admins/boards', body);
 };

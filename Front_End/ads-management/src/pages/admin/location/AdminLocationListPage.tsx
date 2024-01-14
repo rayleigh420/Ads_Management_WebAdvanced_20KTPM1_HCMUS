@@ -5,6 +5,7 @@ import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
+import LocationFormModal from '@/pages/form/LocationForm';
 import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
@@ -14,12 +15,13 @@ import {
   columnsAdminLocationPage,
 } from './components/AdminLocationListColumns';
 
-export const adminAdsKey = initKeys('admin-ads');
+export const adminLocationListKey = initKeys('admin-location-list');
 
 export default function AdminLocationListPage() {
   const [searchParams] = useSearchParams();
   const idRef = useRef<string | null>(null);
   const [value, setValue] = useState<any>({});
+  const [modal1Open, setModal1Open] = useState(false);
 
   const { initialPaging } = useMemo(() => {
     const initialPaging: PagingState = {
@@ -34,7 +36,7 @@ export default function AdminLocationListPage() {
   });
 
   const adminLocationsQuery = useQuery({
-    queryKey: adminAdsKey.list(filter),
+    queryKey: adminLocationListKey.list(filter),
     queryFn: () => getLocationByAdminApi(filter),
     select: (resp) => {
       const items: LocationPageColumns[] = [];
@@ -76,7 +78,11 @@ export default function AdminLocationListPage() {
       <div className='flex justify-between items-center'>
         <h1 className={`font-bold text-2xl my-0 `}>Quản lý các điểm đặt quảng cáo</h1>
         <div className='flex justify-end my-3'>
-          <ButtonPrimary icon={<PlusOutlined />} title='Thêm điểm đặt quảng cáo' />
+          <ButtonPrimary
+            icon={<PlusOutlined />}
+            title='Thêm điểm đặt quảng cáo'
+            onClick={() => setModal1Open(true)}
+          />
         </div>
       </div>
 
@@ -86,6 +92,7 @@ export default function AdminLocationListPage() {
         paging={adminLocationsQuery.data?.pageInfo}
         onPageNumberChange={handlePageChange}
       />
+      <LocationFormModal isOpen={modal1Open} setIsOpen={setModal1Open} />
     </div>
   );
 }

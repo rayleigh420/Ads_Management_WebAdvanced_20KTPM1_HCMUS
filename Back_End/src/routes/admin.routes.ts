@@ -23,7 +23,9 @@ import {
   addOfficerToDistrict,
   addOfficerToWard,
   approveLicense,
+  approveModificationRequest,
   cancelLicense,
+  cancelModificationRequest,
   createAdsBoardType,
   createReportForm,
   deleteAdsBoardType,
@@ -41,7 +43,16 @@ import {
   updateAdsBoardType,
   updateReportForm,
 } from '../controllers/admins.controllers';
-import { getLocationList } from '../controllers/locations.controller';
+import { createLocation, deleteLocation, getLocationList, updateLocation } from '../controllers/locations.controller';
+import multer from 'multer';
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 2 MB
+    files: 2,
+  },
+});
 
 const adminRouter = Router();
 adminRouter.use(authorizationAdminValidator);
@@ -62,12 +73,15 @@ adminRouter.delete('/districts/:id', wrapRequestHandler(deleteDistrict));
 
 // Board-management
 adminRouter.get('/boards/:id', wrapRequestHandler(getListBoardsByIdLocation));
-adminRouter.post('/boards', BoardReqValidator, wrapRequestHandler(createBoard));
-adminRouter.put('/borad/:id', BoardReqValidator, wrapRequestHandler(updateBoard));
-adminRouter.delete('/board/:id', wrapRequestHandler(deleteBoard));
+adminRouter.post('/boards', upload.array('file', 2), BoardReqValidator, wrapRequestHandler(createBoard));
+adminRouter.patch('/boards/:id', upload.array('file', 2), BoardReqValidator, wrapRequestHandler(updateBoard));
+adminRouter.delete('/boards/:id', wrapRequestHandler(deleteBoard));
 
 // location-management
 adminRouter.get('/locations', wrapRequestHandler(getLocationList));
+adminRouter.post('/locations', upload.array('file', 2), wrapRequestHandler(createLocation));
+adminRouter.patch('/locations/:id', upload.array('file', 2), wrapRequestHandler(updateLocation));
+adminRouter.delete('/locations/:id', wrapRequestHandler(deleteLocation));
 
 // Report-management
 adminRouter.get('/location-reports/ward/:id', wrapRequestHandler(getListReportInWardofLocation));
@@ -85,6 +99,8 @@ adminRouter.delete('/cancel-license/:id', wrapRequestHandler(cancelLicense));
 
 // Modification-management
 adminRouter.get('/modification-requests', wrapRequestHandler(getListModificationRequest));
+adminRouter.get('/approve-modification-requests/:id', wrapRequestHandler(approveModificationRequest));
+adminRouter.get('/cancel-modification-requests/:id', wrapRequestHandler(cancelModificationRequest));
 
 //crud advertising type
 adminRouter.get('/advertising-type', wrapRequestHandler(getListAdsBoardType));

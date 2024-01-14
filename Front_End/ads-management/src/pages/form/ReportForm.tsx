@@ -9,17 +9,30 @@ import {
 import { CustomEditorInput } from '@/components/ui/form/CustomEditorInput';
 import CustomSelectInput from '@/components/ui/form/CustomSelectInput';
 import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
+import { STATUS_REPORT } from '@/core/constants/location-type.contants';
 import { UserType } from '@/core/enums/user-type.enum';
 import { RootState } from '@/store';
 import { getOrSetDeviceId } from '@/utils/config/diviceId';
 import { UploadOutlined } from '@ant-design/icons';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Divider, Form, Image, Pagination, Upload } from 'antd';
+import {
+  Button,
+  Divider,
+  Form,
+  Image,
+  Modal,
+  Pagination,
+  Space,
+  Tag,
+  Upload,
+  UploadFile,
+} from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import ReportHandleForm from '../wards/components/ReportHandleForm';
 
 export type ReportInput = {
   id?: string;
@@ -28,7 +41,7 @@ export type ReportInput = {
   phoneNumber: string;
   select: string;
   content: string;
-  file: File;
+  file: UploadFile[];
   reportForm: string;
   locationId?: string;
   boardId?: string;
@@ -43,25 +56,56 @@ export type ReportInput = {
 type ReportFormProps = {
   initialValues?: any;
   setOpen?: (value: boolean) => void;
+  checked?: boolean;
+  isOpenModal?: boolean;
 };
 
 function isVietnamesePhoneNumber(number: string) {
   return /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
 }
 
-export default function ReportFormModal({ initialValues, setOpen }: ReportFormProps) {
+export default function ReportFormModal({
+  initialValues,
+  setOpen,
+  isOpenModal,
+  checked = true,
+}: ReportFormProps) {
   const [form] = Form.useForm<ReportInput>();
   const [fileList, setFileList] = useState([]);
   const ref = useRef<any>(null);
   const [isCreate, setIsCreate] = useState<boolean>(true);
   const [image, setImage] = useState<string>('');
+  const [image1, setImage1] = useState<string>('');
   const [content, setContent] = useState();
+  const [handleMethod, setHandleMethod] = useState<string>('');
   const auth = useSelector((state: RootState) => state.auth);
   const [data, setData] = useState<any>(null);
+  const [status, setStatus] = useState<number>();
   const [pageBoard, setPageBoard] = useState<number>(1);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
   const { id } = useParams();
+  const [idReport, setIdReport] = useState<string>('');
+  console.log('checked', checked);
+  useEffect(() => {
+    if (!checked) {
+      setIsCreate(true);
+      form.resetFields();
+    }
+  }, [checked]);
+  useEffect(() => {
+    if (isOpenModal === false) {
+      setIsCreate(true);
+      form.resetFields();
+      // init all state back to default
+      setStatus(undefined);
+      setImage('');
+      setContent(undefined);
+      setHandleMethod('');
+      setIdReport('');
+    }
+  }, [isOpenModal]);
 
   const { mutate: mutateReport } = useMutation({
     mutationFn: (data: ReportInput) => createReportApi(data, auth.fcmToken),
@@ -75,6 +119,7 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
 
       form.resetFields();
       setOpen && setOpen(false);
+      setIsCreate(true);
     },
   });
 
@@ -91,7 +136,12 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
         content: resp.data.data[0].content,
         status: resp.data.data[0].status,
       });
+      console.log('image status 1', resp.data.data[0].status);
+
+      setHandleMethod(resp.data.data[0].handleMethod);
+      setStatus(+resp.data.data[0].status);
       setImage(resp.data.data[0].image1);
+      setImage1(resp.data.data[0].image2);
       setContent(resp.data.data[0].content);
       setIsCreate(false);
     }
@@ -117,7 +167,11 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
           content: resp.data.data.content,
           status: resp.data.data.status,
         });
+        setHandleMethod(resp.data.data[0].handleMethod);
+        console.log('image status 2');
+        setStatus(+resp.data.data.status);
         setImage(resp.data.data.image1);
+        setImage1(resp.data.data.image2);
         setContent(resp.data.data.content);
         setIsCreate(false);
       }
@@ -141,7 +195,12 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
           content: resp.data.data.items[0].content,
           status: resp.data.data.items[0].status,
         });
+        console.log('image status 3', resp.data.data[0].handleMethod);
+        setHandleMethod(resp.data.data[0].handleMethod);
+        console.log('image status 3');
+        setStatus(resp.data.data.items[0].status);
         setImage(resp.data.data[0].image1);
+        setImage1(resp.data.data[0].image2);
         setContent(resp.data.data[0].content);
       }
     },
@@ -158,11 +217,16 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
         content: data[pageBoard - 1].content,
         status: data[pageBoard - 1].status,
       });
+      setIdReport(data[pageBoard - 1].id);
+      setHandleMethod(data[pageBoard - 1].handleMethod);
+      console.log('image status 4');
+      setStatus(+data[pageBoard - 1].status);
       setImage(data[pageBoard - 1].image1);
+      setImage1(data[pageBoard - 1].image2);
       setContent(data[pageBoard - 1].content);
       setIsCreate(false);
     }
-  }, [pageBoard]);
+  }, [pageBoard, data]);
 
   useEffect(() => {
     if (id) {
@@ -189,10 +253,25 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
     }
 
     const formData: ReportInput = { ...values, ...initialValues };
+    // help me convert to formdata nay
+    const data = new FormData();
 
-    mutateReport(formData);
+    for (let i = 0; i < values.file.length; i++) {
+      data.append(`file`, values.file[i].originFileObj as Blob);
+    }
+
+    // auto add append to formData with key and value
+    for (const [key, value] of Object.entries(formData)) {
+      data.append(key, value);
+    }
+    for (const [key, value] of Object.entries(initialValues)) {
+      data.append(key, value);
+    }
+
+    mutateReport(data);
   };
 
+  console.log('status', status, isCreate);
   return (
     <div className='w-full '>
       <div className='w-[800px] m-auto'>
@@ -200,12 +279,37 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
         <Form
           name='report-form'
           onFinish={handleSubmit}
+          //cancel
+
           autoComplete='off'
           colon={false}
           form={form}
           labelAlign='left'
           className='mt-11 flex justify-center flex-col gap-5'
         >
+          {/* status = 0 is đang xử lý =1 đã xử lý */}
+          {isCreate == false && status !== undefined && (
+            <>
+              <Space wrap>
+                <Tag color={status === 0 ? 'red' : 'cyan'} className='text-lg px-3 rounded-lg'>
+                  {STATUS_REPORT[status]}
+                </Tag>
+              </Space>
+              {status == 1 && handleMethod ? (
+                <>
+                  <div className='font-bold'>Nội dung xử lý</div>
+                  <div className='ml-2' dangerouslySetInnerHTML={{ __html: handleMethod! }} />
+                </>
+              ) : (
+                auth.type !== UserType.resident &&
+                status == 0 && (
+                  <Button type='primary' onClick={() => setIsOpen(true)}>
+                    Xử lý
+                  </Button>
+                )
+              )}
+            </>
+          )}
           <CustomTextInput<ReportInput>
             name='fullname'
             label='Họ tên người gửi báo cáo'
@@ -281,11 +385,12 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
               <Upload
                 listType='picture'
                 defaultFileList={[...fileList]}
-                maxCount={1}
+                maxCount={2}
+                multiple
                 className='upload-container upload-list-inline'
                 accept='.jpg, .txt, .pdf, .bmp, .png, .ppt, .pptx, .doc, .docx, .xls, .xlsx, .pdf, .hwp, .svg'
                 onChange={(info) => {
-                  form.setFieldValue('file', info.file);
+                  form.setFieldValue('file', info.fileList);
                   form.validateFields(['file']);
                 }}
                 beforeUpload={() => false}
@@ -293,13 +398,16 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
                 <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
             ) : (
-              <Image width={200} src={image} />
+              <div className='flex gap-5'>
+                <Image width={200} src={image} />
+                <Image width={200} src={image1} />
+              </div>
             )}
             <br />
           </Form.Item>
           {isCreate && (
             <div className='flex justify-between'>
-              <Button type='primary' htmlType='submit' className={`h-[54px] p-[15px] bg-cyan-600`}>
+              <Button type='primary' htmlType='submit' className={`h-[54px] px-[30px] bg-cyan-600`}>
                 Submit
               </Button>
               <div className=''>
@@ -321,6 +429,19 @@ export default function ReportFormModal({ initialValues, setOpen }: ReportFormPr
             </div>
           )}
         </Form>
+        <Modal
+          // centered
+          centered
+          open={isOpen}
+          onOk={() => setIsOpen(false)}
+          onCancel={() => setIsOpen(false)}
+          width={1000}
+          className='my-3'
+          footer={null}
+          // style={{ top: 20 }}
+        >
+          <ReportHandleForm setIsConfirm={setIsOpen} id={idReport} />
+        </Modal>
 
         <Divider />
       </div>

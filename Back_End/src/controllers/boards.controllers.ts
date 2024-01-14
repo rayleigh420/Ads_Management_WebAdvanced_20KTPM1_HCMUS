@@ -51,14 +51,15 @@ export const getListBoardsByIdLocation = async (req: Request, res: Response, nex
     const limit = parseInt(req.query.limit as string);
     const skip = parseInt(req.query.skip as string);
 
-    const results = await boardsService.getListBoard(id);
-    console.log('🚀 ~ file: boards.controllers.ts:16 ~ results:', results);
+    let results = await boardsService.getListBoard(id);
+    results = results.slice().reverse();
+
     const count = results.length;
     let data: any;
     if (limit === 0 && skip === 0) {
       data = results;
     } else {
-      data = results.splice(skip - 1, limit);
+      data = results.splice((skip - 1) * limit, limit);
     }
     const dataPaging = getPagingData({ data, count, limit, skip });
     return res.json(ApiResponse.success(dataPaging, 'success'));
@@ -69,7 +70,10 @@ export const getListBoardsByIdLocation = async (req: Request, res: Response, nex
 
 export const createBoard = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await boardsService.createBoard(req.body as BoardReqBody);
+    const newBoard = req.body as BoardReqBody;
+    // const image1 = req.file as Express.Multer.File;
+    const images = req.files as Express.Multer.File[];
+    const result = await boardsService.createBoard(newBoard, images);
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);
@@ -78,7 +82,8 @@ export const createBoard = async (req: Request, res: Response, next: NextFunctio
 
 export const updateBoard = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await boardsService.updateBoard(parseInt(req.params.id), req.body as BoardReqBody);
+    const images = req.files as Express.Multer.File[];
+    const result = await boardsService.updateBoard(parseInt(req.params.id), req.body as BoardReqBody, images);
     res.json(ApiResponse.success(result));
   } catch (error) {
     next(error);

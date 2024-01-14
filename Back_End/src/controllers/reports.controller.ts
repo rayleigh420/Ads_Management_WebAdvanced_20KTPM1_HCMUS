@@ -11,12 +11,13 @@ import { sendEmail } from '../utils/mailing.util';
 import { ReportStatus } from '../constants/enum';
 import boardsServices from '../services/boards.services';
 import { sendMessageFirebase } from '../utils/firebase.util';
+import { logger } from '../utils/logging.util';
 
 export const createReport = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('report', req.body.reportType);
     const deviceId = req.headers.device_id as string;
-    const result = await reportsServices.createReport(req.body as ReportReqBody, req.file, deviceId);
+    const images = req.files as Express.Multer.File[];
+    const result = await reportsServices.createReport(req.body as ReportReqBody, images, deviceId);
     console.log('🚀 ~ createReport ~ result:', result);
     if (result) {
       if (result.locationId) {
@@ -24,12 +25,14 @@ export const createReport = async (req: Request, res: Response, next: NextFuncti
         const user = await reportsServices.findUserManageByLocationId(+result.locationId);
         console.log('🚀 ~ createReport ~ user:', user.ward.wardOfficiers[0].user.fcmToken);
         // const fcmToken = user.ward.wardOfficiers[0].user.fcmToken;
-        const fcmToken = 'cvJx4fmvNmXOUIUGGX_inf:APA91bEIEvEg72bK257VNf1PUEcIpweofp_QWavQtiYQG194H1x4lERxEzNBiFg8KRmwAXC49VsvCvtDz6_38SzECidDIUfPMWZ0ull79SrbYn_dbnGUNq_aLG1TA8mqSSxyK1nfgH1_';
+        const fcmToken =
+          'cvJx4fmvNmXOUIUGGX_inf:APA91bEIEvEg72bK257VNf1PUEcIpweofp_QWavQtiYQG194H1x4lERxEzNBiFg8KRmwAXC49VsvCvtDz6_38SzECidDIUfPMWZ0ull79SrbYn_dbnGUNq_aLG1TA8mqSSxyK1nfgH1_';
         const title = 'Báo cáo vi phạm';
         const body = 'Có báo cáo vi phạm mới';
         sendMessageFirebase(fcmToken, title, body);
       }
     }
+    logger.info(`created report`);
     res.json(ApiResponse.success(result, 'success'));
   } catch (error) {
     console.log(error);
@@ -81,13 +84,15 @@ export const getReportByConditionController = async (req: any, res: Response, ne
     const wardOfficer = await usersServices.getWardOfficerByUserId(parseInt(userId, 10));
     const wardId = wardOfficer.manageWardId;
 
-    const results = await reportsServices.getReportForOfficer(parseInt(locationId, 10), parseInt(boardId, 10), wardId);
+    let results = await reportsServices.getReportForOfficer(parseInt(locationId, 10), parseInt(boardId, 10), wardId);
+    results = results.slice().reverse();
+
     const count = results.length;
     let data: any;
     if (limit === 0 && skip === 0) {
       data = results;
     } else {
-      data = results.splice(skip - 1, limit);
+      data = results.splice((skip - 1) * limit, limit);
     }
 
     const dataPaging = getPagingData({ data, count, limit, skip });

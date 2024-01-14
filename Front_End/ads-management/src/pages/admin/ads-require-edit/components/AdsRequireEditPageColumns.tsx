@@ -12,7 +12,7 @@ export type AdsRequireEditPageColumns = {
   date: string;
 };
 
-export const columnsAdsRequireEdit = (onEdit: any): ColumnsType<RequireList> => [
+export const columnsAdsRequireEdit = (onAccept: any, onDelete: any): ColumnsType<RequireList> => [
   { title: 'No.', dataIndex: 'id' },
   { title: 'Loại bảng quảng cáo', dataIndex: 'boardType' },
   { title: 'Chiều dài', dataIndex: 'width' },
@@ -33,14 +33,14 @@ export const columnsAdsRequireEdit = (onEdit: any): ColumnsType<RequireList> => 
       <div className='flex flex-col items-center gap-3 justify-center'>
         <div
           className='flex items-center gap-2 cursor-pointer hover:text-blue-500'
-          onClick={() => onEdit(record)}
+          onClick={() => onAccept(record)}
         >
           <LikeOutlined />
           Đồng ý
         </div>
         <div
           className='flex items-center gap-2 cursor-pointer hover:text-red-500'
-          onClick={() => onEdit(record)}
+          onClick={() => onDelete(record)}
         >
           <DislikeOutlined />
           Từ chối

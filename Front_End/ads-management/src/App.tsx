@@ -1,6 +1,6 @@
 import { getOrSetDeviceId } from '@/utils/config/diviceId';
 import Cookies from 'js-cookie';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -9,7 +9,7 @@ import './App.css';
 import { STORAGE } from './core/constants/share.constants';
 import { UserType } from './core/enums/user-type.enum';
 import { getEnum } from './core/parser/enum.parser';
-import Notification from './firebaseNotifications/Notification';
+import Notificationss from './firebaseNotifications/Notification';
 import { AntdConfigProvider, ReactQueryProvider } from './providers';
 import { router } from './routes';
 import { loginSuccess } from './store/auth/auth.slice';
@@ -42,7 +42,7 @@ function App() {
       <AntdConfigProvider>
         <ToastContainer />
         <RouterProvider router={router} />;
-        <Notification />
+        <Notificationss />
       </AntdConfigProvider>
     </ReactQueryProvider>
   );

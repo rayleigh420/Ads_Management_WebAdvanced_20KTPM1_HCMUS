@@ -16,6 +16,7 @@ import { Ward } from '../orm/entities/Ward';
 import { WardOfficier } from '../orm/entities/WardOfficier';
 import { hashPassword } from '../utils/crypto';
 import { signToken, verifyToken } from '../utils/jwt.utils';
+import { logger } from '../utils/logging.util';
 import { sendEmail } from '../utils/mailing.util';
 import { randomPassword } from '../utils/random.util';
 
@@ -47,6 +48,11 @@ class UserService {
       await this.districtOfficerRepository.save(districtOfficier);
     }
 
+    logger.info('User created', {
+      userId: user.id,
+      email: user.email,
+      // Add more fields as needed
+    });
     return savedUser;
   }
 

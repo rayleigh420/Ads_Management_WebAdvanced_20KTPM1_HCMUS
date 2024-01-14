@@ -8,6 +8,7 @@ export interface AdvertiseInfoType {
   size: string;
   quantity: number;
   advertisingType: string;
+  reports?: any[];
   name: string;
   image: string;
   locationId: string;

@@ -1,7 +1,9 @@
 import adsIconActive from '@/assets/ads-active.svg';
 import adsIconDefault from '@/assets/ads-default.svg';
+import boardReport from '@/assets/board_report.svg';
 import districtIconActive from '@/assets/district-active.svg';
 import districtIconDefault from '@/assets/district-default.svg';
+import locationIcon from '@/assets/location_icon.png';
 import logoutIcon from '@/assets/logout.svg';
 import markerAdsBlack from '@/assets/marker-ads-black.svg';
 import markerAdsBlue from '@/assets/marker-ads-blue.svg';
@@ -14,6 +16,7 @@ import markerReport from '@/assets/marker-report.svg';
 import plusIcon from '@/assets/plus.svg';
 import reportIconActive from '@/assets/report-active.svg';
 import reportIconDefault from '@/assets/report-default.svg';
+import reportIcon from '@/assets/report-icon.png';
 import rightArrowIcon from '@/assets/right-arrow.svg';
 import wardIconDefault from '@/assets/ward_icon_default.svg';
 
@@ -36,4 +39,7 @@ export default {
   MARKER_ADS_RED: markerAdsRed,
   MARKER_ADS_BLACK: markerAdsBlack,
   MARKER_ADS_PINK: markerAdsPink,
+  REPORT_ICON: reportIcon,
+  LOCATION_ICON: locationIcon,
+  BOARD_REPORT: boardReport,
 };

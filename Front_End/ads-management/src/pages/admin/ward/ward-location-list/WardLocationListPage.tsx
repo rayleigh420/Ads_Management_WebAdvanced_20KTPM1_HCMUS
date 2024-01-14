@@ -1,12 +1,10 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
 import { getLocationByOfficerApi } from '@/apis/location/location.api';
-import { ButtonPrimary } from '@/components/ui';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
 import { MY_ROUTE } from '@/routes/route.constant';
-import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -65,9 +63,7 @@ export default function WardLocationListPage() {
     <div className='w-[1200px] mx-auto '>
       <div className='flex justify-between items-center'>
         <h1 className={`font-bold text-2xl my-0 `}>Quản lý các điểm đặt quảng cáo</h1>
-        <div className='flex justify-end my-3'>
-          <ButtonPrimary icon={<PlusOutlined />} title='Thêm quảng cáo' />
-        </div>
+        <div className='flex justify-end my-3'></div>
       </div>
 
       <CustomTableCore<LocationPageColumns>

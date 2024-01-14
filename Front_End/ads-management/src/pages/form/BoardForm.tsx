@@ -1,59 +1,24 @@
 import { createBoardApi } from '@/apis/board/board.api';
 import { CustomDateInput } from '@/components/ui/form/CustomDateInput';
+import { CustomNumberInput } from '@/components/ui/form/CustomNumberInput';
 import CustomSelectInput from '@/components/ui/form/CustomSelectInput';
-import { CustomTextInput } from '@/components/ui/form/CustomTextInput';
 import { BOARD_TYPE } from '@/core/constants/location-type.contants';
 import { RootState } from '@/store';
+import { parseDate } from '@/utils/parser/datetime.parser';
 import { UploadOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Divider, Form, Modal, Upload } from 'antd';
+import { Button, Divider, Form, Modal, Upload, UploadFile } from 'antd';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-/**
- * convert to typeScript
- *  locationId: {
-      isNumeric: true,
-      notEmpty: true,
-      errorMessage: 'Invalid location id',
-    },
-    boardType: {
-      isNumeric: true,
-      notEmpty: true,
-      errorMessage: 'Invalid board type',
-    },
-    quantity: {
-      isNumeric: true,
-      notEmpty: true,
-      errorMessage: 'Invalid quantity',
-    },
-    image1: {
-      isString: true,
-      errorMessage: 'Invalid image',
-    },
-    expireDate: {
-      notEmpty: true,
-      isISO8601: true,
-      errorMessage: 'Invalid date',
-    },
-    width: {
-      isFloat: true,
-      errorMessage: 'Invalid width',
-    },
-    heigh: {
-      isFloat: true,
-      errorMessage: 'Invalid height',
-    },
- */
 export type BoardInput = {
   locationId: string;
   boardType: string;
-  quantity: string;
-  file: File;
+  file: Array<UploadFile>;
   expireDate: string;
-  width: string;
-  heigh: string;
+  width: number;
+  heigh: number;
 };
 
 type ReportFormProps = {
@@ -62,10 +27,6 @@ type ReportFormProps = {
   setIsOpen: (value: boolean) => void;
   locationId: string;
 };
-
-function isVietnamesePhoneNumber(number: string) {
-  return /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
-}
 
 export default function BoardFormModal({
   isOpen,
@@ -76,8 +37,8 @@ export default function BoardFormModal({
   const [isCreate, setIsCreate] = useState<boolean>(true);
   const auth = useSelector((state: RootState) => state.auth);
 
-  const { mutate: mutateReport } = useMutation({
-    mutationFn: (data: BoardInput) => createBoardApi(data),
+  const { mutate: mutateReport, isPending } = useMutation({
+    mutationFn: (data: any) => createBoardApi(data),
     onSuccess: (resp) => {
       // show success
       toast.success('Thêm quảng cáo thành công');
@@ -88,9 +49,18 @@ export default function BoardFormModal({
   });
 
   const handleSubmit = (values: BoardInput) => {
-    const formData: any = { ...values, locationId: locationId };
-    mutateReport(formData);
-    // mutateReport(formData);
+    const data = new FormData();
+
+    for (let i = 0; i < values.file.length; i++) {
+      data.append(`file`, values.file[i].originFileObj as Blob);
+    }
+    data.append(`locationId`, locationId);
+    data.append(`boardType`, values.boardType);
+    data.append(`width`, values.width.toString());
+    data.append(`heigh`, values.heigh.toString());
+    data.append(`expireDate`, parseDate(values.expireDate) as any);
+
+    mutateReport(data);
   };
 
   return (
@@ -105,6 +75,12 @@ export default function BoardFormModal({
       footer={null}
       // style={{ top: 20 }}
     >
+      {/* modal loading when isPending is true */}
+      {isPending && (
+        <div className='absolute inset-0 bg-white bg-opacity-50 z-50 flex justify-center items-center'>
+          <div className='w-24 h-24 border-t-4 border-b-4 rounded-full animate-spin border-cyan-600'></div>
+        </div>
+      )}
       <div className='w-full '>
         <div className='w-[800px] m-auto'>
           <h1 className='text-3xl font-bold text-center mb-5'>Thêm bảng quảng cáo</h1>
@@ -129,13 +105,13 @@ export default function BoardFormModal({
             />
 
             <div className='flex justify-between gap-5'>
-              <CustomTextInput<BoardInput>
+              <CustomNumberInput<BoardInput>
                 name='heigh'
                 label='Nhập chiều cao bảng'
                 rules={[{ required: true, message: 'Please input your name!' }]}
                 disabled={!isCreate}
               />
-              <CustomTextInput<BoardInput>
+              <CustomNumberInput<BoardInput>
                 name='width'
                 label='Nhập chiều dài bảng'
                 rules={[{ required: true, message: 'Please input your name!' }]}
@@ -157,13 +133,14 @@ export default function BoardFormModal({
             >
               <Upload
                 listType='picture'
-                maxCount={1}
+                maxCount={2}
                 className='upload-container upload-list-inline'
                 accept='.jpg, .txt, .pdf, .bmp, .png, .ppt, .pptx, .doc, .docx, .xls, .xlsx, .pdf, .hwp, .svg'
                 onChange={(info) => {
-                  form.setFieldValue('file', info.file);
+                  form.setFieldValue('file', info.fileList);
                   form.validateFields(['file']);
                 }}
+                multiple
                 beforeUpload={() => false}
               >
                 <Button icon={<UploadOutlined />}>Upload</Button>

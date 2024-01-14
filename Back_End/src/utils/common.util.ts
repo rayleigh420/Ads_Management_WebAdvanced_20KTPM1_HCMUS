@@ -15,11 +15,9 @@ export const verifyAccessToken = async (accessToken: string, req?: any, userType
     });
   }
   try {
-    console.log('need access token2');
 
     const decodedAuthorization = await verifyToken(accessToken, envConfig.jwtSecretAccessToken as string);
     if (userType != null) {
-      console.log(userType);
       if (decodedAuthorization.userType != userType) {
         throw new ErrorWithStatus({
           message: capitalize(USER_MESSAGES.NOT_ACCESS_PERMISSION),

@@ -9,6 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Button, Dropdown, Form, MenuProps, Modal, Space } from 'antd';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export default function UserMenu() {
@@ -59,15 +60,14 @@ export default function UserMenu() {
           </Space>
         </Dropdown>
       ) : (
-        <div
-          className='h-[36px] py-2 pt-1.5 px-5 font-bold text-base bg-primary-custom-900 text-white rounded-3xl cursor-pointer'
-          style={{ border: '1px solid #fff' }}
-          onClick={() => {
-            dispatch(logoutSuccess());
-          }}
-        >
-          Logout
-        </div>
+        <Link to='/login'>
+          <div
+            className='h-[36px] py-2 pt-1.5 px-5 font-bold text-base bg-primary-custom-900 text-white rounded-3xl cursor-pointer'
+            style={{ border: '1px solid #fff' }}
+          >
+            Login
+          </div>
+        </Link>
       )}
       <Modal
         // centered

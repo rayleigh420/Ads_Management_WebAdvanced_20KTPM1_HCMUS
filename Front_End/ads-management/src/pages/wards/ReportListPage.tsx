@@ -85,7 +85,6 @@ export default function ReportListPage() {
       >
         <ReportHandleForm setIsConfirm={setIsOpen} id={id} />
       </Modal>
-      s
     </div>
   );
 }

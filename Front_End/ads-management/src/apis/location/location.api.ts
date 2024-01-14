@@ -64,6 +64,7 @@ export type AdsManagementPagRESP = {
   };
   quantity: number;
   image1: string;
+  image2?: string;
   expireDate: string;
   width: string;
   height: string;
@@ -94,10 +95,12 @@ export const convertLocationBoardsRESPToAdvertiseInfo = (
 ): AdvertiseInfoType[] => {
   console.log(locationBoardsRESP, 'locationBoardsRESP');
   const { locationType, address, advertisingType } = locationBoardsRESP;
-  return locationBoardsRESP.advertisingBoards.map((advertisingBoard) => {
-    const { expireDate, boardType, quantity, width, height, image1, id } = advertisingBoard;
+  const output: AdvertiseInfoType[] = [];
+  for (const item of locationBoardsRESP.advertisingBoards) {
+    console.log('locationBoardsRESP in nha');
+    const { expireDate, boardType, quantity, width, height, image1, id } = item;
     const size = `${width}m x ${height}m`;
-    return {
+    output.push({
       id,
       locationType: LOCATION_TYPE[locationType],
       address,
@@ -105,10 +108,17 @@ export const convertLocationBoardsRESPToAdvertiseInfo = (
       quantity,
       advertisingType: ADVERTISING_TYPE[advertisingType],
       name: BOARD_TYPE[boardType],
+      reports: item.reports,
       image: image1,
       expirationDate: expireDate,
-      locationId: advertisingBoard.locationId,
+      locationId: item.locationId,
       isPlanned: locationBoardsRESP.isPlanned === 1 ? true : false,
-    };
-  });
+    });
+    console.log(output, 'locationBoardsRESP');
+  }
+  return output;
+};
+
+export const createLocationApi = async (body: any) => {
+  return await api.post<BaseResponse<any>>('admins/locations', body);
 };

@@ -61,12 +61,14 @@ class ReportService {
       .getOne();
   }
 
-  public async createReport(payload: ReportReqBody, file: Express.Multer.File, deviceId: string) {
-    if (!file) {
+  public async createReport(payload: ReportReqBody, images: Express.Multer.File[], deviceId: string) {
+    if (!images || images.length == 0) {
       throw new Error('Please upload a file');
     }
 
-    const resultUpload = await uploadToCloudinary(file);
+    const imageUrls = await Promise.all(images.map((image) => uploadToCloudinary(image)));
+    console.log('🚀 ~ ReportService ~ createReport ~ imageUrls:', imageUrls);
+
     const {
       reportType,
       locationId,
@@ -123,7 +125,8 @@ class ReportService {
       emailOfReporter: email,
       phoneNumberOfReporter: phoneNumber,
       content,
-      image1: resultUpload.url,
+      image1: imageUrls[0].url,
+      image2: imageUrls[1]?.url,
       deviceId,
     });
 
@@ -153,7 +156,7 @@ class ReportService {
       return result;
     } else {
       //find all location in ward
-      console.log("all location in ward");
+      console.log('all location in ward');
       const locations = await this.advertisingLocationRepository
         .createQueryBuilder('location')
         .leftJoinAndSelect('location.ward', 'ward')
@@ -210,7 +213,8 @@ class ReportService {
   }
 
   public async getReportByWardId(wardId: number) {
-    const result = await this.reportRepository.createQueryBuilder('report')
+    const result = await this.reportRepository
+      .createQueryBuilder('report')
       .leftJoinAndSelect('report.location', 'location')
       .leftJoinAndSelect('location.ward', 'ward')
       .where('ward.id = :wardId', { wardId })

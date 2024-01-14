@@ -19,11 +19,11 @@ export interface FindDistrictOption {
 }
 
 export interface BoardReqBody {
-  locationId: number;
-  boardType: number;
-  quantity: number;
+  locationId?: number;
+  boardType?: number;
+  quantity?: number;
   image1?: string;
-  expireDate: string;
+  expireDate?: string;
   width?: number;
   height?: number;
   image2?: string;

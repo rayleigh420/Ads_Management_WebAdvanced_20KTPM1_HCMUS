@@ -2,7 +2,7 @@ import { api } from '@/utils/config/http';
 import { PagingREQ } from '../report/report.api';
 
 export const getWardApi = async (params: PagingREQ, id: string) => {
-  return api.get<any>(`/admins/wards/${id}`, { params });
+  if (id) return api.get<any>(`/admins/wards/${id}`, { params });
 };
 
 export const createWardApi = async (body: { name: string; districtId: string }) => {

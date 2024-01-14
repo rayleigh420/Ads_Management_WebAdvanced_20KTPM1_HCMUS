@@ -1,0 +1,1196 @@
+swagger: '2.0'
+info:
+  title: ADS MANAGEMENT API
+  description: Description
+  version: 1.0.0
+host: localhost:3001
+basePath: /
+schemes:
+  - http
+tags:
+  - name: Users
+    description: Operations related to user management
+  - name: Admins
+    description: Operations related to admin functionalities
+  - name: Boards
+    description: Operations related to boards
+  - name: Reports
+    description: Operations related to reports
+  - name: Locations
+    description: Operations related to locations
+  - name: Licenses
+    description: Operations related to licenses
+  - name: Modifications
+    description: Operations related to modification requests
+  - name: Advertising
+    description: Operations related to advertising types
+  - name: Resident
+    description: Operations related to resident
+securityDefinitions:
+  jwt:
+    type: apiKey
+    name: Authorization
+    in: header
+paths:
+  /users/login:
+    post:
+      summary: User login
+      description: Authenticate a user and obtain an access token.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Users
+      parameters:
+        - name: body
+          in: body
+          description: User credentials for login
+          required: true
+          schema:
+            $ref: '#/definitions/LoginRequest'
+      responses:
+        '200':
+          description: Successful login
+          schema:
+            $ref: '#/definitions/LoginSuccessResponse'
+        default:
+          description: Error response
+          schema:
+            $ref: '#/definitions/LoginErrorResponse'
+  /users/account:
+    post:
+      description: ''
+      responses:
+        default:
+          description: ''
+  /users/register:
+    post:
+      description: ''
+      tags:
+        - Users
+      responses:
+        default:
+          description: ''
+  /users/forgot:
+    post:
+      description: ''
+      tags:
+        - Users
+      responses:
+        default:
+          description: ''
+  /users/change-password:
+    post:
+      description: ''
+      tags:
+        - Users
+      responses:
+        default:
+          description: ''
+  /admins/wards/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      security:
+        - jwt: []
+      responses:
+        default:
+          description: ''
+    put:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      security:
+        - jwt: []
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      security:
+        - jwt: []
+      responses:
+        default:
+          description: ''
+  /admins/wards:
+    post:
+      description: ''
+      tags:
+        - Admins
+      security:
+        - jwt: []
+      responses:
+        default:
+          description: ''
+  /admins/districts:
+    get:
+      description: ''
+      tags:
+        - Admins
+      security:
+        - jwt: []
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      tags:
+        - Admins
+      security:
+        - jwt: []
+      responses:
+        default:
+          description: ''
+  /admins/districts/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      security:
+        - jwt: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    put:
+      description: ''
+      tags:
+        - Admins
+      security:
+        - jwt: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/boards/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    patch:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/boards:
+    post:
+      description: ''
+      tags:
+        - Admins
+      responses:
+        default:
+          description: ''
+  /admins/locations:
+    get:
+      description: ''
+      tags:
+        - Admins
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      tags:
+        - Admins
+      responses:
+        default:
+          description: ''
+  /admins/locations/{id}:
+    patch:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/location-reports/ward/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/board-reports/ward/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/location-reports/district/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/board-reports/district/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/district-officer:
+    post:
+      description: ''
+      tags:
+        - Admins
+      responses:
+        default:
+          description: ''
+  /admins/ward-officer:
+    post:
+      description: ''
+      tags:
+        - Admins
+      responses:
+        default:
+          description: ''
+  /admins/approve-license/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/cancel-license/{id}:
+    delete:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/modification-requests:
+    get:
+      description: ''
+      tags:
+        - Admins
+      responses:
+        default:
+          description: ''
+  /admins/approve-modification-requests/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/cancel-modification-requests/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/advertising-type:
+    get:
+      description: ''
+      tags:
+        - Admins
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      responses:
+        default:
+          description: ''
+  /admins/advertising-type/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    put:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/report-form:
+    get:
+      description: ''
+      tags:
+        - Admins
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      responses:
+        default:
+          description: ''
+  /admins/report-form/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    put:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /admins/statistic/report/ward/{id}:
+    get:
+      description: ''
+      tags:
+        - Admins
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /boards/anonymous:
+    get:
+      description: ''
+      tags:
+        - Resident
+      parameters:
+        - name: boardId
+          in: query
+          description: ID of the board
+          required: true
+          type: integer
+      responses:
+        default:
+          description: ''
+  /boards/anonymous/{id}:
+    get:
+      description: ''
+      tags:
+        - Resident
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /boards/ward/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: ''
+  /boards/officer:
+    get:
+      description: ''
+      responses:
+        default:
+          description: ''
+  /reports/anonymous:
+    get:
+      description: ''
+      tags:
+        - Resident
+      parameters:
+        - name: locationId
+          in: query
+          description: ID of the location
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: ''
+      responses:
+        default:
+          description: ''
+  /reports/officer:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /reports/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /locations/anonymous:
+    get:
+      description: ''
+      tags:
+        - Resident
+      parameters:
+        - name: locationId
+          in: query
+          description: ID of the location
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+  /locations/anonymous/boards:
+    get:
+      description: ''
+      tags:
+        - Resident
+      responses:
+        '200':
+          description: Successful response
+  /locations/officer:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /licenses/:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /licenses/{id}:
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /modifications/:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /login:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /account:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /register:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /forgot:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /change-password:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /wards/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /wards:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /districts:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /districts/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /boards/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /boards:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /locations:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /locations/{id}:
+    patch:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /location-reports/ward/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /board-reports/ward/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /location-reports/district/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /board-reports/district/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /district-officer:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /ward-officer:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /approve-license/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /cancel-license/{id}:
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /modification-requests:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /approve-modification-requests/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /cancel-modification-requests/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /advertising-type:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /advertising-type/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /report-form:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /report-form/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /statistic/report/ward/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /anonymous:
+    get:
+      description: ''
+      tags:
+        - Resident
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /anonymous/{id}:
+    get:
+      description: ''
+      tags:
+        - Resident
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /ward/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /officer:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+  /{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /anonymous/boards:
+    get:
+      description: ''
+      tags:
+        - Resident
+      responses:
+        '200':
+          description: Successful response
+  /:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: ''
+      responses:
+        default:
+          description: ''
+definitions:
+  LoginRequest:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      fcmToken:
+        type: string
+
+  LoginSuccessResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+        default: true
+      data:
+        type: object
+        properties:
+          userType:
+            type: integer
+          newAccessToken:
+            type: string
+          newRefreshToken:
+            type: string
+      message:
+        type: string
+        default: "Login success"
+
+  LoginErrorResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+        default: false
+      message:
+        type: string
+      errors:
+        type: object
+        properties:
+          message:
+            type: string
+          errors:
+            type: object
+            properties:
+              email:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  value:
+                    type: string
+                  msg:
+                    type: string
+                  path:
+                    type: string
+                  location:
+                    type: string
