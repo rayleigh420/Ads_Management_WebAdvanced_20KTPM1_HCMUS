@@ -5,13 +5,11 @@ import {
   getLicenseListApi,
   updateAdminLicenseListApi,
 } from '@/apis/board/board.api';
-import { ButtonPrimary } from '@/components/ui';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { handleError } from '@/core/helpers/noti-error.helper';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
-import { PlusOutlined } from '@ant-design/icons';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -93,10 +91,8 @@ export default function AdminLicensesListPage() {
   return (
     <div className=' mx-auto '>
       <div className='flex justify-between items-center'>
-        <h1 className={`font-bold text-2xl my-0 `}>Danh sách cấp phép quảng cáo</h1>
-        <div className='flex justify-end my-3'>
-          <ButtonPrimary icon={<PlusOutlined />} title='Thêm quảng cáo' />
-        </div>
+        <h1 className={`font-bold text-2xl my-0 `}>Quản lý các điểm đặt quảng cáo</h1>
+        <div className='flex justify-end my-3'></div>
       </div>
 
       <CustomTableCore

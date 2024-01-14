@@ -48,14 +48,14 @@ function ShowMarkers({
   });
 
   const { mutate: mutateBoard } = useMutation({
-    mutationFn: (id: String) => getBoardByIdLocationApi(id),
+    mutationFn: (id: string) => getBoardByIdLocationApi(id),
     onSuccess: (resp) => {
       if (resp.data.data) setBoardAds(convertLocationBoardsRESPToAdvertiseInfo(resp.data.data));
     },
   });
 
   const handleClickMarker = (location: LocationRESP) => {
-    isRefClick.current = true;
+    isRefClick.current = false;
     location.id && mutateBoard(location.id);
     setSelectedMarker(location);
   };
@@ -69,22 +69,26 @@ function ShowMarkers({
       if (!isReport) {
         dataAll = dataLocation.filter((data) => data.reports?.length === 0);
       }
-      return dataAll.map((data, index) => ({
-        type: 'Feature',
-        properties: {
-          cluster: false,
-          crimeId: index,
-          category: index,
-        },
-        id: data.id,
-        isPlanned: data.isPlanned,
-        reports: data.reports,
-        advertisingBoards: data.advertisingBoards,
-        geometry: {
-          type: 'Point',
-          coordinates: [data.long, data.lat],
-        },
-      }));
+      return dataAll.map((data, index) => {
+        console.log('dataAll', data.reports);
+
+        return {
+          type: 'Feature',
+          properties: {
+            cluster: false,
+            crimeId: index,
+            category: index,
+          },
+          id: data.id,
+          isPlanned: data.isPlanned,
+          reports: data.reports,
+          advertisingBoards: data.advertisingBoards,
+          geometry: {
+            type: 'Point',
+            coordinates: [data.long, data.lat],
+          },
+        };
+      });
     }
     return [];
   }, [dataLocation, isPlanned]);
@@ -143,6 +147,7 @@ function ShowMarkers({
                 id: cluster.id,
                 lat: latitude,
                 long: longitude,
+                reports: cluster.reports,
               })
             }
             draggable
@@ -153,7 +158,9 @@ function ShowMarkers({
                   ? cluster.isPlanned === 1
                     ? ICONS.MARKER_ADS_RED
                     : ICONS.MARKER_ADS_VIOLET
-                  : ICONS.MARKER_ADS_BLUE
+                  : cluster.reports.length !== 0
+                  ? ICONS.REPORT_ICON
+                  : ICONS.LOCATION_ICON
               }
               alt=''
             />

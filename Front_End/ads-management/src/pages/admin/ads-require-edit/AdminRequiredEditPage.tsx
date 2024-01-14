@@ -1,13 +1,19 @@
 // import { ModalConfirm } from '@/components/popup/ModalConfirm';
-import { getModifyApi } from '@/apis/board/board.api';
+import {
+  deleteAdminEditListApi,
+  getModifyApi,
+  updateAdminEditListApi,
+} from '@/apis/board/board.api';
 import CustomTableCore from '@/components/ui/table/CustomTableBlue';
 import { BOARD_TYPE } from '@/core/constants/location-type.contants';
+import { handleError } from '@/core/helpers/noti-error.helper';
 import { PagingState, initialPagingState } from '@/core/models/paging.type';
 import { initKeys } from '@/core/models/query-key.util';
 import { usePaging } from '@/hooks/usePaging';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { columnsAdsRequireEdit } from './components/AdsRequireEditPageColumns';
 export const adminRequiredListKeys = initKeys('admin-required');
 export type RequireList = {
@@ -34,7 +40,7 @@ export default function AdminRequiredEditPage() {
     initialPaging,
   });
 
-  const { data: dataWards } = useQuery({
+  const { data: dataWards, refetch } = useQuery({
     queryKey: adminRequiredListKeys.list(filter),
     queryFn: () => getModifyApi(filter),
     select: (resp) => {
@@ -63,8 +69,31 @@ export default function AdminRequiredEditPage() {
     placeholderData: keepPreviousData,
   });
 
-  const handleEdit = () => {};
+  const { mutate: muteDelete } = useMutation({
+    mutationFn: (id: string) => deleteAdminEditListApi(id),
+    onSuccess: () => {
+      refetch();
+      toast.success('Từ chối thành công');
+    },
+    onError: handleError,
+  });
 
+  const { mutate: muteAccept } = useMutation({
+    mutationFn: (id: string) => updateAdminEditListApi(id),
+    onSuccess: () => {
+      refetch();
+      toast.success('Chấp thuận  thành công');
+    },
+    onError: handleError,
+  });
+
+  const handleDelete = (data: any) => {
+    muteDelete(data.id);
+  };
+
+  const handleAccept = (data: any) => {
+    muteAccept(data.id);
+  };
   return (
     <div className='w-full '>
       <div className='flex justify-between items-center'>
@@ -74,7 +103,7 @@ export default function AdminRequiredEditPage() {
       </div>
 
       <CustomTableCore
-        columns={columnsAdsRequireEdit(handleEdit)}
+        columns={columnsAdsRequireEdit(handleAccept, handleDelete)}
         data={dataWards?.items || []}
         paging={dataWards?.pageInfo}
         showSelect

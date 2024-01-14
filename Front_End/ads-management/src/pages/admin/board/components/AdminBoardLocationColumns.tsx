@@ -33,8 +33,18 @@ export const columnsAdminLocationPage = (
   {
     title: 'Hình ảnh',
     dataIndex: 'image1',
+    width: '20%',
     render: (text) => {
-      return <Image width={100} className='rounded-lg' src={text} />;
+      const [variable1, variable2] = text.split(', ');
+      console.log('variable1', variable1);
+      console.log('variable2', variable2);
+
+      return (
+        <div className='flex flex-wrap gap-2 justify-center'>
+          {variable1 !== 'null' && <Image width={100} className='rounded-lg' src={variable1} />}
+          {variable2 !== 'null' && <Image width={100} className='rounded-lg' src={variable2} />}
+        </div>
+      );
     },
   },
   {

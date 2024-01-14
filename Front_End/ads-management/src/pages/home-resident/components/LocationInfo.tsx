@@ -56,7 +56,7 @@ const LocationInfo = ({ location }: LocationInfoProps) => {
               className='mt-2 self-end flex gap-2 items-center'
             >
               <InfoCircleOutlined className='text-red-500' />
-              Báo cáo vi phạm
+              {/* Báo cáo vi phạm */}
             </Button>
           </div>
           <Modal

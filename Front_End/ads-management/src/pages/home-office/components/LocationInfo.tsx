@@ -1,8 +1,7 @@
 import { getAddressMapDetailApi } from '@/apis/map-box/address-map_detail.api';
 import { Coordinates } from '@/core/models/map.model';
-import { CheckCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
-import { Button } from 'antd';
 import { memo, useEffect, useState } from 'react';
 
 type LocationInfoProps = {
@@ -48,14 +47,6 @@ const LocationInfo = ({ location }: LocationInfoProps) => {
             <h1 className='text-secondary-unsuccess text-base m-0'>Thông tin địa điểm</h1>
             <div className='text-secondary-unsuccess font-semibold'>{name}</div>
             <div className='text-secondary-unsuccess'>{address}</div>
-            <Button
-              danger
-              onClick={() => setModal1Open(true)}
-              className='mt-2 self-end flex gap-2 items-center'
-            >
-              <InfoCircleOutlined className='text-red-500' />
-              Báo cáo vi phạm
-            </Button>
           </div>
         </div>
       ) : (

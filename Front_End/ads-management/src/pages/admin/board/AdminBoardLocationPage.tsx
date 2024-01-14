@@ -50,7 +50,7 @@ export default function AdminBoardLocationPage() {
           boardType: resp.data.data?.items[i].boardType,
           address: resp.data.data?.items[i].location.address,
           quantity: resp.data.data?.items[i].quantity,
-          image1: resp.data.data?.items[i].image1,
+          image1: resp.data.data?.items[i].image1 + ', ' + resp.data.data?.items[i].image2,
           expireDate: resp.data.data?.items[i].expireDate,
           size: `${resp.data.data?.items[i].width}m x ${resp.data.data?.items[i].height}m`,
         });
@@ -72,6 +72,7 @@ export default function AdminBoardLocationPage() {
       toast.error('Vị trí này chưa có điểm quảng cáo');
       navigator(-1);
     }
+    ``;
   }, [adminAds]);
 
   const handleDelete = (id: any) => {

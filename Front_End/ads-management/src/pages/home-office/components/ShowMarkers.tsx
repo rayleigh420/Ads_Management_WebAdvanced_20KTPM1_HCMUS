@@ -45,9 +45,12 @@ function ShowMarkers({
   });
 
   const { mutate: mutateBoard } = useMutation({
-    mutationFn: (id: String) => getBoardByIdLocationApi(id),
+    mutationFn: (id: string) => getBoardByIdLocationApi(id),
     onSuccess: (resp) => {
-      if (resp.data.data) setBoardAds(convertLocationBoardsRESPToAdvertiseInfo(resp.data.data));
+      if (resp.data.data) {
+        setPageBoard(1);
+        setBoardAds(convertLocationBoardsRESPToAdvertiseInfo(resp.data.data));
+      }
     },
   });
 
@@ -70,6 +73,7 @@ function ShowMarkers({
         },
         id: data.id,
         isPlanned: data.isPlanned,
+        advertisingBoards: data.advertisingBoards,
         reports: data.reports,
         geometry: {
           type: 'Point',
@@ -124,7 +128,7 @@ function ShowMarkers({
             </Marker>
           );
         }
-        console.log('isCluster', cluster.isPlanned);
+        console.log('isCluster sao the', cluster.reports);
         return (
           <Marker
             key={longitude}
@@ -135,24 +139,30 @@ function ShowMarkers({
                 id: cluster.id,
                 lat: latitude,
                 long: longitude,
+                advertisingBoards: cluster.advertisingBoards,
+                reports: cluster.reports,
               })
             }
             draggable
           >
             <img
               src={
-                cluster.reports.length !== 0
-                  ? cluster.isPlanned === 1
-                    ? ICONS.MARKER_ADS_RED
-                    : ICONS.MARKER_ADS_VIOLET
-                  : ICONS.MARKER_ADS_BLUE
+                cluster.advertisingBoards.length !== 0
+                  ? cluster.reports.length === 0
+                    ? cluster.isPlanned === 1
+                      ? ICONS.MARKER_ADS_RED
+                      : ICONS.MARKER_ADS_VIOLET
+                    : ICONS.BOARD_REPORT
+                  : cluster.reports.length !== 0
+                  ? ICONS.REPORT_ICON
+                  : ICONS.LOCATION_ICON
               }
               alt=''
             />
           </Marker>
         );
       })}
-      {selectedMarker?.id && (
+      {selectedMarker?.id && boardAds?.[pageBoard - 1]?.name && (
         <Popup
           longitude={selectedMarker.long}
           latitude={selectedMarker.lat}

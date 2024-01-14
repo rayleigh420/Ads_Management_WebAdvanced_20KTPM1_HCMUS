@@ -26,7 +26,7 @@ const CustomSelectInput = <T extends object>({
   classNameSelect,
   classNameForm,
   options,
-  showSearch,
+  showSearch = true,
   labelCol = 24,
   defaultValue,
   value,
