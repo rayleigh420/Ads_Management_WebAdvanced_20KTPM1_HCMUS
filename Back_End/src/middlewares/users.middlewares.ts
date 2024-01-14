@@ -45,15 +45,15 @@ export const loginValidator = validate(
           }
           req.user = user;
           return true;
-        },
-      },
+        }
+      }
     },
     password: {
       notEmpty: true,
       isString: true,
-      errorMessage: 'Invalid password',
-    },
-  }),
+      errorMessage: 'Invalid password'
+    }
+  })
 );
 
 export const registerValidator = validate(
@@ -73,10 +73,10 @@ export const registerValidator = validate(
             throw new Error('Email address already in use');
           }
           return true;
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 );
 
 export const accessTokenValidator = validate(
@@ -87,12 +87,12 @@ export const accessTokenValidator = validate(
           options: async (value: string, { req }) => {
             const accessToken = (value || '').split(' ')[1];
             return await verifyAccessToken(accessToken, req);
-          },
-        },
-      },
+          }
+        }
+      }
     },
-    ['headers'],
-  ),
+    ['headers']
+  )
 );
 
 export const forgotPasswordValidator = validate(
@@ -111,10 +111,10 @@ export const forgotPasswordValidator = validate(
             throw new Error('Email address does not exist in system');
           }
           return true;
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 );
 
 export const changePasswordValidator = validate(
@@ -123,11 +123,11 @@ export const changePasswordValidator = validate(
       newPassword: {
         notEmpty: true,
         isString: true,
-        errorMessage: 'Invalid password',
-      },
+        errorMessage: 'Invalid password'
+      }
     },
-    ['body'],
-  ),
+    ['body']
+  )
 );
 
 export const refreshTokenValidator = validate(
@@ -141,18 +141,18 @@ export const refreshTokenValidator = validate(
               throw new ErrorWithStatus({
                 message: USER_MESSAGES.REFRESH_TOKEN_IS_REQUIRED,
                 status: HTTP_STATUS.UNAUTHORIZED
-              })
+              });
             }
             try {
               const [decodedRefreshToken, refreshToken] = await Promise.all([
-                verifyToken( value, envConfig.jwtSecretRefreshToken as string),
-            myDataSource.getRepository(RefreshToken).findOne({where: {token: value}})
-              ])
+                verifyToken(value, envConfig.jwtSecretRefreshToken as string),
+                myDataSource.getRepository(RefreshToken).findOne({ where: { token: value } })
+              ]);
               if (refreshToken === null) {
                 throw new ErrorWithStatus({
                   message: USER_MESSAGES.USED_REFRESH_TOKEN_OR_NOT_EXIST,
                   status: HTTP_STATUS.UNAUTHORIZED
-                })
+                });
               }
               req.decodedRefreshToken = decodedRefreshToken;
             } catch (error) {
@@ -160,15 +160,15 @@ export const refreshTokenValidator = validate(
                 throw new ErrorWithStatus({
                   message: capitalize(error.message),
                   status: HTTP_STATUS.UNAUTHORIZED
-                })
+                });
               }
-              throw error
+              throw error;
             }
-            return true
+            return true;
           }
         }
       }
     },
     ['body']
   )
-)
+);

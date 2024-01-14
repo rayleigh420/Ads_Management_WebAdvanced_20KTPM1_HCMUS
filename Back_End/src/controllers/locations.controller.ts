@@ -217,3 +217,41 @@ export const deleteLocation = async (req: Request, res: Response, next: NextFunc
     next(error);
   }
 };
+
+export const getLocationHaveLicenseManageByUserIdController = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    logger.info('get list location manage by user id');
+    const userId = req.decodedAuthorization.userId;
+    const userType = req.decodedAuthorization.userType;
+    const limit = parseInt(req.query.limit as string);
+    const skip = parseInt(req.query.skip as string);
+    const wardIdsString = req.query.wardIds as string;
+    let results: any;
+    let listWardId = [];
+    if (wardIdsString) {
+      listWardId = wardIdsString.split(',').map((item: string) => parseInt(item, 10));
+    }
+
+    if (userType === UserType.WARD_OFFICER) {
+      const wardOfficer = await usersService.getWardOfficerByUserId(userId);
+      const wardId = wardOfficer.manageWardId;
+      console.log('🚀 ~ wardId:', wardId);
+      results = await locationsService.getLocationHaveLicenseManageWard(wardId);
+      results = results.slice().reverse();
+    } else {
+      throw new Error('can not access this route');
+    }
+    const count = results.length;
+    let data: any;
+    if (limit === 0 && skip === 0) {
+      data = results;
+    } else {
+      data = results.splice((skip - 1) * limit, limit);
+    }
+
+    const dataPaging = getPagingData({ data, count, limit, skip });
+    return res.json(ApiResponse.success(dataPaging, 'success'));
+  } catch (error) {
+    next(error);
+  }
+};

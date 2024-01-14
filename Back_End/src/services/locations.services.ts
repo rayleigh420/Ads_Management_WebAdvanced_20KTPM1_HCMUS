@@ -106,24 +106,6 @@ class LocationService {
   }
 
   public async getLocationManageWard(wardId: number) {
-    // let locations: any = [];
-
-    // const addReportsToLocations = async (advertisingLocations: AdvertisingLocation[]) => {
-    //   for (const item of advertisingLocations) {
-    //     const reports = await reportsServices.getReportAnonymousByLocationId(item.id);
-    //     const location = { ...item, reports };
-    //     locations.push(location);
-    //   }
-    // };
-
-    // if (userType === UserType.WARD_OFFICER) {
-    //     const result = await this.wardRepository.createQueryBuilder('ward')
-    //       .leftJoinAndSelect('ward.wardOfficiers', 'wardOfficiers')
-    //       .where('wardOfficiers.userId = :userId', { userId })
-    //       .leftJoinAndSelect('ward.advertisingLocations', 'locations')
-    //       .getMany();
-    // console.log("🚀 ~ file: locations.services.ts:157 ~ LocationService ~ getLocationManageByUserId ~ result", result);
-    //     await addReportsToLocations(result[0].advertisingLocations);
 
     const locations = await this.locationRepository
       .createQueryBuilder('location')
@@ -135,24 +117,30 @@ class LocationService {
       // .where('reports.deviceId = :deviceId', { deviceId })
       .getMany();
 
-    // } else if (userType === UserType.DISTRICT_OFFICER) {
-    //   const result = await this.districtRepository.createQueryBuilder('district')
-    //     .leftJoinAndSelect('district.districtOfficiers', 'districtOfficiers')
-    //     .where('districtOfficiers.userId = :userId', { userId })
-    //     .leftJoinAndSelect('district.wards', 'wards')
-    //     .leftJoinAndSelect('wards.advertisingLocations', 'locations')
-    //     .getMany();
+    return locations;
+  }
 
-    //   const wards = result[0].wards as Ward[];
-    //   for (const ward of wards) {
-    //     if (ward.advertisingLocations.length > 0 && (wardIds.length > 0 ? wardIds.includes(ward.id) : true)) {
-    //       await addReportsToLocations(ward.advertisingLocations);
-    //     }
-    //   }
-    // }
+  public async getLocationHaveLicenseManageWard(wardId: number) {
+
+    const locations = await this.locationRepository
+      .createQueryBuilder('location')
+      .leftJoinAndSelect('location.ward', 'ward')
+      .leftJoinAndSelect('location.reports', 'reports')
+      .leftJoinAndSelect('location.advertisingBoards', 'boards')
+      .leftJoinAndSelect('boards.reports', 'boardReports')
+      .leftJoinAndSelect('boards.license', 'license')
+      // .andWhere('boards.licenseId IS NOT NULL')
+      .where('ward.id = :wardId', { wardId })
+      // .where('reports.deviceId = :deviceId', { deviceId })
+      .getMany();
+
+      locations.forEach(location => {
+        location.advertisingBoards = location.advertisingBoards.filter(board => board.licenseId !== null);
+      });
 
     return locations;
   }
+
 
   public async getLocationByWardIdAndLocationId(wardId: number, locationId) {
     return await this.locationRepository
