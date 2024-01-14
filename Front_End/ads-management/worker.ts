@@ -13,6 +13,7 @@ function stopInterval() {
 // Sử dụng postMessage để gửi thông điệp đến trình duyệt
 self.addEventListener('message', (event) => {
   if (event.data === 'pushNotification') {
+    console.log('pushNotification v');
     // Bắt đầu đếm ngược
     startInterval(() => {
       self.self.postMessage('updateSecond');
@@ -24,6 +25,8 @@ self.addEventListener('message', (event) => {
 });
 
 self.addEventListener('push', (event: any) => {
+  console.log('pushNotification nah v');
+
   const options = {
     body: 'Bạn có 1 thông báo mới.',
   };

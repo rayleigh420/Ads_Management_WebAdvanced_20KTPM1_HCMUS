@@ -12,6 +12,7 @@ import { MapRef, Marker } from 'react-map-gl';
 import AdvertiseInfoComponent from './components/AdvertiseInfo';
 import LocationInfo from './components/LocationInfo';
 import MapComponent from './components/MapComponent';
+import NoteInfo from './components/NoteInfo';
 import ShowMarkers from './components/ShowMarkers';
 
 const optionsReport: OptionItems = [
@@ -133,6 +134,7 @@ const HomeResidentPage = () => {
             />
             {!selectedMarker?.id && <LocationInfo location={selectedMarker} />}
           </div>
+          <NoteInfo />
         </div>
       </div>
     </div>

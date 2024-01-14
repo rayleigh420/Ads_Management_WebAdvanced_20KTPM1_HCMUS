@@ -18,7 +18,6 @@ export const createReportApi = async (body: ReportInput, id?: string) => {
   if (!id) id = getOrSetDeviceId();
   return await api.post<BaseResponse<ReportRESP>>('/reports/anonymous', body, {
     headers: {
-      'Content-Type': 'multipart/form-data',
       device_id: id,
     },
   });

@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Modal } from 'antd';
-import { memo, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 function AdvertiseInfoComponent({
   advertiseInfo,
@@ -48,6 +48,10 @@ function AdvertiseInfoComponent({
   //     }
   //   },
   // });
+
+  useEffect(() => {
+    queryAddress.refetch();
+  }, [modal1Open, modal2Open]);
 
   console.log('report ne', location?.reports);
 
@@ -101,6 +105,7 @@ function AdvertiseInfoComponent({
                 boardId: advertiseInfo.id,
                 reportType: 1,
               }}
+              isOpenModal={modal1Open}
             />
           </Modal>
         </div>
@@ -130,14 +135,15 @@ function AdvertiseInfoComponent({
                   locationId: location?.id,
                   reportType: 1,
                 }}
+                isOpenModal={modal1Open}
                 checked={location?.reports && location.reports.length !== 0}
               />
             </Modal>
           </div>
           {location.id && (
-            <div className='bg-secondary-bgsuccess p-3 rounded-lg flex flex-row items-start gap-3'>
+            <div className='bg-secondary-bgsuccess p-3 rounded-lg flex flex-row items-start gap-3 mt-5'>
               <CheckCircleOutlined className='p-1 text-lg text-secondary-success font-bold stroke-2' />
-              <div className='flex flex-col mt-5'>
+              <div className='flex flex-col'>
                 <h1 className='text-secondary-unsuccess text-base m-0'>Thông tin địa điểm</h1>
                 <div className='text-secondary-unsuccess font-semibold'>
                   {queryAddress.data?.name}
