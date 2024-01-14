@@ -152,6 +152,18 @@ export default function ReportFormModal({
     onSuccess: handleSetReportForm,
   });
 
+  useEffect(() => {
+    //refetch all data
+    if (auth.type !== UserType.resident) {
+      mutateGetReportOfficer({
+        limit: 0,
+        skip: 0,
+        boardId: initialValues?.boardId,
+        locationId: initialValues?.locationId,
+      });
+    }
+  }, [isOpen]);
+
   const { mutate: mutateGetReportById } = useMutation({
     mutationFn: (id: string) => getReportByIdApi(id),
     onSuccess: (resp) => {
@@ -264,9 +276,9 @@ export default function ReportFormModal({
     for (const [key, value] of Object.entries(formData)) {
       data.append(key, value);
     }
-    for (const [key, value] of Object.entries(initialValues)) {
-      data.append(key, value);
-    }
+    // for (const [key, value] of Object.entries(initialValues)) {
+    //   data.append(key, value);
+    // }
 
     mutateReport(data);
   };

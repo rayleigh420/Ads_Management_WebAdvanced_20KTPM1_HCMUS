@@ -49,9 +49,9 @@ export default function AdminRequiredEditPage() {
       for (const item of resp.data.data.items) {
         items.push({
           id: item.id,
-          boardType: BOARD_TYPE[item.boardType] + ' -> ' + BOARD_TYPE[item.board.boardType],
-          width: item.width + ' -> ' + item.board.width,
-          height: item.height + ' -> ' + item.board.height,
+          boardType: BOARD_TYPE[item.board.boardType] + ' -> ' + BOARD_TYPE[item.boardType],
+          width: item.board.width + ' -> ' + item.width,
+          height: item.board.height + ' -> ' + item.height,
           requestTime: item.requestTime,
           reason: item.reason || 'Không có lý do',
         });
