@@ -9,6 +9,10 @@ import indexRouter from './routes/index.routes';
 import cors from 'cors';
 // import { firebaseConfig } from './config/firebase.config';
 import { initializeApp, applicationDefault } from 'firebase-admin/app';
+import fs from 'fs';
+import path from 'path';
+import Yaml from 'yaml';
+import swaggerUi from 'swagger-ui-express';
 
 dotenv.config();
 const PORT = process.env.PORT || 3001;
@@ -33,6 +37,15 @@ initializeApp({
   credential: applicationDefault(),
   projectId: 'web2-289e9',
 });
+
+
+
+
+
+const yamlFile = fs.readFileSync(path.resolve('swagger.yaml'), 'utf8');
+const swaggerDocument = Yaml.parse(yamlFile);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(cors(options));
 app.use(express.json());
